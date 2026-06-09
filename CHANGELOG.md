@@ -4,6 +4,15 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, hearth-markdown-copy-print) [0.5h]
+- Hearth's replies now render **markdown as HTML** (bold, lists, headings, code blocks, tables,
+  links), sanitized with DOMPurify (no XSS).
+- Added per-message **Copy** buttons and a top-bar **Print** button (with print styles for a
+  clean black-on-white printout of the conversation).
+- Fixed a stray empty container above the input — the image-preview chip was rendering even when
+  `hidden`, because the author rule `.imgchip{display:flex}` overrode the `hidden` attribute;
+  added `.imgchip[hidden]{display:none}`.
+
 ### Added (2026-06-09, hearth-vision-smolvlm) [1h]
 - Added on-device **vision** to the browser app: attach an image and ask about it. Lazy-loads
   SmolVLM-256M via transformers.js on WebGPU only when first used — still 100% private, nothing

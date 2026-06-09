@@ -108,6 +108,41 @@
   .imgchip .x{margin-left:auto;cursor:pointer;color:var(--ink-soft);font-size:20px;line-height:1;flex:none;padding:0 4px}
   .imgchip .x:hover{color:var(--ink)}
   .msg .uimg{margin-top:10px;max-width:240px;width:100%;border-radius:12px;display:block;border:1px solid var(--line)}
+  .imgchip[hidden]{display:none}
+  /* rendered markdown in Hearth's replies */
+  .msg.ai .text p{margin:0 0 12px}
+  .msg.ai .text > *:last-child{margin-bottom:0}
+  .msg.ai .text ul,.msg.ai .text ol{margin:0 0 12px;padding-left:22px}
+  .msg.ai .text li{margin:3px 0}
+  .msg.ai .text h1,.msg.ai .text h2,.msg.ai .text h3,.msg.ai .text h4{font-family:"Fraunces",Georgia,serif;font-weight:600;margin:16px 0 8px;line-height:1.2}
+  .msg.ai .text h1{font-size:21px}.msg.ai .text h2{font-size:19px}.msg.ai .text h3{font-size:17px}
+  .msg.ai .text code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.88em;background:rgba(245,241,232,.09);padding:1px 5px;border-radius:5px}
+  .msg.ai .text pre{background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:10px;padding:13px 15px;overflow-x:auto;margin:0 0 12px}
+  .msg.ai .text pre code{background:none;padding:0;font-size:13px}
+  .msg.ai .text a{color:var(--brass-lit);text-decoration:underline}
+  .msg.ai .text strong{font-weight:600}
+  .msg.ai .text blockquote{border-left:3px solid var(--line);margin:0 0 12px;padding-left:14px;color:var(--ink-soft)}
+  .msg.ai .text table{border-collapse:collapse;margin:0 0 12px;font-size:14px}
+  .msg.ai .text th,.msg.ai .text td{border:1px solid var(--line);padding:6px 10px}
+  /* per-message copy */
+  .msg .acts{display:flex;gap:14px;margin-top:9px;opacity:0;transition:opacity .15s}
+  .msg:hover .acts{opacity:1}
+  .msg .acts button{background:none;border:none;cursor:pointer;color:var(--ink-soft);font-size:11.5px;font-family:"JetBrains Mono",ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;padding:0}
+  .msg .acts button:hover{color:var(--brass-lit)}
+  /* top-bar icon buttons */
+  .iconbtn{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink-soft);cursor:pointer;display:grid;place-items:center}
+  .iconbtn:hover{color:var(--ink);border-color:var(--brass-lit)}
+  .iconbtn svg{width:16px;height:16px}
+  .iconbtn[hidden]{display:none}
+  @media print {
+    body{background:#fff !important;color:#000 !important}
+    .bar,.composer,.composer-foot,#imgchip,.acts,.view.loading,.view.gate{display:none !important}
+    .stage,.chat,.thread{height:auto !important;max-height:none !important;overflow:visible !important;display:block !important;max-width:100% !important;-webkit-mask-image:none !important;mask-image:none !important}
+    .msg .text,.msg .who,.msg.ai .text,.msg.ai .text *{color:#000 !important}
+    .msg.user .text{background:#f4f4f4 !important;border-color:#ccc !important}
+    .dot{background:#EE9A45 !important;box-shadow:none !important}
+    .uimg{border-color:#ccc !important}
+  }
   .composer-foot{width:100%;text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:10px;font-family:"JetBrains Mono",ui-monospace,monospace;letter-spacing:.02em}
 
   @media (max-width:680px){.gate h1{font-size:32px}}
@@ -117,6 +152,9 @@
 <script src="https://pulse.champlinenterprises.com/pulse.js" data-token="17j5KP9HYKhdtcKAGO0RuBfvWnouU0Tp" async></script>
 <!-- Hearth Analytics (first-party, content-free) -->
 <script src="/analytics/a.js" defer></script>
+<!-- Markdown rendering (sanitized with DOMPurify) -->
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js" defer></script>
 </head>
 <body data-theme="dark">
   <div class="app">
@@ -129,6 +167,7 @@
         </span>
       </div>
       <div class="right">
+        <button class="iconbtn" id="printBtn" title="Print this conversation" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg></button>
         <span class="pill" id="modelPill">⚡ Fast</span>
       </div>
     </header>
@@ -237,6 +276,7 @@
         });
         window.hearth && window.hearth.track('model_ready', { load_ms: Math.round(performance.now() - _loadStart), tier: 'fast' });
         $("modelPill").style.display = "inline-flex";
+        const pb = $("printBtn"); if (pb) { pb.hidden = false; pb.addEventListener("click", () => window.print()); }
         show("chat");
         $("input").focus();
       } catch (e) {
@@ -252,6 +292,18 @@
     sendBtn.addEventListener("click", fire);
     document.querySelectorAll(".spark").forEach(s => s.addEventListener("click", () => { input.value = s.textContent; autosize(); fire(); }));
 
+    function renderMarkdown(el, text){
+      try {
+        if (window.marked && window.DOMPurify){
+          const html = window.marked.parse(String(text), { breaks: true });
+          const frag = window.DOMPurify.sanitize(html, { RETURN_DOM_FRAGMENT: true, ADD_ATTR: ['target','rel'] });
+          el.replaceChildren(frag);
+          return;
+        }
+      } catch (e) {}
+      el.textContent = text;
+    }
+    function copyText(t){ try { navigator.clipboard.writeText(t); } catch (e) {} }
     function bubble(role, text){
       const empty = $("empty"); if (empty) empty.remove();
       views.chat.classList.remove("is-empty");
@@ -260,7 +312,15 @@
       if (role === "ai"){ const d=document.createElement("span"); d.className="dot"; who.appendChild(d); who.append("Hearth"); }
       else who.textContent = "You";
       const body = document.createElement("div"); body.className = "text"; body.textContent = text;
-      wrap.appendChild(who); wrap.appendChild(body); thread.appendChild(wrap);
+      wrap.appendChild(who); wrap.appendChild(body);
+      if (role === "ai"){
+        const acts = document.createElement("div"); acts.className = "acts";
+        const cp = document.createElement("button"); cp.type = "button"; cp.textContent = "Copy";
+        cp.addEventListener("click", () => { copyText(body.innerText); cp.textContent = "Copied"; setTimeout(() => { cp.textContent = "Copy"; }, 1400); });
+        acts.appendChild(cp);
+        wrap.appendChild(acts);
+      }
+      thread.appendChild(wrap);
       thread.scrollTop = thread.scrollHeight;
       return body;
     }
@@ -308,7 +368,7 @@
       const inputs = await processor(prompt, [image]);
       const ids = await model.generate({ ...inputs, max_new_tokens: 256, do_sample: false });
       const decoded = processor.batch_decode(ids.slice(null, [inputs.input_ids.dims.at(-1), null]), { skip_special_tokens: true });
-      outEl.textContent = (decoded[0] || "").trim() || "(I couldn't quite read that one.)";
+      renderMarkdown(outEl, (decoded[0] || "").trim() || "(I couldn't quite read that one.)");
     }
 
     async function fire(){
@@ -343,6 +403,8 @@
           out.textContent = full;
           thread.scrollTop = thread.scrollHeight;
         }
+        renderMarkdown(out, full);
+        thread.scrollTop = thread.scrollHeight;
         history.push({ role:"assistant", content: full });
       } catch (e){
         out.textContent = "(the fire flickered — try that again)";
