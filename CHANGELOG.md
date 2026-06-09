@@ -4,6 +4,11 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Fixed (2026-06-09, hearth-honest-browser-copy) [0.1h]
+- Corrected a false claim in the landing's browser callout ("Try it instantly… no download") —
+  there IS a one-time ~1 GB model download. Now reads "No app to install… downloads the AI once
+  (about a minute), then it's instant and works offline." On a brand built on honesty, this matters.
+
 ### Added (2026-06-09, hearth-brain-picker) [0.75h]
 - Added an in-app **brain picker**: tap the model pill to open "Choose Hearth's brain" — three
   plain-language options (Fast ~1 GB · Smart ~2 GB · Genius ~5 GB) with friendly descriptions,
