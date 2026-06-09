@@ -1,0 +1,76 @@
+/* Hearth — shared site styles for header, footer, and content pages. */
+:root{
+  --paper:#FBFAF7; --paper-2:#F3ECDF; --ink:#2B2720; --ink-soft:#6B6253;
+  --brass:#C8A15A; --brass-text:#8A6E3C; --brass-lit:#E4C27C; --line:rgba(43,39,32,.10);
+  --d-bg:#14120E; --on-d:#F5F1E8; --on-d-soft:rgba(245,241,232,.62); --d-line:rgba(245,241,232,.13);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Inter",system-ui,-apple-system,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:740px;margin:0 auto;padding:0 24px}
+.serif{font-family:"Fraunces",Georgia,serif}
+.seed{display:inline-block;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 37% 31%,#FFEEC9,#FFCC84 30%,#EE9A45 72%);box-shadow:0 0 10px 1px rgba(238,154,69,.55);flex:none}
+
+/* header */
+header.nav{position:sticky;top:0;z-index:50;background:rgba(251,250,247,.9);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1000px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:21px;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:9px}
+.links{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.links a{text-decoration:none;color:var(--ink-soft);font-size:15px;font-weight:500}
+.links a:hover{color:var(--ink)}
+.links a.try{background:radial-gradient(circle at 35% 30%,#FFD89A,#EE9A45 78%);color:#3A2206;font-weight:600;padding:9px 18px;border-radius:11px;box-shadow:0 0 18px rgba(238,154,69,.3)}
+
+/* page content */
+main.page{padding:60px 0 70px}
+.eyebrow{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--brass-text);margin-bottom:18px}
+.page h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:42px;line-height:1.1;letter-spacing:-.01em;margin-bottom:18px}
+.page h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:25px;margin:34px 0 12px}
+.page p{font-size:17px;margin-bottom:18px}
+.page p.lead{font-size:20px;color:var(--ink-soft);margin-bottom:30px}
+.page ul{margin:0 0 18px 22px}
+.page li{font-size:17px;margin-bottom:8px}
+.page a.inline,.page p a,.page li a{color:var(--brass-text);text-decoration:underline;font-weight:500}
+
+/* faq */
+.faq-item{border-top:1px solid var(--line);padding:22px 0}
+.faq-item:last-child{border-bottom:1px solid var(--line)}
+.faq-q{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:19px;margin-bottom:8px}
+.faq-a{font-size:16.5px;color:var(--ink-soft)}
+.faq-a a{color:var(--brass-text);text-decoration:underline}
+
+/* contact form */
+.field{margin-bottom:16px}
+.field label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.field input,.field textarea{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:#fff;font-family:inherit;font-size:16px;color:var(--ink);outline:none}
+.field input:focus,.field textarea:focus{border-color:var(--brass);box-shadow:0 0 0 4px rgba(200,161,90,.16)}
+.field textarea{min-height:150px;resize:vertical}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.btn-send{background:radial-gradient(circle at 35% 30%,#FFD89A,#EE9A45 78%);color:#3A2206;font-weight:700;font-size:16px;padding:14px 30px;border:none;border-radius:12px;cursor:pointer;box-shadow:0 0 22px rgba(238,154,69,.35)}
+.btn-send:hover{transform:translateY(-1px)}
+.notice{padding:14px 16px;border-radius:12px;margin-bottom:22px;font-size:15px}
+.notice.ok{background:rgba(47,125,79,.1);color:#2f7d4f;border:1px solid rgba(47,125,79,.3)}
+.notice.err{background:rgba(179,64,42,.08);color:#b3402a;border:1px solid rgba(179,64,42,.25)}
+.contact-alt{margin-top:24px;color:var(--ink-soft);font-size:15px}
+.contact-alt a{color:var(--brass-text);text-decoration:underline}
+
+/* footer */
+footer.foot{background:var(--d-bg);color:var(--on-d-soft);padding:54px 0 40px;margin-top:50px}
+.foot-inner{max-width:1000px;margin:0 auto;padding:0 24px}
+.foot-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;padding-bottom:24px;border-bottom:1px solid var(--d-line)}
+.foot-brand{font-family:"Fraunces",Georgia,serif;font-size:18px;color:var(--on-d);display:flex;align-items:center;gap:9px}
+.foot-links{display:flex;gap:20px;flex-wrap:wrap}
+.foot-links a{color:var(--on-d-soft);text-decoration:none;font-size:14px}
+.foot-links a:hover{color:var(--on-d)}
+.foot-projects{padding:24px 0;display:flex;align-items:center;gap:18px;flex-wrap:wrap;border-bottom:1px solid var(--d-line)}
+.foot-projects .label{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,241,232,.45)}
+.foot-projects a{color:var(--brass-lit);text-decoration:none;font-size:14.5px}
+.foot-projects a:hover{text-decoration:underline}
+.foot-attr{padding-top:22px;font-size:13px;color:rgba(245,241,232,.5)}
+.foot-attr a{color:var(--on-d-soft);text-decoration:underline}
+
+@media (max-width:680px){
+  .nav-inner{justify-content:center}
+  .links{gap:14px;justify-content:center}
+  .page h1{font-size:32px}
+  .foot-top{flex-direction:column;align-items:flex-start}
+}

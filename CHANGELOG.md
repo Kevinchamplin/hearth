@@ -4,6 +4,15 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, hearth-site-pages-nav-contact) [1.5h]
+- Added a shared, mom/dad-readable **header** (About · How it works · FAQ · Contact · Try Hearth)
+  and a dark **footer** with project links (Kevin Champlin, The Mirror, BrandForge, BridgeCare OS)
+  and a "Built by Kevin Champlin" attribution — across the landing and the new pages (PHP includes).
+- New pages: **/about**, **/faq** (10 plain-English Q&As), **/contact** (form with honeypot spam guard).
+- Contact form sends via the shared CE **Mailgun** (mg.champlinenterprises.com); the API key lives
+  server-only outside the docroot (`hearth-analytics-data/mailgun.php`), never in the repo. Verified
+  end-to-end delivery to kevin@kevinchamplin.com.
+
 ### Added (2026-06-09, hearth-view-source-easter-eggs) [0.25h]
 - Added a witty view-source welcome comment, a devtools console greeting, and a couple of
   cheeky inline comments for the snoopers — all on-brand (privacy-proud, warm). Cosmetic only.
