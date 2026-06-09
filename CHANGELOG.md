@@ -4,6 +4,13 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Fixed (2026-06-09, hearth-vision-progress-and-blob) [0.5h]
+- Vision "failed to fetch": the image's blob URL was being revoked (in clearPending) before the
+  still-downloading vision model actually read it. Now the image is kept alive until the model is
+  done with it, then released ~1.5s later.
+- Vision loading no longer shows a per-file percentage that resets and appears to "spin forever" —
+  it now shows a steadily-climbing "NN MB downloaded (one-time only)" counter.
+
 ### Fixed (2026-06-09, hearth-vision-version-fix) [0.25h]
 - Vision was failing with "Unsupported model type: idefics3" — transformers.js was pinned too
   old (3.0.2), before SmolVLM/Idefics3 support. Bumped to 3.8.1. Confirmed the model's ONNX

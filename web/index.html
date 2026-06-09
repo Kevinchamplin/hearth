@@ -383,15 +383,25 @@
     }
     async function ensureVision(statusEl){
       if (visionEngine) return visionEngine;
-      if (statusEl) statusEl.textContent = "Opening Hearth's eyes… (one-time download)";
+      if (statusEl) statusEl.textContent = "Opening Hearth's eyes for the first time… (one-time download, give it a minute)";
       const T = await import("https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1");
       const model_id = "HuggingFaceTB/SmolVLM-256M-Instruct";
-      const processor = await T.AutoProcessor.from_pretrained(model_id);
+      // transformers.js reports per-file progress (resets each file), so we show the running
+      // total of MB downloaded — a number that only ever climbs, instead of a spinning %.
+      const seen = {};
+      const onProgress = (p) => {
+        if (!statusEl || !p || p.status !== "progress" || !p.file) return;
+        seen[p.file] = p.loaded || 0;
+        let bytes = 0; for (const k in seen) bytes += seen[k];
+        statusEl.textContent = "Opening Hearth's eyes for the first time… " + Math.round(bytes / 1048576) + " MB downloaded (one-time only)";
+      };
+      const processor = await T.AutoProcessor.from_pretrained(model_id, { progress_callback: onProgress });
       const model = await T.AutoModelForVision2Seq.from_pretrained(model_id, {
         dtype: { embed_tokens: "fp16", vision_encoder: "fp16", decoder_model_merged: "q4" },
         device: "webgpu",
-        progress_callback: (p) => { if (statusEl && p && p.progress) statusEl.textContent = "Opening Hearth's eyes… " + Math.round(p.progress) + "%"; }
+        progress_callback: onProgress
       });
+      if (statusEl) statusEl.textContent = "Almost there — warming up the vision…";
       visionEngine = { T, processor, model };
       return visionEngine;
     }
@@ -414,13 +424,18 @@
 
       if (pendingImage) {
         window.hearth && window.hearth.track('message_sent', { value: 'image' });
-        const ub = bubble("user", text || "What's in this image?");
-        const im = document.createElement("img"); im.className = "uimg"; im.src = pendingImage.url; ub.appendChild(im);
         const imgUrl = pendingImage.url, q = text;
-        clearPending(); input.value = ""; autosize();
+        const ub = bubble("user", text || "What's in this image?");
+        const im = document.createElement("img"); im.className = "uimg"; im.src = imgUrl; ub.appendChild(im);
+        // Clear the composer WITHOUT revoking the blob — the vision model still needs to read it.
+        pendingImage = null;
+        if (imgchip) { imgchip.hidden = true; imgchip.replaceChildren(); }
+        if (fileInput) fileInput.value = "";
+        input.value = ""; autosize();
         const out = bubble("ai", "…");
         try { await seeImage(q, imgUrl, out); }
         catch (e) { out.textContent = "I couldn't make out that image — " + (e && e.message ? e.message : e); }
+        finally { setTimeout(function () { URL.revokeObjectURL(imgUrl); }, 1500); }
         generating = false; sendBtn.disabled = !input.value.trim();
         thread.scrollTop = thread.scrollHeight;
         return;
