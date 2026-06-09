@@ -147,6 +147,8 @@
 </style>
 <!-- Pulse analytics (pulse.champlinenterprises.com) -->
 <script src="https://pulse.champlinenterprises.com/pulse.js" data-token="17j5KP9HYKhdtcKAGO0RuBfvWnouU0Tp" async></script>
+<!-- Hearth Analytics (first-party, content-free) -->
+<script src="/analytics/a.js" defer></script>
 </head>
 <body>
 
@@ -171,8 +173,8 @@
         <h1 class="serif">A warm light in a cold cloud.</h1>
         <p class="lead">Hearth is a beautiful AI that lives on your computer — private, unlimited, and free. No account. No internet. Nobody watching. Just you and a quiet, intelligent presence by the fire.</p>
         <div class="hero-cta">
-          <a href="/app" class="btn btn-primary"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>Try it in your browser</a>
-          <a href="#download" class="btn btn-ghost">Download the app</a>
+          <a href="/app" class="btn btn-primary" data-ev="hero_try"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>Try it in your browser</a>
+          <a href="#download" class="btn btn-ghost" data-ev="hero_download">Download the app</a>
         </div>
         <p class="runs-on">No install in Chrome — or a native app for macOS, Windows &amp; Linux</p>
         <div class="trust"><span>100% on your device</span><span>·</span><span>No sign-up</span><span>·</span><span>Works offline</span></div>
@@ -280,7 +282,7 @@
           <p>No download, no install. Open Hearth in Chrome and start talking. The AI runs inside your tab, entirely private.</p>
         </div>
         <div class="bc-right">
-          <a class="btn btn-primary bc-btn" href="/app">Launch in Chrome</a>
+          <a class="btn btn-primary bc-btn" href="/app" data-ev="launch_browser">Launch in Chrome</a>
           <span class="soon">✓ Live now</span>
         </div>
       </div>

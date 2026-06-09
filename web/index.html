@@ -107,6 +107,8 @@
 </style>
 <!-- Pulse analytics (pulse.champlinenterprises.com) -->
 <script src="https://pulse.champlinenterprises.com/pulse.js" data-token="17j5KP9HYKhdtcKAGO0RuBfvWnouU0Tp" async></script>
+<!-- Hearth Analytics (first-party, content-free) -->
+<script src="/analytics/a.js" defer></script>
 </head>
 <body data-theme="dark">
   <div class="app">
@@ -204,10 +206,13 @@
 
     $("lightBtn").addEventListener("click", async () => {
       if (!navigator.gpu){
+        window.hearth && window.hearth.track('webgpu_missing');
         views.gate.querySelector(".lead").textContent =
           "Hearth needs WebGPU, which this browser doesn't have yet. Open this page in Chrome or Edge (or Safari 18+) and it'll spark right up.";
         return;
       }
+      window.hearth && window.hearth.track('hearth_lit');
+      const _loadStart = performance.now();
       show("loading");
       try {
         engine = await webllm.CreateMLCEngine(MODEL, {
@@ -218,6 +223,7 @@
             $("pct").textContent = pct > 0 ? pct + "% home" : "";
           }
         });
+        window.hearth && window.hearth.track('model_ready', { load_ms: Math.round(performance.now() - _loadStart), tier: 'fast' });
         $("modelPill").style.display = "inline-flex";
         show("chat");
         $("input").focus();
@@ -251,6 +257,7 @@
       const text = input.value.trim();
       if (!text || generating || !engine) return;
       generating = true; sendBtn.disabled = true;
+      window.hearth && window.hearth.track('message_sent');
       bubble("user", text);
       input.value = ""; autosize();
       history.push({ role:"user", content:text });

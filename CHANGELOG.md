@@ -4,6 +4,20 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, hearth-analytics-god-admin) [2h]
+- Built a first-party, privacy-respecting analytics system + **god-admin dashboard** at
+  `/analytics` (password-gated, `noindex`). Anonymous, **content-free** telemetry — never
+  touches conversation text. Captures pageviews, CTA clicks, the activation funnel
+  (app opened → Hearth lit → model ready → message sent), OS / browser / device, screen,
+  locale, timezone (privacy-friendly geo proxy), referrer, WebGPU support, model load times,
+  and unique visitors via a one-way salted IP hash (raw IP never stored). PHP 8.4 + SQLite;
+  DB + secrets live OUTSIDE the web docroot in `hearth-analytics-data/`.
+- Dashboard: KPI cards, activity-over-time chart (Chart.js), conversion funnel,
+  OS/browser/device + referrer/timezone/language breakdowns, live recent-events feed, date
+  filters (24h/7d/30d/90d/all), bot toggle, and CSV export.
+- Beacon (`analytics/a.js`) on the landing + app; app instrumented for `hearth_lit`,
+  `model_ready` (with load time), `message_sent` (count only — never content), `webgpu_missing`.
+
 ### Fixed (2026-06-09, hearth-chat-empty-layout) [0.25h]
 - Fixed the empty-state layout where the input box was pinned to the very bottom with a dead
   gap above it. Now the greeting + suggestions + input center as one group (ChatGPT-style
