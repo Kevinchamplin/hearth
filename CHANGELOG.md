@@ -4,6 +4,19 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, hearth-expectations-and-chamber-culture) [0.25h]
+- Set expectations in plain language: a "One honest note" callout on the landing + a rewritten
+  FAQ answer — Hearth isn't a ChatGPT/Gemini competitor (no data center; it's your computer),
+  which is why it's simple, fast, private. Great for recipes, explanations, writing, brainstorming;
+  not for building a full website.
+- Added **Chamber Culture** (chamberculture.com) to the footer project links.
+
+### Added (2026-06-09, hearth-explainer-plain-language) [0.25h]
+- Explained the "runs on your device · ~1 GB · best in Chrome/Edge" promise in plain,
+  non-technical language: a friendly "A few honest details" section on the landing (with
+  movie-download and graphics-chip analogies), two new FAQ entries, and a gentle "Wait — why?"
+  link on the app's start screen pointing to the FAQ.
+
 ### Added (2026-06-09, hearth-site-pages-nav-contact) [1.5h]
 - Added a shared, mom/dad-readable **header** (About · How it works · FAQ · Contact · Try Hearth)
   and a dark **footer** with project links (Kevin Champlin, The Mirror, BrandForge, BridgeCare OS)
