@@ -4,6 +4,17 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, hearth-vision-smolvlm) [1h]
+- Added on-device **vision** to the browser app: attach an image and ask about it. Lazy-loads
+  SmolVLM-256M via transformers.js on WebGPU only when first used — still 100% private, nothing
+  leaves the device. Attach (📎) button + image thumbnails in the conversation; the text chat is
+  untouched and the feature fails gracefully (error shown in-bubble, app keeps working).
+
+### Added (2026-06-09, hearth-launch-post) [0.5h]
+- Published the build-in-public launch post on kevinchamplin.com ("Your AI shouldn't live in
+  someone else's computer") with a featured ember image, two inline screenshots, and a CTA to
+  hearth.kevinchamplin.com. Draft saved in repo at `blog/`.
+
 ### Added (2026-06-09, hearth-github-public) [0.25h]
 - Published the repo **public** at https://github.com/Kevinchamplin/hearth (MIT licensed) and
   wired the site's "Star on GitHub" + footer links to it (were dead `#` placeholders).
