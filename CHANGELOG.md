@@ -4,6 +4,11 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, hearth-brain-discoverability) [0.2h]
+- Made the brain switcher discoverable: added a ▾ caret to the model pill (so it reads as a menu)
+  and a friendly **one-time nudge** ("Want smarter answers? Tap the brain button up here to
+  switch") that points at it on first chat load — dismissible, shown only once (localStorage).
+
 ### Added (2026-06-09, hearth-picker-computer-fit) [0.25h]
 - The brain picker now shows the visitor's own computer (memory + processor cores, and GPU where
   the browser exposes it) and gives each brain a plain verdict badge — "✓ Good for your computer"

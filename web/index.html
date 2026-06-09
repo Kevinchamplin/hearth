@@ -184,6 +184,14 @@
   .mverdict.warn{color:#e9b06a;background:rgba(233,176,106,.12);border:1px solid rgba(233,176,106,.32)}
   .mverdict.bad{color:#e2937f;background:rgba(226,138,111,.12);border:1px solid rgba(226,138,111,.32)}
   .mverdict.ok{color:var(--ink-soft);background:rgba(255,255,255,.05);border:1px solid var(--line)}
+  /* first-time "you can switch brains" nudge */
+  .brain-hint{position:fixed;top:62px;right:18px;z-index:60;max-width:238px;background:#1c1812;border:1px solid var(--brass);border-radius:14px;padding:13px 30px 13px 15px;box-shadow:0 14px 40px rgba(0,0,0,.5);font-size:13.5px;line-height:1.45;color:var(--ink);cursor:pointer;animation:hintIn .3s ease}
+  .brain-hint[hidden]{display:none}
+  .brain-hint b{color:var(--brass-lit)}
+  .brain-hint::after{content:"";position:absolute;top:-7px;right:26px;width:12px;height:12px;background:#1c1812;border-left:1px solid var(--brass);border-top:1px solid var(--brass);transform:rotate(45deg)}
+  .brain-hint .hx{position:absolute;top:6px;right:10px;color:var(--ink-soft);font-size:16px;line-height:1}
+  .brain-hint .hx:hover{color:var(--ink)}
+  @keyframes hintIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
   @media print {
     body{background:#fff !important;color:#000 !important}
     .bar,.composer,.composer-foot,#imgchip,.acts,.view.loading,.view.gate{display:none !important}
@@ -228,7 +236,7 @@
       </div>
       <div class="right">
         <button class="iconbtn" id="printBtn" title="Print this conversation" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg></button>
-        <span class="pill" id="modelPill">⚡ Fast</span>
+        <span class="pill" id="modelPill" title="Change Hearth's brain">⚡ Fast ▾</span>
       </div>
     </header>
 
@@ -279,6 +287,12 @@
         <p class="composer-foot">Private · runs on your device · unlimited &amp; free</p>
       </section>
     </main>
+  </div>
+
+  <!-- First-time nudge: you can change the brain -->
+  <div class="brain-hint" id="brainHint" hidden>
+    <span class="hx">×</span>
+    👋 Want <b>smarter</b> (or faster) answers? Tap the brain button up here to switch anytime.
   </div>
 
   <!-- Brain picker -->
@@ -372,7 +386,7 @@
       try { localStorage.setItem("h_model", id); } catch (e) {}
       const m = modelInfo(id);
       const pill = $("modelPill");
-      pill.textContent = m.emoji + " " + m.name;
+      pill.textContent = m.emoji + " " + m.name + " ▾";
       show("loading");
       $("status").textContent = "Kindling the fire…"; $("bar").style.width = "0%"; $("pct").textContent = "";
       engine = null;
@@ -391,6 +405,7 @@
         const pb = $("printBtn"); if (pb) pb.hidden = false;
         show("chat");
         $("input").focus();
+        maybeBrainHint();
       } catch (e) {
         $("status").textContent = "That brain wouldn't load (" + (e.message || e) + "). Try a smaller one.";
       }
@@ -456,6 +471,18 @@
     });
     $("pickerClose").addEventListener("click", () => $("pickerOverlay").classList.remove("open"));
     $("pickerOverlay").addEventListener("click", (e) => { if (e.target === $("pickerOverlay")) $("pickerOverlay").classList.remove("open"); });
+
+    // One-time nudge so people discover they can change the brain.
+    function maybeBrainHint(){
+      try { if (localStorage.getItem("h_brain_hint")) return; } catch (e) {}
+      const h = $("brainHint"); if (!h) return;
+      h.hidden = false;
+      const dismiss = () => { h.hidden = true; try { localStorage.setItem("h_brain_hint", "1"); } catch (e) {} };
+      const x = h.querySelector(".hx");
+      if (x) x.addEventListener("click", (e) => { e.stopPropagation(); dismiss(); });
+      h.addEventListener("click", () => { dismiss(); $("modelPill").click(); });
+      setTimeout(() => { if (!h.hidden) dismiss(); }, 9000);
+    }
 
     // composer
     const input = $("input"), sendBtn = $("sendBtn"), thread = $("thread");
