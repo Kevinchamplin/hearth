@@ -4,6 +4,16 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Changed (2026-06-09, hearth-chat-ux-polish) [0.75h]
+- UX-designer pass on the in-browser chat: replaced the dated native scrollbar with a thin,
+  warm custom one + a soft top fade, added gutters and a ~70-char reading column, refined
+  message typography/spacing, dropped the redundant "YOU" label for a subtle user pill, and
+  added `prefers-reduced-motion` support.
+- Warmer first-load copy (fireside phrases — "Gathering the kindling…", "Warming the room…",
+  "NN% home" — instead of WebLLM's technical text) and a **local-time greeting** (good
+  morning/afternoon/evening from the visitor's own device clock).
+- Tightened Hearth's system prompt so it keeps replies short and stops rambling/contradicting.
+
 ### Added (2026-06-09, hearth-web-app-deployed) [0.5h]
 - Deployed the in-browser app **live** to https://hearth.kevinchamplin.com/app (rsynced
   `web/` to the subdomain's `app/` dir) and wired the landing page's "Try it in your browser"
