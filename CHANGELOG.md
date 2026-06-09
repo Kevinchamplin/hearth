@@ -4,6 +4,12 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, pulse-pixel-wired) [0.25h]
+- Wired the site into **Pulse** analytics (pulse.champlinenterprises.com) — pixel on both the
+  landing page and the `/app` page (Pulse Site id 185). Pageviews/events now tracked. Verified
+  the snippet renders in the served HTML and the pixel beacon records (200, real UA). No CSP to
+  adjust.
+
 ### Changed (2026-06-09, hearth-chat-ux-polish) [0.75h]
 - UX-designer pass on the in-browser chat: replaced the dated native scrollbar with a thin,
   warm custom one + a soft top fade, added gutters and a ~70-char reading column, refined
