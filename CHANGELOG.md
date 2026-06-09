@@ -4,6 +4,13 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, hearth-web-app-deployed) [0.5h]
+- Deployed the in-browser app **live** to https://hearth.kevinchamplin.com/app (rsynced
+  `web/` to the subdomain's `app/` dir) and wired the landing page's "Try it in your browser"
+  / "Launch in Chrome" CTAs to it — flipping the browser option from "Coming soon" to live.
+  Anyone can now talk to Hearth on their own device, one click from the homepage. The
+  Mac/Windows/Linux apps remain coming soon.
+
 ### Added (2026-06-09, hearth-web-app-webllm) [1.5h]
 - Built the **working browser app** (`web/index.html`): the real Hearth running in-tab via
   WebLLM + WebGPU (Llama-3.2-1B), with **no server inference** — the model runs on the
