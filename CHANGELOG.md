@@ -4,6 +4,13 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, hearth-brain-picker) [0.75h]
+- Added an in-app **brain picker**: tap the model pill to open "Choose Hearth's brain" — three
+  plain-language options (Fast ~1 GB · Smart ~2 GB · Genius ~5 GB) with friendly descriptions,
+  download sizes, a "might be slow on this computer" hint on low-RAM machines, and one-tap
+  switching. The choice is remembered. Lets non-technical users download a smarter model with
+  zero jargon. (Models: Llama-3.2-1B / Llama-3.2-3B / Llama-3.1-8B via WebLLM.)
+
 ### Changed (2026-06-09, hearth-vision-500m) [0.25h]
 - Vision looped garbage ("1.1.1.1…") on the 256M model (too small + greedy decoding). Switched to
   **SmolVLM-500M-Instruct** (the size that actually describes images in-browser) and added

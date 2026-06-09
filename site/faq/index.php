@@ -24,7 +24,7 @@ $faqs = [
   ['Can it look at my photos?',
    'Yes. You can attach an image and ask about it, and that runs privately on your device too &mdash; the picture never leaves your computer.'],
   ['Is this a competitor to ChatGPT or Gemini?',
-   'No &mdash; and that\'s on purpose. ChatGPT and Gemini run on enormous data centers. Hearth runs on <em>your</em> computer, which makes it a different, simpler thing: fast, free, and completely private. It\'s wonderful for recipes, everyday questions, explaining something tricky, writing and rewriting, and brainstorming. It won\'t build you a whole website or tackle huge, complex projects &mdash; for that, the big cloud tools are still the right call. A more powerful Hearth desktop app, with bigger models, is on the way.'],
+   'No &mdash; and that\'s on purpose. ChatGPT and Gemini run on enormous data centers. Hearth runs on <em>your</em> computer, which makes it a different, simpler thing: fast, free, and completely private. It\'s wonderful for recipes, everyday questions, explaining something tricky, writing and rewriting, and brainstorming. It won\'t build you a whole website or tackle huge, complex projects &mdash; for that, the big cloud tools are still the right call. Inside the app you can also pick a bigger, smarter brain (just tap the brain button at the top) if your computer is up to it. A more powerful Hearth desktop app, with even bigger brains, is on the way.'],
   ['So what\'s the catch?',
    'There isn\'t one. Hearth is a passion project, built because it should exist. It\'s <a href="https://github.com/Kevinchamplin/hearth">open source</a>, so you can read every line of it yourself.'],
   ['Who made this?',

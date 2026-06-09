@@ -156,6 +156,27 @@
   .iconbtn:hover{color:var(--ink);border-color:var(--brass-lit)}
   .iconbtn svg{width:16px;height:16px}
   .iconbtn[hidden]{display:none}
+  /* brain picker */
+  #modelPill{cursor:pointer}
+  #modelPill:hover{border-color:var(--brass-lit);color:var(--ink)}
+  .picker-overlay{position:fixed;inset:0;z-index:100;background:rgba(10,8,5,.62);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:24px}
+  .picker-overlay.open{display:flex}
+  .picker{background:#1c1812;border:1px solid var(--line);border-radius:20px;max-width:450px;width:100%;padding:26px;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+  .picker h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:22px;margin-bottom:5px}
+  .picker .psub{color:var(--ink-soft);font-size:14px;margin-bottom:20px;line-height:1.5}
+  .mcard{display:flex;align-items:flex-start;gap:14px;border:1px solid var(--line);border-radius:14px;padding:15px 16px;margin-bottom:11px;cursor:pointer;transition:border-color .15s,background .15s}
+  .mcard:hover{border-color:var(--brass-lit)}
+  .mcard.current{border-color:var(--brass);background:rgba(200,161,90,.08)}
+  .mcard .memoji{font-size:22px;line-height:1.3;flex:none}
+  .mcard .mbody{flex:1}
+  .mcard .mname{font-weight:600;font-size:16px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .mcard .msize{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10.5px;color:var(--brass-lit);border:1px solid var(--d-line);border-radius:999px;padding:2px 8px;letter-spacing:.03em}
+  .mcard .mblurb{font-size:13.5px;color:var(--ink-soft);margin-top:4px;line-height:1.5}
+  .mcard .mnote{font-size:12px;color:#E9b06a;margin-top:6px}
+  .mcard .mcur{font-size:10.5px;color:var(--brass-lit);font-family:"JetBrains Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.1em;margin-top:7px}
+  .picker .pclose{margin-top:4px;width:100%;background:none;border:1px solid var(--line);color:var(--ink-soft);border-radius:12px;padding:11px;cursor:pointer;font-family:inherit;font-size:14px}
+  .picker .pclose:hover{color:var(--ink)}
+  .picker .pfoot{font-size:12.5px;color:var(--ink-soft);margin-top:14px;text-align:center}
   @media print {
     body{background:#fff !important;color:#000 !important}
     .bar,.composer,.composer-foot,#imgchip,.acts,.view.loading,.view.gate{display:none !important}
@@ -253,13 +274,31 @@
     </main>
   </div>
 
+  <!-- Brain picker -->
+  <div class="picker-overlay" id="pickerOverlay">
+    <div class="picker">
+      <h2 class="serif">Choose Hearth's brain</h2>
+      <p class="psub">A bigger brain gives smarter answers, but takes longer to download and needs a stronger computer. You can switch anytime.</p>
+      <div id="pickerCards"></div>
+      <button class="pclose" id="pickerClose">Close</button>
+      <p class="pfoot">Each brain downloads once, then it's yours — even offline.</p>
+    </div>
+  </div>
+
   <script type="module">
     // Below: WebLLM. The part that runs an actual language model on your GPU,
     // inside a browser tab, with no server involved. If you'd told 2019-me this
     // was possible I'd have laughed. Anyway — it's all client-side from here. 🔥
     import * as webllm from "https://esm.run/@mlc-ai/web-llm";
 
-    const MODEL = "Llama-3.2-1B-Instruct-q4f32_1-MLC";
+    const MODELS = [
+      { id: "Llama-3.2-1B-Instruct-q4f32_1-MLC", name: "Fast",   emoji: "⚡", size: "~1 GB", blurb: "Quick and light. Works well on almost any computer." },
+      { id: "Llama-3.2-3B-Instruct-q4f16_1-MLC", name: "Smart",  emoji: "✨", size: "~2 GB", blurb: "More thoughtful, fuller answers. Best on a newer computer." },
+      { id: "Llama-3.1-8B-Instruct-q4f16_1-MLC", name: "Genius", emoji: "🧠", size: "~5 GB", blurb: "The most capable. Needs a powerful computer with lots of memory." },
+    ];
+    function modelInfo(id){ return MODELS.find(m => m.id === id) || MODELS[0]; }
+    let currentModelId = MODELS[0].id;
+    try { const saved = localStorage.getItem("h_model"); if (saved && modelInfo(saved).id === saved) currentModelId = saved; } catch (e) {}
     const SYSTEM = "You are Hearth, a warm, calm, private AI that lives on the user's own computer and runs entirely in their browser — no internet, no account, fully private. Be genuinely helpful, clear, and warm, like a thoughtful friend by the fire. Keep replies short — usually 2 to 4 sentences unless more is asked for. Don't repeat yourself or contradict what you just said. If you're unsure, say so simply. Just be Hearth — never slip into robotic AI-disclaimer talk.";
 
     const $ = (id) => document.getElementById(id);
@@ -291,18 +330,20 @@
     let pendingImage = null, visionEngine = null;
     const history = [{ role:"system", content: SYSTEM }];
 
-    $("lightBtn").addEventListener("click", async () => {
-      if (!navigator.gpu){
-        window.hearth && window.hearth.track('webgpu_missing');
-        views.gate.querySelector(".lead").textContent =
-          "Hearth needs WebGPU, which this browser doesn't have yet. Open this page in Chrome or Edge (or Safari 18+) and it'll spark right up.";
-        return;
-      }
-      window.hearth && window.hearth.track('hearth_lit');
-      const _loadStart = performance.now();
+    function lowMemory(){ try { return typeof navigator.deviceMemory === "number" && navigator.deviceMemory > 0 && navigator.deviceMemory < 8; } catch (e) { return false; } }
+
+    async function loadModel(id){
+      currentModelId = id;
+      try { localStorage.setItem("h_model", id); } catch (e) {}
+      const m = modelInfo(id);
+      const pill = $("modelPill");
+      pill.textContent = m.emoji + " " + m.name;
       show("loading");
+      $("status").textContent = "Kindling the fire…"; $("bar").style.width = "0%"; $("pct").textContent = "";
+      engine = null;
+      const t0 = performance.now();
       try {
-        engine = await webllm.CreateMLCEngine(MODEL, {
+        engine = await webllm.CreateMLCEngine(id, {
           initProgressCallback: (r) => {
             $("status").textContent = warmStatus(r);
             const pct = Math.max(0, Math.min(100, Math.round((r.progress || 0) * 100)));
@@ -310,15 +351,54 @@
             $("pct").textContent = pct > 0 ? pct + "% home" : "";
           }
         });
-        window.hearth && window.hearth.track('model_ready', { load_ms: Math.round(performance.now() - _loadStart), tier: 'fast' });
-        $("modelPill").style.display = "inline-flex";
-        const pb = $("printBtn"); if (pb) { pb.hidden = false; pb.addEventListener("click", () => window.print()); }
+        window.hearth && window.hearth.track('model_ready', { load_ms: Math.round(performance.now() - t0), tier: m.name });
+        pill.style.display = "inline-flex";
+        const pb = $("printBtn"); if (pb) pb.hidden = false;
         show("chat");
         $("input").focus();
       } catch (e) {
-        $("status").textContent = "The fire wouldn't catch: " + (e.message || e);
+        $("status").textContent = "That brain wouldn't load (" + (e.message || e) + "). Try a smaller one.";
       }
+    }
+
+    $("lightBtn").addEventListener("click", () => {
+      if (!navigator.gpu){
+        window.hearth && window.hearth.track('webgpu_missing');
+        views.gate.querySelector(".lead").textContent =
+          "Hearth needs WebGPU, which this browser doesn't have yet. Open this page in Chrome or Edge (or Safari 18+) and it'll spark right up.";
+        return;
+      }
+      window.hearth && window.hearth.track('hearth_lit');
+      loadModel(currentModelId);
     });
+
+    // Print button (wire once).
+    (function(){ const pb = $("printBtn"); if (pb) pb.addEventListener("click", () => window.print()); })();
+
+    // Brain picker.
+    function renderPicker(){
+      const wrap = $("pickerCards"); wrap.replaceChildren();
+      MODELS.forEach(m => {
+        const card = document.createElement("div"); card.className = "mcard" + (m.id === currentModelId ? " current" : "");
+        const em = document.createElement("div"); em.className = "memoji"; em.textContent = m.emoji;
+        const body = document.createElement("div"); body.className = "mbody";
+        const nm = document.createElement("div"); nm.className = "mname"; nm.append(m.name);
+        const sz = document.createElement("span"); sz.className = "msize"; sz.textContent = m.size + " download"; nm.appendChild(sz);
+        const bl = document.createElement("div"); bl.className = "mblurb"; bl.textContent = m.blurb;
+        body.append(nm, bl);
+        if (m.id === currentModelId){ const c = document.createElement("div"); c.className = "mcur"; c.textContent = "✓ In use now"; body.appendChild(c); }
+        else if (m.name === "Genius" && lowMemory()){ const n = document.createElement("div"); n.className = "mnote"; n.textContent = "⚠ Might be slow on this computer."; body.appendChild(n); }
+        card.append(em, body);
+        card.addEventListener("click", () => {
+          $("pickerOverlay").classList.remove("open");
+          if (m.id !== currentModelId) loadModel(m.id);
+        });
+        wrap.appendChild(card);
+      });
+    }
+    $("modelPill").addEventListener("click", () => { renderPicker(); $("pickerOverlay").classList.add("open"); });
+    $("pickerClose").addEventListener("click", () => $("pickerOverlay").classList.remove("open"));
+    $("pickerOverlay").addEventListener("click", (e) => { if (e.target === $("pickerOverlay")) $("pickerOverlay").classList.remove("open"); });
 
     // composer
     const input = $("input"), sendBtn = $("sendBtn"), thread = $("thread");
