@@ -4,6 +4,12 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Changed (2026-06-09, hearth-vision-500m) [0.25h]
+- Vision looped garbage ("1.1.1.1…") on the 256M model (too small + greedy decoding). Switched to
+  **SmolVLM-500M-Instruct** (the size that actually describes images in-browser) and added
+  anti-repetition generation (`repetition_penalty: 1.2`, `no_repeat_ngram_size: 3`). Heftier
+  one-time download, but real answers.
+
 ### Fixed (2026-06-09, hearth-vision-progress-and-blob) [0.5h]
 - Vision "failed to fetch": the image's blob URL was being revoked (in clearPending) before the
   still-downloading vision model actually read it. Now the image is kept alive until the model is
