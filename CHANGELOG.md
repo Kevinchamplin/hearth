@@ -4,6 +4,12 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Fixed (2026-06-09, hearth-chat-empty-layout) [0.25h]
+- Fixed the empty-state layout where the input box was pinned to the very bottom with a dead
+  gap above it. Now the greeting + suggestions + input center as one group (ChatGPT-style
+  new-chat screen); once a conversation starts, the input docks to the bottom and messages
+  fill upward. Also removed a double height-calc that could push the composer off-screen.
+
 ### Added (2026-06-09, pulse-pixel-wired) [0.25h]
 - Wired the site into **Pulse** analytics (pulse.champlinenterprises.com) — pixel on both the
   landing page and the `/app` page (Pulse Site id 185). Pageviews/events now tracked. Verified

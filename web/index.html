@@ -47,7 +47,7 @@
   .ember.kindling{animation:breathe 1.6s ease-in-out infinite alternate}
 
   /* stage / views */
-  .stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+  .stage{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
   .view{display:none;width:100%;max-width:680px;flex-direction:column;align-items:center}
   .view.active{display:flex}
 
@@ -68,8 +68,11 @@
   .loading .reassure{margin-top:18px;font-size:14px;color:var(--ink-soft);max-width:440px}
 
   /* chat */
-  .chat{max-width:700px;height:calc(100vh - 70px);justify-content:flex-start}
-  .thread{width:100%;flex:1;overflow-y:auto;overflow-x:hidden;padding:18px 18px 26px;text-align:left;
+  .chat{max-width:700px;flex:1;min-height:0;justify-content:flex-start}
+  .chat.is-empty{justify-content:center}
+  .chat.is-empty .thread{flex:0 1 auto;overflow:visible;-webkit-mask-image:none;mask-image:none}
+  .chat.is-empty .empty{padding-bottom:30px}
+  .thread{width:100%;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:18px 18px 26px;text-align:left;
     scrollbar-width:thin;scrollbar-color:rgba(228,194,124,.3) transparent;
     -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 24px);mask-image:linear-gradient(to bottom,transparent 0,#000 24px)}
   .thread::-webkit-scrollbar{width:10px}
@@ -99,7 +102,7 @@
   .send svg{width:18px;height:18px;color:#3a2208}
   .composer-foot{width:100%;text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:10px;font-family:"JetBrains Mono",ui-monospace,monospace;letter-spacing:.02em}
 
-  @media (max-width:680px){.gate h1{font-size:32px}.chat{height:calc(100vh - 64px)}}
+  @media (max-width:680px){.gate h1{font-size:32px}}
   @media (prefers-reduced-motion: reduce){.ember,.glow,.seed,.dot,.ember.kindling{animation:none !important}}
 </style>
 <!-- Pulse analytics (pulse.champlinenterprises.com) -->
@@ -143,7 +146,7 @@
       </section>
 
       <!-- CHAT -->
-      <section class="view chat" id="view-chat">
+      <section class="view chat is-empty" id="view-chat">
         <div class="thread" id="thread">
           <div class="empty" id="empty">
             <div class="ember-wrap" style="width:120px;height:120px;margin-bottom:14px"><div class="glow"></div><div class="ember" style="width:78px;height:78px"></div></div>
@@ -233,6 +236,7 @@
 
     function bubble(role, text){
       const empty = $("empty"); if (empty) empty.remove();
+      views.chat.classList.remove("is-empty");
       const wrap = document.createElement("div"); wrap.className = "msg " + role;
       const who = document.createElement("div"); who.className = "who";
       if (role === "ai"){ const d=document.createElement("span"); d.className="dot"; who.appendChild(d); who.append("Hearth"); }
