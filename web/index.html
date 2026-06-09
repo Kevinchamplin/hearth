@@ -177,6 +177,13 @@
   .picker .pclose{margin-top:4px;width:100%;background:none;border:1px solid var(--line);color:var(--ink-soft);border-radius:12px;padding:11px;cursor:pointer;font-family:inherit;font-size:14px}
   .picker .pclose:hover{color:var(--ink)}
   .picker .pfoot{font-size:12.5px;color:var(--ink-soft);margin-top:14px;text-align:center}
+  .picker .pspecs{font-size:13px;color:var(--ink);background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:18px;line-height:1.5}
+  .picker .pspecs strong{color:var(--brass-lit)}
+  .mverdict{display:inline-block;font-size:11px;font-family:"JetBrains Mono",ui-monospace,monospace;letter-spacing:.03em;padding:3px 9px;border-radius:999px;margin-top:8px}
+  .mverdict.good{color:#8ecb9f;background:rgba(120,191,138,.12);border:1px solid rgba(120,191,138,.32)}
+  .mverdict.warn{color:#e9b06a;background:rgba(233,176,106,.12);border:1px solid rgba(233,176,106,.32)}
+  .mverdict.bad{color:#e2937f;background:rgba(226,138,111,.12);border:1px solid rgba(226,138,111,.32)}
+  .mverdict.ok{color:var(--ink-soft);background:rgba(255,255,255,.05);border:1px solid var(--line)}
   @media print {
     body{background:#fff !important;color:#000 !important}
     .bar,.composer,.composer-foot,#imgchip,.acts,.view.loading,.view.gate{display:none !important}
@@ -279,6 +286,7 @@
     <div class="picker">
       <h2 class="serif">Choose Hearth's brain</h2>
       <p class="psub">A bigger brain gives smarter answers, but takes longer to download and needs a stronger computer. You can switch anytime.</p>
+      <div class="pspecs" id="pickerSpecs"></div>
       <div id="pickerCards"></div>
       <button class="pclose" id="pickerClose">Close</button>
       <p class="pfoot">Each brain downloads once, then it's yours — even offline.</p>
@@ -299,6 +307,33 @@
     function modelInfo(id){ return MODELS.find(m => m.id === id) || MODELS[0]; }
     let currentModelId = MODELS[0].id;
     try { const saved = localStorage.getItem("h_model"); if (saved && modelInfo(saved).id === saved) currentModelId = saved; } catch (e) {}
+
+    // What does THIS computer have? (Used to tell the user which brain it can handle.)
+    let specs = null;
+    async function detectSpecs(){
+      const mem = (typeof navigator.deviceMemory === "number" && navigator.deviceMemory > 0) ? navigator.deviceMemory : null;
+      const cores = navigator.hardwareConcurrency || null;
+      let gpu = null;
+      try {
+        if (navigator.gpu) {
+          const adapter = await navigator.gpu.requestAdapter();
+          if (adapter) {
+            let info = adapter.info || null;
+            if (!info && adapter.requestAdapterInfo) info = await adapter.requestAdapterInfo();
+            if (info) gpu = info.description || [info.vendor, info.architecture].filter(Boolean).join(" ") || null;
+          }
+        }
+      } catch (e) {}
+      return { mem, cores, gpu };
+    }
+    function memLabel(mem){ return mem == null ? null : (mem >= 8 ? "8 GB or more" : "about " + mem + " GB"); }
+    function verdict(model){
+      const mem = specs ? specs.mem : null;
+      if (mem == null) return { label: "Should run in Chrome or Edge", cls: "ok" };
+      if (model.name === "Fast")  return mem >= 2 ? { label: "✓ Great for your computer", cls: "good" } : { label: "✓ Should run fine", cls: "good" };
+      if (model.name === "Smart") return mem >= 8 ? { label: "✓ Good for your computer", cls: "good" } : (mem >= 4 ? { label: "⚠ Might be slow here", cls: "warn" } : { label: "✗ Likely too much", cls: "bad" });
+      return mem >= 8 ? { label: "✓ Should run on your computer", cls: "good" } : { label: "✗ Likely too much for this computer", cls: "bad" };
+    }
     const SYSTEM = "You are Hearth, a warm, calm, private AI that lives on the user's own computer and runs entirely in their browser — no internet, no account, fully private. Be genuinely helpful, clear, and warm, like a thoughtful friend by the fire. Keep replies short — usually 2 to 4 sentences unless more is asked for. Don't repeat yourself or contradict what you just said. If you're unsure, say so simply. Just be Hearth — never slip into robotic AI-disclaimer talk.";
 
     const $ = (id) => document.getElementById(id);
@@ -376,7 +411,24 @@
     (function(){ const pb = $("printBtn"); if (pb) pb.addEventListener("click", () => window.print()); })();
 
     // Brain picker.
+    function renderSpecs(){
+      const sp = $("pickerSpecs"); if (!sp) return; sp.replaceChildren();
+      if (!specs) return;
+      const ml = memLabel(specs.mem);
+      const line = document.createElement("div");
+      if (ml || specs.cores){
+        const lab = document.createElement("span"); lab.style.color = "var(--ink-soft)"; lab.textContent = "Your computer: ";
+        line.appendChild(lab);
+        if (ml){ const b = document.createElement("strong"); b.textContent = ml; line.append(b, " of memory"); }
+        if (specs.cores){ line.append((ml ? " · " : "") + specs.cores + " processor cores"); }
+      } else {
+        line.append("Your computer looks ready to go.");
+      }
+      sp.appendChild(line);
+      if (specs.gpu){ const g = document.createElement("div"); g.style.opacity = ".6"; g.style.marginTop = "3px"; g.textContent = specs.gpu; sp.appendChild(g); }
+    }
     function renderPicker(){
+      renderSpecs();
       const wrap = $("pickerCards"); wrap.replaceChildren();
       MODELS.forEach(m => {
         const card = document.createElement("div"); card.className = "mcard" + (m.id === currentModelId ? " current" : "");
@@ -386,8 +438,9 @@
         const sz = document.createElement("span"); sz.className = "msize"; sz.textContent = m.size + " download"; nm.appendChild(sz);
         const bl = document.createElement("div"); bl.className = "mblurb"; bl.textContent = m.blurb;
         body.append(nm, bl);
-        if (m.id === currentModelId){ const c = document.createElement("div"); c.className = "mcur"; c.textContent = "✓ In use now"; body.appendChild(c); }
-        else if (m.name === "Genius" && lowMemory()){ const n = document.createElement("div"); n.className = "mnote"; n.textContent = "⚠ Might be slow on this computer."; body.appendChild(n); }
+        const v = verdict(m);
+        const vb = document.createElement("div"); vb.className = "mverdict " + v.cls; vb.textContent = v.label; body.appendChild(vb);
+        if (m.id === currentModelId){ const c = document.createElement("div"); c.className = "mcur"; c.textContent = "In use now"; body.appendChild(c); }
         card.append(em, body);
         card.addEventListener("click", () => {
           $("pickerOverlay").classList.remove("open");
@@ -396,7 +449,11 @@
         wrap.appendChild(card);
       });
     }
-    $("modelPill").addEventListener("click", () => { renderPicker(); $("pickerOverlay").classList.add("open"); });
+    $("modelPill").addEventListener("click", async () => {
+      if (!specs) specs = await detectSpecs();
+      renderPicker();
+      $("pickerOverlay").classList.add("open");
+    });
     $("pickerClose").addEventListener("click", () => $("pickerOverlay").classList.remove("open"));
     $("pickerOverlay").addEventListener("click", (e) => { if (e.target === $("pickerOverlay")) $("pickerOverlay").classList.remove("open"); });
 

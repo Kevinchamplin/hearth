@@ -4,6 +4,13 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, hearth-picker-computer-fit) [0.25h]
+- The brain picker now shows the visitor's own computer (memory + processor cores, and GPU where
+  the browser exposes it) and gives each brain a plain verdict badge — "✓ Good for your computer"
+  / "⚠ Might be slow here" / "✗ Likely too much" — so non-technical users can see what their
+  machine can handle before downloading. Uses navigator.deviceMemory / hardwareConcurrency /
+  WebGPU adapter info.
+
 ### Fixed (2026-06-09, hearth-honest-browser-copy) [0.1h]
 - Corrected a false claim in the landing's browser callout ("Try it instantly… no download") —
   there IS a one-time ~1 GB model download. Now reads "No app to install… downloads the AI once
