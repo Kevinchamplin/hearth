@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hearth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#FBFAF7; --ink:#2B2720; --ink-soft:#6B6253;
+    --brass:#C8A15A; --brass-text:#8A6E3C; --brass-lit:#E4C27C;
+    --line:rgba(43,39,32,.10); --card:#FFFFFF;
+    --grad: radial-gradient(120% 80% at 50% 28%, #FFF7E8 0%, #FBFAF7 46%, #F4EEE2 100%);
+    --greeting:var(--ink); --sub:var(--ink-soft); --body:var(--ink);
+    --pill-bg:rgba(200,161,90,.08); --pill-line:var(--line); --pill-text:var(--brass-text);
+  }
+  [data-theme="dark"]{
+    --paper:#14120E; --ink:#F5F1E8; --ink-soft:rgba(245,241,232,.60);
+    --line:rgba(245,241,232,.12); --card:rgba(255,255,255,.045);
+    --grad: radial-gradient(120% 80% at 50% 30%, #221A10 0%, #14120E 55%, #100D09 100%);
+    --greeting:#F5F1E8; --sub:rgba(245,241,232,.62); --body:#EFEADF;
+    --pill-bg:rgba(228,194,124,.10); --pill-line:rgba(245,241,232,.14); --pill-text:var(--brass-lit);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:"Inter",system-ui,-apple-system,sans-serif;
+    background:var(--grad); color:var(--body);
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{min-height:100vh;display:flex;flex-direction:column}
+
+  /* top bar */
+  .bar{display:flex;justify-content:space-between;align-items:center;padding:22px 28px}
+  .left{display:flex;align-items:center}
+  .wordmark{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:23px;letter-spacing:.005em;color:var(--greeting)}
+  .pill{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:500;
+    padding:7px 13px;border-radius:999px;border:1px solid var(--pill-line);
+    color:var(--pill-text);background:var(--pill-bg)}
+  .privacy{margin-left:16px}
+  .brain{cursor:pointer}
+  .pill svg{width:14px;height:14px}
+  .chev{width:12px;height:12px;opacity:.7}
+
+  /* stage */
+  .stage{flex:1;display:none}
+  body[data-view="home"] .view-home{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px 64px}
+  body[data-view="chat"] .view-chat{display:flex;flex-direction:column}
+
+  /* ember */
+  .ember-wrap{position:relative;width:170px;height:170px;display:grid;place-items:center;margin-bottom:30px}
+  .glow{position:absolute;inset:-46px;border-radius:50%;
+    background:radial-gradient(circle, rgba(232,146,60,.42), rgba(232,146,60,0) 66%);
+    filter:blur(8px);animation:glow 4.8s ease-in-out infinite alternate}
+  [data-theme="dark"] .glow{background:radial-gradient(circle, rgba(244,168,76,.55), rgba(244,168,76,0) 68%)}
+  .ember{width:108px;height:108px;border-radius:50%;
+    background:radial-gradient(circle at 37% 31%, #FFEEC9 0%, #FFCC84 25%, #EE9A45 63%, #CC7A2B 100%);
+    box-shadow:0 0 42px 8px rgba(238,154,69,.45), 0 0 96px 32px rgba(232,146,60,.24),
+      inset 0 -9px 20px rgba(150,80,20,.38), inset 0 7px 15px rgba(255,242,214,.62);
+    animation:breathe 4.8s ease-in-out infinite alternate}
+  @keyframes breathe{from{transform:scale(1)}to{transform:scale(1.05)}}
+  @keyframes glow{from{opacity:.65;transform:scale(1)}to{opacity:1;transform:scale(1.09)}}
+  .mote{position:absolute;bottom:54px;width:5px;height:5px;border-radius:50%;
+    background:radial-gradient(circle,#FFDDA4,#E8923C);opacity:0;animation:rise 4.6s ease-in infinite}
+  .mote:nth-child(3){left:74px;animation-delay:.2s}
+  .mote:nth-child(4){left:90px;animation-delay:1.6s}
+  .mote:nth-child(5){left:82px;animation-delay:3s}
+  @keyframes rise{0%{opacity:0;transform:translateY(8px) scale(.8)}18%{opacity:.9}100%{opacity:0;transform:translateY(-78px) scale(.3)}}
+
+  .greeting{font-family:"Fraunces",Georgia,serif;font-weight:500;font-size:42px;
+    line-height:1.05;color:var(--greeting);letter-spacing:.005em}
+  .sub{font-size:18px;color:var(--sub);margin-top:12px;margin-bottom:38px}
+
+  /* sparks */
+  .sparks{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;max-width:760px;margin-bottom:40px}
+  .spark{display:flex;align-items:center;gap:10px;padding:13px 18px;border-radius:15px;
+    border:1px solid var(--line);background:var(--card);color:var(--body);
+    font-size:14.5px;font-weight:500;cursor:pointer;
+    box-shadow:0 2px 10px rgba(43,39,32,.045);transition:transform .18s ease, box-shadow .18s ease}
+  .spark:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(43,39,32,.09)}
+  .spark svg{width:17px;height:17px;color:var(--brass-text);flex:none}
+  [data-theme="dark"] .spark svg{color:var(--brass-lit)}
+  [data-theme="dark"] .spark{box-shadow:none}
+
+  /* composer */
+  .composer{width:min(680px,92%);margin:0 auto;display:flex;align-items:center;gap:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:19px;padding:13px 14px 13px 20px;
+    box-shadow:0 3px 14px rgba(43,39,32,.06)}
+  [data-theme="dark"] .composer{box-shadow:none}
+  .composer:focus-within{border-color:var(--brass);box-shadow:0 0 0 4px rgba(200,161,90,.18)}
+  .composer input{flex:1;border:0;background:transparent;font-family:inherit;font-size:16px;color:var(--body);outline:none}
+  .composer input::placeholder{color:var(--ink-soft);font-style:italic}
+  .send{width:40px;height:40px;border-radius:50%;flex:none;display:grid;place-items:center;
+    background:radial-gradient(circle at 38% 32%, #FFCC84, #EE9A45 70%, #D9842F);
+    box-shadow:0 0 16px 2px rgba(238,154,69,.45)}
+  .send svg{width:18px;height:18px;color:#3a2208}
+
+  /* chat */
+  .thread{width:min(720px,92%);margin:18px auto 0;flex:1;display:flex;flex-direction:column}
+  .msg{margin-bottom:30px;max-width:100%}
+  .who{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;font-weight:500;
+    letter-spacing:.13em;text-transform:uppercase;margin-bottom:9px;display:flex;align-items:center;gap:8px}
+  .msg.user{align-self:flex-end;text-align:right;max-width:80%}
+  .msg.user .who{justify-content:flex-end;color:var(--ink-soft)}
+  .msg.user .text{font-size:17px;color:var(--body)}
+  .msg.ai .who{color:var(--brass-text)}
+  [data-theme="dark"] .msg.ai .who{color:var(--brass-lit)}
+  .msg.ai .text{font-size:17px;line-height:1.72;color:var(--body)}
+  .msg.ai .text p{margin-bottom:14px}
+  .dot{width:15px;height:15px;border-radius:50%;
+    background:radial-gradient(circle at 37% 31%, #FFEEC9, #FFCC84 30%, #EE9A45 70%);
+    box-shadow:0 0 9px 1px rgba(238,154,69,.55);animation:breathe 4.8s ease-in-out infinite alternate}
+  .thinking{display:flex;align-items:center;gap:10px;color:var(--ink-soft);
+    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:13px}
+  .chat-composer{padding:8px 0 26px}
+</style>
+</head>
+<body data-theme="light" data-view="home">
+  <div class="app">
+    <header class="bar">
+      <div class="left">
+        <span class="wordmark">Hearth</span>
+        <span class="pill privacy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          Private · on this Mac
+        </span>
+      </div>
+      <div class="right">
+        <span class="pill brain">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3c-2 0-3 1.5-3 3 0 .5-.5 1-1 1.5-1 .8-1.5 2-1 3.2.3.8.2 1.3-.2 2-.6 1 .1 2.3 1.2 2.6.6.2.9.7 1 1.5.2 1.4 1.5 2.2 3 2.2s2.8-.8 3-2.2c.1-.8.4-1.3 1-1.5 1.1-.3 1.8-1.6 1.2-2.6-.4-.7-.5-1.2-.2-2 .5-1.2 0-2.4-1-3.2-.5-.5-1-1-1-1.5 0-1.5-1-3-3-3z"/></svg>
+          Smart
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+      </div>
+    </header>
+
+    <!-- HOME / RESTING STATE -->
+    <main class="stage view-home">
+      <div class="ember-wrap">
+        <div class="glow"></div>
+        <div class="ember"></div>
+        <span class="mote"></span><span class="mote"></span><span class="mote"></span>
+      </div>
+      <h1 class="greeting">Evening, Kevin.</h1>
+      <p class="sub">What&rsquo;s on your mind?</p>
+      <div class="sparks">
+        <button class="spark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-1.5"/><path d="M2 2l7.5 7.5"/><path d="M2 2l3 9 4-4-9-3z"/></svg>Help me write something</button>
+        <button class="spark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>Explain anything, simply</button>
+        <button class="spark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h8l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v4h4"/></svg>Talk to my files</button>
+        <button class="spark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.8A8 8 0 1 1 21 12z"/></svg>Just chat</button>
+      </div>
+      <div class="composer">
+        <input placeholder="Say something to Hearth&hellip;" />
+        <span class="send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 20V5M5 12l7-7 7 7"/></svg></span>
+      </div>
+    </main>
+
+    <!-- CONVERSATION STATE -->
+    <main class="stage view-chat">
+      <div class="thread">
+        <div class="msg user">
+          <div class="who">You</div>
+          <div class="text">Explain how vaccines work &mdash; like I&rsquo;m 10.</div>
+        </div>
+        <div class="msg ai">
+          <div class="who"><span class="dot"></span>Hearth</div>
+          <div class="text">
+            <p>Think of your body as a castle with guards. The guards are great at fighting off invaders &mdash; but only once they&rsquo;ve seen them before and know what they look like.</p>
+            <p>A vaccine is like showing the guards a <em>wanted poster</em> of an invader. Nobody gets hurt, but now the guards know the face. So if the real invader ever shows up, they recognize it instantly and stop it before it can make you sick.</p>
+          </div>
+        </div>
+        <div class="msg user">
+          <div class="who">You</div>
+          <div class="text">Whoa. So what&rsquo;s a booster then?</div>
+        </div>
+        <div class="msg ai">
+          <div class="who"><span class="dot"></span>Hearth</div>
+          <div class="text"><span class="thinking"><span class="dot"></span>thinking&hellip;</span></div>
+        </div>
+      </div>
+      <div class="composer chat-composer" style="margin-top:auto">
+        <input placeholder="Say something to Hearth&hellip;" />
+        <span class="send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 20V5M5 12l7-7 7 7"/></svg></span>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const p = new URLSearchParams(location.search);
+    document.body.dataset.theme = p.get("theme") === "dark" ? "dark" : "light";
+    document.body.dataset.view  = p.get("view")  === "chat" ? "chat" : "home";
+  </script>
+</body>
+</html>

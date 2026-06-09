@@ -1,0 +1,15 @@
+# OS
+.DS_Store
+
+# Node / build
+node_modules/
+dist/
+build/
+*.log
+
+# Tauri
+src-tauri/target/
+
+# Local model files (huge — never commit weights)
+*.gguf
+models/
