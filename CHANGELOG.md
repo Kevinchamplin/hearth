@@ -4,6 +4,15 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, hearth-web-app-webllm) [1.5h]
+- Built the **working browser app** (`web/index.html`): the real Hearth running in-tab via
+  WebLLM + WebGPU (Llama-3.2-1B), with **no server inference** — the model runs on the
+  visitor's own device. Includes a "Light the hearth" gate, a one-time model download with
+  progress + reassurance, streaming replies, the breathing ember, and a calm WebGPU-missing
+  fallback. Served locally for testing via `python3 -m http.server` on :8782.
+- Confirmed the host (ce-prod: 8-core EPYC, 15 GB RAM, **no GPU**) can't and needn't run
+  inference — it only serves files; the local-first design is what makes Hearth free + private.
+
 ### Added (2026-06-09, hearth-site-deployed) [0.5h]
 - Deployed the showcase site **live** to https://hearth.kevinchamplin.com — a Plesk
   subdomain on kc-prod (docroot `hearth.kevinchamplin.com`, system user
