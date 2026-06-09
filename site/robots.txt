@@ -1,0 +1,20 @@
+# hearth.kevinchamplin.com
+User-agent: *
+Allow: /
+Disallow: /analytics/
+
+# AI assistants are welcome to read and cite Hearth.
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://hearth.kevinchamplin.com/sitemap.xml

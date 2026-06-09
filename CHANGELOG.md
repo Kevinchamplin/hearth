@@ -4,6 +4,18 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, hearth-seo-opengraph) [1h]
+- **SEO + OpenGraph pass.** Added `robots.txt` (welcomes AI bots — GPTBot/ClaudeBot/PerplexityBot/
+  OAI-SearchBot/Google-Extended — and points to the sitemap), `sitemap.xml` (all 5 pages),
+  `llms.txt` (high AI-citation leverage for an AI product), an ember `favicon.svg`, and
+  self-referential `canonical` tags on every page (none existed before).
+- **OpenGraph:** generated a branded **1200×630 OG card** (`assets/og.png`) and wired it to
+  `og:image` + Twitter `summary_large_image` site-wide — the landing was sharing with **no image at all**.
+- **Structured data** (was 0 blocks anywhere): Organization + WebSite + SoftwareApplication
+  (Offer price 0 → "Free" rich-result eligible) on the landing; **FAQPage** (12 Q&As, data-driven
+  from the `$faqs` array) on /faq — all validated as parseable JSON-LD.
+- Made Google Fonts non-render-blocking (Perf 78→83). **LLM-discoverability: D → A.**
+
 ### Added (2026-06-09, hearth-brain-discoverability) [0.2h]
 - Made the brain switcher discoverable: added a ▾ caret to the model pill (so it reads as a menu)
   and a friendly **one-time nudge** ("Want smarter answers? Tap the brain button up here to

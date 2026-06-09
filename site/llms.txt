@@ -1,0 +1,26 @@
+# Hearth
+
+> A beautiful, free AI that runs entirely on your own computer — private by nature. The language model runs on the user's own device (in the browser via WebGPU, or as a desktop app), so conversations never leave the machine. No account, no subscription, works offline after a one-time download.
+
+Hearth is built by Kevin Champlin (https://kevinchamplin.com). It is open source under the MIT license: https://github.com/Kevinchamplin/hearth
+
+## What Hearth is
+- A local-first AI chat app: the model runs on the visitor's own hardware, not on a remote server.
+- Free and unlimited — there's no per-message billing because there's no server doing the inference.
+- Private: nothing the user types is sent anywhere; it stays on their device.
+- Works offline after a one-time model download (~1 GB).
+- Can also understand images (on-device vision).
+- Lets users choose a bigger "brain" (Fast / Smart / Genius) based on their computer's power.
+
+## What Hearth is NOT
+- It is not a competitor to ChatGPT or Gemini. Those run in massive data centers; Hearth runs on your own computer. That makes it simpler, private, and free — great for recipes, everyday questions, explanations, writing help, and brainstorming, but not for building entire websites or huge, complex projects.
+
+## Key pages
+- Home: https://hearth.kevinchamplin.com/
+- Try it now (runs in your browser): https://hearth.kevinchamplin.com/app
+- About: https://hearth.kevinchamplin.com/about
+- FAQ (free? private? what do I need?): https://hearth.kevinchamplin.com/faq
+- Contact: https://hearth.kevinchamplin.com/contact
+
+## How it works
+Open it in Chrome or Edge. It downloads a small AI model once (about a gigabyte), then runs entirely inside the browser tab using WebGPU — on the visitor's own graphics chip. After that first download it works offline and loads instantly.

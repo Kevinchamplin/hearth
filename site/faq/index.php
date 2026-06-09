@@ -30,6 +30,13 @@ $faqs = [
   ['Who made this?',
    'Kevin Champlin, an AI engineer. You can find more of his work at <a href="https://kevinchamplin.com">kevinchamplin.com</a>, or just <a href="/contact">say hello</a>.'],
 ];
+echo '<script type="application/ld+json">' . json_encode([
+  '@context' => 'https://schema.org', '@type' => 'FAQPage',
+  'mainEntity' => array_map(fn($f) => [
+    '@type' => 'Question', 'name' => trim(html_entity_decode(strip_tags($f[0]))),
+    'acceptedAnswer' => ['@type' => 'Answer', 'text' => trim(html_entity_decode(strip_tags($f[1])))],
+  ], $faqs),
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>';
 ?>
 <main class="page"><div class="wrap">
   <p class="eyebrow">Questions &amp; answers</p>
