@@ -4,6 +4,11 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Fixed (2026-06-09, hearth-vision-version-fix) [0.25h]
+- Vision was failing with "Unsupported model type: idefics3" — transformers.js was pinned too
+  old (3.0.2), before SmolVLM/Idefics3 support. Bumped to 3.8.1. Confirmed the model's ONNX
+  weights (q4 decoder + fp16 embed/vision encoder) exist, so the dtype config was already right.
+
 ### Added (2026-06-09, hearth-expectations-and-chamber-culture) [0.25h]
 - Set expectations in plain language: a "One honest note" callout on the landing + a rewritten
   FAQ answer — Hearth isn't a ChatGPT/Gemini competitor (no data center; it's your computer),

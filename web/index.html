@@ -384,7 +384,7 @@
     async function ensureVision(statusEl){
       if (visionEngine) return visionEngine;
       if (statusEl) statusEl.textContent = "Opening Hearth's eyes… (one-time download)";
-      const T = await import("https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.2");
+      const T = await import("https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1");
       const model_id = "HuggingFaceTB/SmolVLM-256M-Instruct";
       const processor = await T.AutoProcessor.from_pretrained(model_id);
       const model = await T.AutoModelForVision2Seq.from_pretrained(model_id, {
