@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hearth — a warm light in a cold cloud</title>
+<meta name="description" content="Hearth is a beautiful, free AI that runs entirely on your own computer. Private, unlimited, offline. No account, no cloud, nobody watching." />
+<meta property="og:title" content="Hearth — a warm light in a cold cloud" />
+<meta property="og:description" content="A beautiful, free AI that lives on your computer. Private, unlimited, offline." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#FBFAF7; --paper-2:#F3ECDF; --ink:#2B2720; --ink-soft:#6B6253;
+    --brass:#C8A15A; --brass-text:#8A6E3C; --brass-lit:#E4C27C; --line:rgba(43,39,32,.10);
+    --d-bg:#14120E; --on-d:#F5F1E8; --on-d-soft:rgba(245,241,232,.66); --d-line:rgba(245,241,232,.13);
+    --ember-a:#FFCC84; --ember-b:#EE9A45;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Inter",system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+  .serif{font-family:"Fraunces",Georgia,serif}
+  .eyebrow{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;font-weight:500;letter-spacing:.18em;text-transform:uppercase}
+  a{color:inherit;text-decoration:none}
+  section{position:relative}
+
+  /* ember */
+  .ember-wrap{position:relative;display:grid;place-items:center;margin:0 auto}
+  .glow{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(244,168,76,.55),rgba(244,168,76,0) 66%);filter:blur(10px);animation:glow 4.8s ease-in-out infinite alternate}
+  .ember{border-radius:50%;background:radial-gradient(circle at 37% 31%,#FFEEC9 0%,#FFCC84 25%,#EE9A45 63%,#CC7A2B 100%);
+    box-shadow:0 0 50px 10px rgba(238,154,69,.5),0 0 120px 40px rgba(232,146,60,.26),inset 0 -10px 22px rgba(150,80,20,.4),inset 0 8px 16px rgba(255,242,214,.62);
+    animation:breathe 4.8s ease-in-out infinite alternate}
+  @keyframes breathe{from{transform:scale(1)}to{transform:scale(1.05)}}
+  @keyframes glow{from{opacity:.6;transform:scale(1)}to{opacity:1;transform:scale(1.1)}}
+  .mote{position:absolute;width:5px;height:5px;border-radius:50%;background:radial-gradient(circle,#FFDDA4,#E8923C);opacity:0;animation:rise 4.8s ease-in infinite}
+  @keyframes rise{0%{opacity:0;transform:translateY(10px) scale(.8)}18%{opacity:.95}100%{opacity:0;transform:translateY(-90px) scale(.3)}}
+
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:15px;padding:14px 26px;border-radius:14px;cursor:pointer;transition:transform .16s ease,box-shadow .16s ease;border:1px solid transparent}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-primary{background:radial-gradient(circle at 35% 30%,#FFD89A,#EE9A45 78%);color:#3A2206;box-shadow:0 0 26px rgba(238,154,69,.42)}
+  .btn-primary:hover{box-shadow:0 0 38px rgba(238,154,69,.6)}
+  .btn-ghost{background:transparent;border-color:var(--d-line);color:var(--on-d)}
+  .btn-ghost:hover{border-color:rgba(245,241,232,.4)}
+  .btn svg{width:18px;height:18px}
+
+  /* HERO (dark fireside) */
+  .hero{background:radial-gradient(125% 95% at 50% -5%,#271D11 0%,#15120D 52%,#100D09 100%);color:var(--on-d);overflow:hidden;text-align:center;padding-bottom:104px}
+  nav{display:flex;justify-content:space-between;align-items:center;padding:26px 0}
+  .brandmark{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:24px;color:var(--on-d);display:flex;align-items:center;gap:11px}
+  .brandmark .seed{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 36% 30%,#FFEEC9,#FFCC84 30%,#EE9A45 72%);box-shadow:0 0 12px 1px rgba(238,154,69,.6);animation:breathe 4.8s ease-in-out infinite alternate}
+  .nav-links{display:flex;align-items:center;gap:30px;font-size:14.5px;color:var(--on-d-soft)}
+  .nav-links a:hover{color:var(--on-d)}
+  .nav-cta{color:var(--brass-lit);font-weight:600}
+  .hero-inner{padding-top:46px}
+  .hero .ember-wrap{width:200px;height:200px;margin-bottom:34px}
+  .hero .glow{inset:-50px}
+  .hero .ember{width:128px;height:128px}
+  .hero .mote:nth-child(3){left:88px;bottom:66px;animation-delay:.3s}
+  .hero .mote:nth-child(4){left:106px;bottom:62px;animation-delay:1.7s}
+  .hero .mote:nth-child(5){left:98px;bottom:70px;animation-delay:3.2s}
+  .hero .eyebrow{color:var(--brass-lit);margin-bottom:22px}
+  .hero h1{font-weight:600;font-size:62px;line-height:1.04;letter-spacing:-.01em;max-width:760px;margin:0 auto}
+  .hero p.lead{font-size:20px;line-height:1.6;color:var(--on-d-soft);max-width:600px;margin:24px auto 0}
+  .hero-cta{display:flex;gap:14px;justify-content:center;margin-top:38px;flex-wrap:wrap}
+  .trust{margin-top:26px;font-size:13.5px;color:var(--on-d-soft);display:flex;gap:18px;justify-content:center;flex-wrap:wrap;font-family:"JetBrains Mono",ui-monospace,monospace;letter-spacing:.02em}
+  .trust span{opacity:.85}
+  .runs-on{margin-top:18px;font-size:13.5px;color:var(--brass-lit)}
+  .soon{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass-text);background:rgba(200,161,90,.12);padding:4px 10px;border-radius:999px}
+  .browser-cta{display:flex;align-items:center;gap:24px;text-align:left;background:linear-gradient(135deg,#ffffff,#FFF6E8);border:1.5px solid rgba(200,161,90,.42);border-radius:20px;padding:26px 30px;max-width:800px;margin:0 auto 14px;box-shadow:0 12px 44px rgba(238,154,69,.15)}
+  .browser-cta .bc-icon{font-size:30px;line-height:1;flex:none}
+  .browser-cta .bc-body{flex:1}
+  .browser-cta .bc-body h3{font-weight:600;font-size:20px;margin-bottom:6px}
+  .browser-cta .bc-body p{font-size:14px;color:var(--ink-soft);line-height:1.55}
+  .browser-cta .bc-right{display:flex;flex-direction:column;align-items:center;gap:9px;flex:none}
+  .or-app{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin:34px 0 22px}
+  @media (max-width:760px){.browser-cta{flex-direction:column;text-align:center}.browser-cta .bc-body{text-align:center}}
+
+  /* PROPS */
+  .props{padding:96px 0}
+  .section-head{text-align:center;max-width:640px;margin:0 auto 58px}
+  .section-head .eyebrow{color:var(--brass-text);margin-bottom:16px}
+  .section-head h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:40px;line-height:1.1;letter-spacing:-.01em}
+  .section-head p{font-size:18px;color:var(--ink-soft);margin-top:14px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px 24px;box-shadow:0 3px 16px rgba(43,39,32,.05)}
+  .card .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(200,161,90,.12);color:var(--brass-text);margin-bottom:18px}
+  .card .ic svg{width:21px;height:21px}
+  .card h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:20px;margin-bottom:9px}
+  .card p{font-size:14.5px;color:var(--ink-soft);line-height:1.6}
+
+  /* SHOWCASE */
+  .look{padding:96px 0;background:var(--paper-2)}
+  .shots{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:8px}
+  .shot{border-radius:16px;overflow:hidden;border:1px solid rgba(43,39,32,.12);box-shadow:0 24px 60px rgba(43,39,32,.18)}
+  .shot img{display:block;width:100%}
+  .shot-cap{text-align:center;font-size:13px;color:var(--ink-soft);margin-top:14px;font-family:"JetBrains Mono",ui-monospace,monospace;letter-spacing:.04em}
+
+  /* STEPS */
+  .how{padding:96px 0}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+  .step{text-align:left}
+  .step .num{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:20px;color:#3A2206;background:radial-gradient(circle at 36% 30%,#FFD89A,#EE9A45 78%);box-shadow:0 0 18px rgba(238,154,69,.35);margin-bottom:20px}
+  .step h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:21px;margin-bottom:9px}
+  .step p{font-size:15px;color:var(--ink-soft);line-height:1.62}
+
+  /* MANIFESTO */
+  .manifesto{background:radial-gradient(120% 120% at 50% 0%,#221A10,#14120E 60%);color:var(--on-d);padding:104px 0;text-align:center}
+  .manifesto .eyebrow{color:var(--brass-lit);margin-bottom:24px}
+  .manifesto p{font-family:"Fraunces",Georgia,serif;font-weight:500;font-size:32px;line-height:1.4;max-width:760px;margin:0 auto;letter-spacing:-.005em}
+  .manifesto p em{color:var(--brass-lit);font-style:italic}
+
+  /* DOWNLOAD */
+  .download{padding:104px 0;text-align:center}
+  .download h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:44px;letter-spacing:-.01em}
+  .download .sub{font-size:18px;color:var(--ink-soft);margin-top:14px;margin-bottom:42px}
+  .platforms{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+  .plat{display:flex;flex-direction:column;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px 38px;min-width:188px;box-shadow:0 3px 16px rgba(43,39,32,.05)}
+  .plat svg{width:34px;height:34px;color:var(--ink)}
+  .plat .name{font-weight:600;font-size:16px}
+  .plat .soon{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass-text);background:rgba(200,161,90,.12);padding:4px 10px;border-radius:999px}
+  .dl-note{margin-top:34px;font-size:14.5px;color:var(--ink-soft)}
+  .dl-note a{color:var(--brass-text);font-weight:600;border-bottom:1px solid rgba(138,110,60,.35)}
+
+  /* FOOTER */
+  footer{background:#100D09;color:var(--on-d-soft);padding:56px 0}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+  .foot .brandmark{font-size:21px}
+  .foot .tag{font-size:14px;color:var(--on-d-soft)}
+  .foot-links{display:flex;gap:26px;font-size:14px}
+  .foot-links a:hover{color:var(--on-d)}
+  .copy{margin-top:30px;font-size:12.5px;color:rgba(245,241,232,.4);font-family:"JetBrains Mono",ui-monospace,monospace;letter-spacing:.04em}
+
+  @media (max-width:880px){
+    .grid4{grid-template-columns:1fr 1fr}
+    .steps{grid-template-columns:1fr}
+    .shots{grid-template-columns:1fr}
+    .hero h1{font-size:44px}
+    .nav-links{display:none}
+    .section-head h2{font-size:32px}
+    .download h2{font-size:34px}
+    .manifesto p{font-size:24px}
+  }
+</style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <nav>
+        <div class="brandmark"><span class="seed"></span>Hearth</div>
+        <div class="nav-links">
+          <a href="#why">Why local</a>
+          <a href="#look">A look</a>
+          <a href="#how">How it works</a>
+          <a href="#download" class="nav-cta">Download</a>
+        </div>
+      </nav>
+      <div class="hero-inner">
+        <div class="ember-wrap">
+          <div class="glow"></div><div class="ember"></div>
+          <span class="mote"></span><span class="mote"></span><span class="mote"></span>
+        </div>
+        <p class="eyebrow">Free · Private · Runs on your computer</p>
+        <h1 class="serif">A warm light in a cold cloud.</h1>
+        <p class="lead">Hearth is a beautiful AI that lives on your computer — private, unlimited, and free. No account. No internet. Nobody watching. Just you and a quiet, intelligent presence by the fire.</p>
+        <div class="hero-cta">
+          <a href="#download" class="btn btn-primary"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>Try it in your browser</a>
+          <a href="#download" class="btn btn-ghost">Download the app</a>
+        </div>
+        <p class="runs-on">No install in Chrome — or a native app for macOS, Windows &amp; Linux</p>
+        <div class="trust"><span>100% on your device</span><span>·</span><span>No sign-up</span><span>·</span><span>Works offline</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROPS -->
+  <section class="props" id="why">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">The opposite of the cloud</p>
+        <h2 class="serif">An AI that's actually yours.</h2>
+        <p>Every other AI lives in someone else's data center — metered, logged, one outage from gone. Hearth is the other thing entirely.</p>
+      </div>
+      <div class="grid4">
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
+          <h3>Private by nature</h3>
+          <p>Every word stays on your machine. No servers, no logs, no one reading over your shoulder. Privacy isn't a setting — it's how Hearth is built.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 8c-2.8 0-2.8 8 0 8s4-8 10-8 2.8 8 0 8-4-8-10-8z"/></svg></div>
+          <h3>Free &amp; unlimited</h3>
+          <p>No subscription. No message caps. No meter ticking. Hearth runs on your own hardware, so there's simply nothing to bill.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h6l3-8 2 16 3-8h6"/></svg></div>
+          <h3>Works offline</h3>
+          <p>On a plane, in a cabin, off the grid. Once it's set up, Hearth needs the internet about as much as a candle does.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 21v-6h6v6"/></svg></div>
+          <h3>Truly yours</h3>
+          <p>No account, no login, no tracking. Hearth is an app that lives with you — not a service you rent.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE -->
+  <section class="look" id="look">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Beautiful enough to want open</p>
+        <h2 class="serif">Most AI looks like a cockpit. Hearth looks like a warm room.</h2>
+      </div>
+      <div class="shots">
+        <div>
+          <div class="shot"><img src="assets/hearth-home-dark.png" alt="Hearth home screen at night" /></div>
+          <p class="shot-cap">The ember, waiting by the fire.</p>
+        </div>
+        <div>
+          <div class="shot"><img src="assets/hearth-chat-dark.png" alt="Hearth conversation at night" /></div>
+          <p class="shot-cap">A conversation that reads like a letter.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section class="how" id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Three steps, no jargon</p>
+        <h2 class="serif">From download to talking in a minute.</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="num">1</div>
+          <h3>Open it</h3>
+          <p>In your browser, or as a one-file app — no setup, no terminal, no account. It just opens, with an AI already waiting inside.</p>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <h3>It picks your brain</h3>
+          <p>Hearth checks your computer and quietly loads the right model — Fast, Smart, or Genius. You don't choose jargon; you choose how clever you want it.</p>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <h3>Start talking</h3>
+          <p>Ask anything. The answer arrives in seconds — entirely offline, entirely private. Often before a cloud app would've finished loading.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="manifesto">
+    <div class="wrap">
+      <p class="eyebrow">Why this exists</p>
+      <p class="serif">The cloud was never yours. Your AI shouldn't live in someone else's data center — metered, logged, and one outage from gone. Hearth brings it home: <em>warm, private, and yours.</em> A light you own, in a cloud you don't.</p>
+    </div>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section class="download" id="download">
+    <div class="wrap">
+      <h2 class="serif">Bring it home.</h2>
+      <p class="sub">Free, forever. Start in your browser — or keep it as an app.</p>
+      <div class="browser-cta">
+        <div class="bc-icon">⚡</div>
+        <div class="bc-body">
+          <h3 class="serif">Try it instantly — right in your browser</h3>
+          <p>No download, no install. Open Hearth in Chrome and start talking. The AI runs inside your tab, entirely private.</p>
+        </div>
+        <div class="bc-right">
+          <a class="btn btn-primary bc-btn">Launch in Chrome</a>
+          <span class="soon">Coming soon</span>
+        </div>
+      </div>
+      <p class="or-app">Or keep it forever as a native app</p>
+      <div class="platforms">
+        <div class="plat">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.9c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.9-3-.8c-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7 2-1.1 2.8-2.2c.9-1.3 1.2-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.8zM14.2 6.3c.6-.8 1.1-1.9 1-3-1 0-2.1.6-2.8 1.4-.6.7-1.1 1.8-1 2.9 1.1.1 2.2-.5 2.8-1.3z"/></svg>
+          <span class="name">macOS</span>
+          <span class="soon">Coming soon</span>
+        </div>
+        <div class="plat">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.7l7.5-1v7.2H3V5.7zm0 12.6l7.5 1v-7.1H3v6.1zM11.3 4.5L21 3v8.9h-9.7V4.5zm0 15l9.7 1.5v-8.9h-9.7v7.4z"/></svg>
+          <span class="name">Windows</span>
+          <span class="soon">Coming soon</span>
+        </div>
+        <div class="plat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3.5c-1 1-1.3 3-1 5 .2 1.4-.6 2.6-1.4 3.8-1 1.5-1.8 3-.6 4.4.6.7.4 1.5.2 2.3M15 3.5c1 1 1.3 3 1 5-.2 1.4.6 2.6 1.4 3.8 1 1.5 1.8 3 .6 4.4-.6.7-.4 1.5-.2 2.3"/><path d="M9 8.5h.01M15 8.5h.01"/><path d="M8.5 19c1 1.3 2 2 3.5 2s2.5-.7 3.5-2"/></svg>
+          <span class="name">Linux</span>
+          <span class="soon">Coming soon</span>
+        </div>
+      </div>
+      <p class="dl-note">Hearth is in active, in-the-open development — the browser version and the apps land right here at launch. <a href="#" id="gh">Star it on GitHub</a> to follow along.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <div class="foot">
+        <div class="brandmark"><span class="seed"></span>Hearth</div>
+        <div class="foot-links">
+          <a href="#download">Download</a>
+          <a href="#" >GitHub</a>
+          <a href="https://kevinchamplin.com">Made by Kevin Champlin</a>
+        </div>
+      </div>
+      <p class="copy">A warm light in a cold cloud. · © 2026 Hearth</p>
+    </div>
+  </footer>
+
+</body>
+</html>

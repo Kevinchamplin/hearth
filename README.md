@@ -28,6 +28,15 @@ talking to it in seconds.
 - ✈️ **Works offline** — on a plane, in a cabin, anywhere. No internet needed once set up.
 - 🏡 **Yours** — no account, no login, no tracking. It lives with you.
 
+## Runs anywhere — no install required
+
+- 🌐 **In your browser** — open Hearth in Chrome and start talking. Nothing to install;
+  the model runs right in your tab via WebGPU, fully private. The fastest way in.
+- 🖥️ **As a native app** — macOS, Windows, and Linux from one codebase (Tauri). Unlocks
+  the bigger, smarter models.
+
+*Same interface, two engines: WebLLM in the browser, a bundled Ollama in the app.*
+
 ## A look
 
 | Home (night) | Conversation (night) |
@@ -48,13 +57,19 @@ the AI's presence — warm paper by day, a glowing hearth in a dark room by nigh
 
 ## How it works (planned)
 
-- **Shell:** [Tauri](https://tauri.app) — a lean, native desktop app.
-- **Interface:** custom-built — the entire point is the UX.
-- **Engine:** bundles [Ollama](https://ollama.com) as a silent sidecar, so you install **one** thing.
-- **Models:** open-weight models (Qwen, Llama, Mistral) shipped as quantized GGUF.
-- **Instant first run:** a tiny model ships *inside* the app so your first reply arrives in
-  seconds, while a smarter model downloads in the background. Hearth detects your hardware
-  and picks the right brain — **Fast · Smart · Genius** — automatically.
+One interface, two runtimes:
+
+- **In the browser** — the UI runs as a web app with [WebLLM](https://github.com/mlc-ai/web-llm) / WebGPU
+  as the engine. The model runs inside the tab; nothing is installed and nothing leaves your
+  machine. Chrome/Edge first, others as WebGPU lands.
+- **As a desktop app** — the *same* UI in a [Tauri](https://tauri.app) shell with a bundled
+  [Ollama](https://ollama.com) engine, so you install **one** thing. macOS, Windows, Linux.
+
+- **Models:** open-weight models (Qwen, Llama, Mistral) as quantized GGUF.
+- **Instant first run:** a tiny model is ready immediately so your first reply lands in
+  seconds, while a smarter model loads in the background. Hearth reads your hardware and
+  picks the right brain — **Fast · Smart · Genius** — automatically.
+- **Reach:** the browser is the zero-install **Fast** tier; the app unlocks **Smart** and **Genius**.
 
 ## Status
 

@@ -4,6 +4,16 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, hearth-landing-site-and-web-runtime) [1.25h]
+- Built the **showcase landing site** (`site/index.html`) — dark fireside hero with the
+  breathing ember, value props, app-screenshot showcase, 3-step how-it-works, a manifesto
+  band, and a download section. Targets `hearth.kevinchamplin.com` (not yet deployed).
+- Decided a **dual runtime** for maximum reach and zero-barrier entry: the *same* UI ships
+  as (1) a browser app (WebLLM / WebGPU — runs in Chrome, no install) and (2) a Tauri
+  desktop app (Ollama engine — macOS / Windows / Linux). Browser = the "Fast" no-install
+  tier; the app unlocks Smart / Genius.
+- Reworked the site to lead with **"Try it in your browser"** as the primary call to action.
+
 ### Added (2026-06-09, hearth-concept-and-mockup) [1.5h]
 - Named the project **Hearth** and locked the positioning — "A warm light in a cold
   cloud": a calm, private, beautiful local AI for people who've never heard the word "LLM."
