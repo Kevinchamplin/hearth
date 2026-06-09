@@ -4,6 +4,12 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, hearth-site-deployed) [0.5h]
+- Deployed the showcase site **live** to https://hearth.kevinchamplin.com — a Plesk
+  subdomain on kc-prod (docroot `hearth.kevinchamplin.com`, system user
+  `kevinchamplin.com_gu0sct6n6k`), DNS A record in the Plesk-managed zone, Let's Encrypt
+  certificate (auto-renew), HTTP→HTTPS 301 redirect. Verified HTTP/2 200 + valid cert.
+
 ### Added (2026-06-09, hearth-landing-site-and-web-runtime) [1.25h]
 - Built the **showcase landing site** (`site/index.html`) — dark fireside hero with the
   breathing ember, value props, app-screenshot showcase, 3-step how-it-works, a manifesto

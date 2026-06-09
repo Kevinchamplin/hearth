@@ -7,6 +7,8 @@
 A beautiful, **free**, fully-local AI that runs entirely on your own computer.
 No account. No internet required. Nobody watching. Your mom could use it.
 
+**Live → [hearth.kevinchamplin.com](https://hearth.kevinchamplin.com)**
+
 </div>
 
 ---
@@ -73,7 +75,8 @@ One interface, two runtimes:
 
 ## Status
 
-🌱 Early — design + interactive mockup complete. Built in the open.
+🌱 Early — design complete and the **showcase site is [live](https://hearth.kevinchamplin.com)**.
+The browser app and desktop builds are in active, in-the-open development.
 
 ---
 
