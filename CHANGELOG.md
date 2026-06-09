@@ -4,6 +4,10 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, hearth-view-source-easter-eggs) [0.25h]
+- Added a witty view-source welcome comment, a devtools console greeting, and a couple of
+  cheeky inline comments for the snoopers — all on-brand (privacy-proud, warm). Cosmetic only.
+
 ### Added (2026-06-09, hearth-markdown-copy-print) [0.5h]
 - Hearth's replies now render **markdown as HTML** (bold, lists, headings, code blocks, tables,
   links), sanitized with DOMPurify (no XSS).

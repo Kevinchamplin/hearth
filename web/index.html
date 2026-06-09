@@ -1,4 +1,26 @@
 <!DOCTYPE html>
+<!--
+  ┌──────────────────────────────────────────────────────────────────────┐
+  │  Oh, hello. You opened View Source. A person of taste and suspicion.   │
+  └──────────────────────────────────────────────────────────────────────┘
+
+  Go ahead — read all of it. That's the entire point.
+
+  Most "AI" apps would rather you didn't look, because if you did, you'd find
+  the part where they ship your keystrokes to a server farm in Virginia and
+  call it "improving your experience." There is none of that here.
+
+  No backend doing the thinking. No analytics pipe slurping your chats. No
+  "we take your privacy seriously" (the eight most expensive words in tech).
+  The whole brain runs on the machine you're sitting at, in this very tab.
+  This file you're reading is, more or less, the entire magic trick.
+
+  Don't believe me? Turn off your wifi and keep chatting. I'll wait. 🔥
+
+  It's open, no secrets:  https://github.com/Kevinchamplin/hearth
+  (Yes, you can steal it. It's MIT-licensed. That's allowed. Go build
+   something warm with it.)
+-->
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -150,11 +172,21 @@
 </style>
 <!-- Pulse analytics (pulse.champlinenterprises.com) -->
 <script src="https://pulse.champlinenterprises.com/pulse.js" data-token="17j5KP9HYKhdtcKAGO0RuBfvWnouU0Tp" async></script>
-<!-- Hearth Analytics (first-party, content-free) -->
+<!-- Hearth Analytics. Yes, analytics. No, it can't read your chats — the AI runs on
+     YOUR machine, so there's literally nothing on our end to read them with. It counts
+     visits and clicks, never words. The whole thing is open at /analytics if you'd
+     rather verify than trust (smart — never trust anyone who says "just trust me"). -->
 <script src="/analytics/a.js" defer></script>
 <!-- Markdown rendering (sanitized with DOMPurify) -->
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js" defer></script>
+<!-- a little something for the devtools crowd -->
+<script>
+  try {
+    console.log("%c🔥 Hearth", "font:600 30px Georgia,serif;color:#EE9A45");
+    console.log("%cYou opened the console. Of course you did.\n\nLook all you want at the Network tab — you'll notice the conversation never shows up there. That's because the model runs locally, in this tab, on your own hardware. Nothing leaves. Nothing to intercept.\n\nThe whole source is yours: https://github.com/Kevinchamplin/hearth\n\nNow go build something warm. 🔥", "color:#8A6E3C;font-size:13px;line-height:1.6");
+  } catch (e) {}
+</script>
 </head>
 <body data-theme="dark">
   <div class="app">
@@ -221,6 +253,9 @@
   </div>
 
   <script type="module">
+    // Below: WebLLM. The part that runs an actual language model on your GPU,
+    // inside a browser tab, with no server involved. If you'd told 2019-me this
+    // was possible I'd have laughed. Anyway — it's all client-side from here. 🔥
     import * as webllm from "https://esm.run/@mlc-ai/web-llm";
 
     const MODEL = "Llama-3.2-1B-Instruct-q4f32_1-MLC";
