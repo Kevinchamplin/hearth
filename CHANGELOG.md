@@ -4,6 +4,10 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-09, hearth-github-public) [0.25h]
+- Published the repo **public** at https://github.com/Kevinchamplin/hearth (MIT licensed) and
+  wired the site's "Star on GitHub" + footer links to it (were dead `#` placeholders).
+
 ### Added (2026-06-09, hearth-analytics-god-admin) [2h]
 - Built a first-party, privacy-respecting analytics system + **god-admin dashboard** at
   `/analytics` (password-gated, `noindex`). Anonymous, **content-free** telemetry — never
