@@ -95,6 +95,13 @@
   .compare .hcol{background:rgba(200,161,90,.08)}
   .compare td.hcol strong{color:var(--brass-text)}
   .compare-foot{text-align:center;font-size:15px;color:var(--ink-soft);margin-top:18px}
+  /* photo strip */
+  .photo-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:980px;margin:40px auto 0}
+  .photo-strip figure{margin:0}
+  .photo-strip img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:16px;
+    filter:sepia(.18) saturate(1.04) contrast(1.02);box-shadow:0 14px 36px rgba(43,39,32,.16)}
+  .photo-strip figcaption{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;letter-spacing:.04em;color:var(--ink-soft);text-align:center;margin-top:12px}
+  @media (max-width:760px){.photo-strip{grid-template-columns:1fr;max-width:420px}}
   /* install guide */
   .install-guide{max-width:660px;margin:44px auto 30px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px 32px;text-align:left;box-shadow:0 3px 16px rgba(43,39,32,.05)}
   .ig-title{font-size:23px;font-weight:600;margin-bottom:8px}
@@ -280,6 +287,22 @@
         </table>
       </div>
       <p class="compare-foot">That last row is on purpose. Hearth isn't trying to replace the giants — it's the everyday AI that's actually <em>yours</em>.</p>
+
+      <!-- Photos via Pexels (free license) — graded warm to sit in the Hearth palette -->
+      <div class="photo-strip">
+        <figure>
+          <img src="assets/photos/plane-window.jpg" alt="Warm sunset glowing through an airplane window" width="1600" height="1067" loading="lazy" />
+          <figcaption>On the plane — no wifi, no problem.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/photos/winter-cabin.jpg" alt="A cozy wooden cabin in a snowy forest" width="799" height="533" loading="lazy" />
+          <figcaption>At the cabin, off the grid.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/photos/kitchen-baking.jpg" alt="Someone kneading dough by warm window light in a rustic kitchen" width="1600" height="1067" loading="lazy" />
+          <figcaption>"What can I make with what's in the fridge?"</figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 

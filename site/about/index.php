@@ -9,6 +9,12 @@ include __DIR__ . '/../partials/header.php';
   <h1 class="serif">A warm light in a cold cloud.</h1>
   <p class="lead">Hearth is a beautiful, free AI that lives on your own computer &mdash; private, unlimited, and yours.</p>
 
+  <figure style="margin:0 0 30px">
+    <img src="/assets/photos/fireside.jpg" alt="Someone enjoying tea beside a glowing wood stove" width="1199" height="800" loading="lazy"
+      style="display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border-radius:16px;filter:sepia(.15) saturate(1.04);box-shadow:0 14px 36px rgba(43,39,32,.16)" />
+    <figcaption style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.04em;color:var(--ink-soft);text-align:center;margin-top:12px">Your own quiet fire.</figcaption>
+  </figure>
+
   <p>Every AI most of us use lives in a giant data center somewhere far away. You rent it by the month, a company keeps a copy of everything you type, and the moment they change their pricing or their rules, your assistant changes with them. Hearth is the opposite of that.</p>
 
   <p>When you use Hearth, the AI runs <strong>on your device</strong> &mdash; right in your web browser, or as an app on your computer. Nothing you say is sent anywhere. There's no account to create, no subscription, and no meter ticking. Once it's set up, it even keeps working with the internet switched off.</p>

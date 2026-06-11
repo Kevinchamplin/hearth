@@ -4,6 +4,15 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-11, hearth-pexels-photo-strip) [0.5h]
+- Added curated lifestyle photography (Pexels free license, self-hosted in
+  `site/assets/photos/`): a 3-up **photo strip** under the comparison table — plane-window
+  sunset ("no wifi, no problem"), snowy cabin ("off the grid"), warm kitchen ("what can I make
+  with what's in the fridge?") — plus a fireside image on /about. All warm-graded via CSS
+  (sepia/saturate filter) to sit inside the Hearth palette; lazy-loaded with width/height attrs.
+- Gotcha: an explicit `height` attribute on `<img>` defeats CSS `aspect-ratio` (it only applies
+  when height is auto) — fixed with `height:auto` in the CSS.
+
 ### Changed (2026-06-11, hearth-works-without-internet-wording) [0.1h]
 - Swapped the jargon-y "works offline" for plain "**works without internet**" everywhere it
   carries weight — meta/OG descriptions, hero stat trio, props card, comparison-table row, app
