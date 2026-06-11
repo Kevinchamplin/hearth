@@ -46,7 +46,7 @@ find genuinely beautiful. Local AI deserves a beautiful home, not a dashboard.
 - **Works offline.** One download, then it's yours — internet optional.
 - **No account.** You open it and you're talking. That's the whole onboarding.
 
-It's open source, too — the code is on [GitHub](https://github.com/Kevinchamplin/hearth).
+The full source is public on [GitHub](https://github.com/Kevinchamplin/hearth) — read every line, contribute if you like.
 A native Mac/Windows/Linux app (with bigger, smarter models) is next, and I'm building the
 whole thing in the open.
 

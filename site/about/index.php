@@ -36,7 +36,7 @@ include __DIR__ . '/../partials/header.php';
   <p>Most AI tools feel cold and technical &mdash; all blue glow and robot icons, the kind of thing that makes a normal person feel like they're doing it wrong. Hearth is built to feel like a warm room you'd actually want to sit in: a quiet ember, soft light, plain words. If your mom or dad can open it and start talking in five seconds, it's doing its job.</p>
 
   <h2 class="serif">Who made it</h2>
-  <p>Hearth is built by <a href="https://kevinchamplin.com">Kevin Champlin</a>, an AI engineer who believes some of AI's future belongs right here &mdash; on the machine in front of you, warm and private and yours, not only in distant data centers. It's <a href="https://github.com/Kevinchamplin/hearth">open source</a>, and built in the open.</p>
+  <p>Hearth is built by <a href="https://kevinchamplin.com">Kevin Champlin</a>, an AI engineer who believes some of AI's future belongs right here &mdash; on the machine in front of you, warm and private and yours, not only in distant data centers. It's built in the open &mdash; the full <a href="https://github.com/Kevinchamplin/hearth">source is public</a>, you can read every line, and contributions are welcome. (One ask: Hearth stays Hearth &mdash; the source is for reading, learning, and improving, not for cloning into a competing product.)</p>
 
   <p style="margin-top:30px"><a href="/app" style="display:inline-block;background:radial-gradient(circle at 35% 30%,#FFD89A,#EE9A45 78%);color:#3A2206;font-weight:700;padding:14px 28px;border-radius:12px;text-decoration:none">Try Hearth free &rarr;</a></p>
 </div></main>

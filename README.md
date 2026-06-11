@@ -78,6 +78,19 @@ One interface, two runtimes:
 🌱 Early — design complete and the **showcase site is [live](https://hearth.kevinchamplin.com)**.
 The browser app and desktop builds are in active, in-the-open development.
 
+## License, contributions & support
+
+Hearth is **fair source** ([FSL-1.1-MIT](LICENSE.md)): the full source is public — read it,
+run it, learn from it, and improve it. What's not allowed is turning it into a competing
+product, and the Hearth name/branding are reserved ([TRADEMARK.md](TRADEMARK.md)). Each
+release automatically becomes plain MIT two years after it ships.
+
+**Contributions are very welcome** — see [CONTRIBUTING.md](CONTRIBUTING.md). The short
+version: open an issue, fork, send a focused PR; the maintainer reviews everything
+personally. Other great ways to support: ⭐ star the repo, report rough edges, and tell
+one person *"it's a free AI that runs on your own computer — it even works with the wifi
+off."*
+
 ---
 
 *Made by [Kevin Champlin](https://kevinchamplin.com).*

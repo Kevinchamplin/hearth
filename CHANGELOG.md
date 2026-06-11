@@ -4,6 +4,19 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Changed (2026-06-11, hearth-fair-source-relicense) [1h]
+- **Relicensed MIT → FSL-1.1-MIT (Functional Source License)** — fair source: anyone can read,
+  run, learn from, and contribute; **competing use is prohibited**; each release auto-converts
+  to plain MIT after two years. Added `TRADEMARK.md` (the Hearth name, ember mark, and tagline
+  are never licensed) and `CONTRIBUTING.md` (fork-and-PR model, maintainer merges everything,
+  CLA-style relicense grant so future licensing stays in Kevin's hands). Done while there are
+  zero outside contributors, so the relicense is clean (note: prior MIT clones keep MIT rights
+  to that snapshot only).
+- Swept "open source / MIT" wording everywhere → "the full source is public — read every line,
+  contributions welcome; Hearth stays Hearth": site footer, About, FAQ, llms.txt, view-source +
+  console easter-egg copy, loading tip, README (new License/Contributions/Support section), and
+  both live kevinchamplin.com posts (114, 115).
+
 ### Added (2026-06-11, hearth-what-is-post-and-hero-line) [0.5h]
 - Published a short, plain-language **"What is Hearth?"** post to kevinchamplin.com (post 115,
   `what-is-hearth-free-private-ai`) — benefits list, what it's good for, the only catch, 3-step

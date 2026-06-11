@@ -2,7 +2,7 @@
 
 > A beautiful, free AI that runs entirely on your own computer — private by nature. The language model runs on the user's own device (in the browser via WebGPU, or as a desktop app), so conversations never leave the machine. No account, no subscription, works offline after a one-time download.
 
-Hearth is built by Kevin Champlin (https://kevinchamplin.com). It is open source under the MIT license: https://github.com/Kevinchamplin/hearth
+Hearth is built by Kevin Champlin (https://kevinchamplin.com). The full source is public (fair-source, FSL-1.1-MIT — readable and open to contributions, but not for competing products): https://github.com/Kevinchamplin/hearth
 
 ## What Hearth is
 - A local-first AI chat app: the model runs on the visitor's own hardware, not on a remote server.
