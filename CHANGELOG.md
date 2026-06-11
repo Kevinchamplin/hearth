@@ -4,6 +4,15 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-11, hearth-all-brains-self-hosted) [1h]
+- **All three brains now download exclusively from our own server.** Root cause of the
+  persistent failures even after Fast was mirrored: Kevin was loading **Smart**, whose weights
+  come from the hub AND whose engine wasm comes from a *third* host (raw.githubusercontent.com)
+  with aggressive rate limits — it died in ~6s while the hub probe showed HTTP 200. Mirrored
+  Smart (65 files) + Genius (115 files) + both wasms (~6.5 GB total alongside Fast's 677 MB);
+  `SELF_HOSTED` map overrides all three prebuilt entries. Zero third-party hosts remain in any
+  download path.
+
 ### Added (2026-06-11, hearth-self-hosted-fast-brain) [1.5h]
 - **The Fast brain now downloads from our own server** — mirrored all 30 model files (677 MB)
   + the matching WebLLM wasm lib to `hearth.kevinchamplin.com/models/` (HF `resolve/main` path

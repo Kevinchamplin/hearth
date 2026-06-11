@@ -401,16 +401,20 @@
       { id: "Llama-3.1-8B-Instruct-q4f16_1-MLC", name: "Genius", emoji: "🧠", size: "~5 GB", blurb: "The most capable. Needs a powerful computer with lots of memory." },
     ];
 
-    // The Fast brain is mirrored on OUR server — no third-party rate limits on the
-    // first-run path. Smart/Genius still come from the public model hub.
+    // ALL three brains are mirrored on OUR server — no third-party hosts, no third-party
+    // rate limits, anywhere in the download path. (Burned twice by hub throttling.)
     const SELF_HOST = "https://hearth.kevinchamplin.com/models";
+    const SELF_HOSTED = {
+      "Llama-3.2-1B-Instruct-q4f32_1-MLC": { dir: "fast",   lib: "Llama-3.2-1B-Instruct-q4f32_1_cs1k-webgpu.wasm" },
+      "Llama-3.2-3B-Instruct-q4f16_1-MLC": { dir: "smart",  lib: "Llama-3.2-3B-Instruct-q4f16_1_cs1k-webgpu.wasm" },
+      "Llama-3.1-8B-Instruct-q4f16_1-MLC": { dir: "genius", lib: "Llama-3_1-8B-Instruct-q4f16_1_cs1k-webgpu.wasm" },
+    };
     const APP_CONFIG = {
       ...webllm.prebuiltAppConfig,
-      model_list: webllm.prebuiltAppConfig.model_list.map((m) =>
-        m.model_id === "Llama-3.2-1B-Instruct-q4f32_1-MLC"
-          ? { ...m, model: SELF_HOST + "/fast", model_lib: SELF_HOST + "/libs/Llama-3.2-1B-Instruct-q4f32_1_cs1k-webgpu.wasm" }
-          : m
-      ),
+      model_list: webllm.prebuiltAppConfig.model_list.map((m) => {
+        const h = SELF_HOSTED[m.model_id];
+        return h ? { ...m, model: SELF_HOST + "/" + h.dir, model_lib: SELF_HOST + "/libs/" + h.lib } : m;
+      }),
     };
     function modelInfo(id){ return MODELS.find(m => m.id === id) || MODELS[0]; }
     let currentModelId = MODELS[0].id;
