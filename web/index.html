@@ -672,11 +672,18 @@
         window.hearth && window.hearth.track('model_load_failed', { value: reason.slice(0, 80) });
         $("status").textContent = "Hmm — checking what went wrong…";
         $("pct").textContent = "";
-        // Probe the two usual suspects separately: the model server, and this browser's storage.
+        // Probe the two usual suspects separately — and probe the server THIS brain
+        // actually downloads from (Fast = our server; Smart/Genius = the public hub).
         let net = "unreachable", store = "OK", freeGB = null;
-        try { const r = await fetch(SELF_HOST + "/fast/resolve/main/mlc-chat-config.json", { cache: "no-store" }); net = r.status; } catch (e2) {}
+        let cfgUrl = SELF_HOST + "/fast/resolve/main/mlc-chat-config.json", hub = "our server";
+        try {
+          const rec = APP_CONFIG.model_list.find((x) => x.model_id === id);
+          if (rec) { cfgUrl = rec.model.replace(/\/$/, "") + "/resolve/main/mlc-chat-config.json"; hub = rec.model.includes("hearth.kevinchamplin.com") ? "our server" : "the public model hub"; }
+        } catch (e2) {}
+        try { const r = await fetch(cfgUrl, { cache: "no-store" }); net = r.status; } catch (e2) {}
         try { const c = await caches.open("hearth-probe"); await c.put("/probe", new Response("ok")); await caches.delete("hearth-probe"); } catch (e2) { store = "FAILING"; }
         try { const est = await navigator.storage.estimate(); freeGB = ((est.quota || 0) - (est.usage || 0)) / 1e9; } catch (e2) {}
+        const fastTip = m.name !== "Fast" ? " Tip: the ⚡ Fast brain downloads from Hearth's own server and isn't affected — switch with the brain button up top." : "";
         if (store === "FAILING") {
           $("status").textContent = "Your browser's storage hiccuped — easy fix.";
           $("pct").textContent = "Quit Chrome completely (right-click its icon → Quit) and reopen Hearth. That repairs it almost every time.";
@@ -684,18 +691,18 @@
           $("status").textContent = "Your browser is running out of storage room.";
           $("pct").textContent = "Hearth needs a couple of GB free. Free up some disk space, then Try again.";
         } else if (net === 429 || (typeof net === "number" && net >= 500)) {
-          $("status").textContent = "The model server is asking us to slow down.";
-          $("pct").textContent = "Give it 15–30 minutes (constant retrying resets their clock), then Try again.";
+          $("status").textContent = "The " + m.name + " brain's server is asking us to slow down.";
+          $("pct").textContent = "Give it 15–30 minutes (constant retrying resets their clock)." + fastTip;
         } else if (net === "unreachable") {
-          $("status").textContent = "Can't reach the model server right now.";
-          $("pct").textContent = "Check your internet (or VPN/ad-blocker) and Try again — your progress is saved.";
+          $("status").textContent = "Can't reach the " + m.name + " brain's server right now.";
+          $("pct").textContent = "Check your internet (or VPN/ad-blocker) and Try again — your progress is saved." + fastTip;
         } else {
-          $("status").textContent = "The download tripped, but everything checks out now.";
-          $("pct").textContent = "Try again keeps your progress. If it trips twice more, Start fresh clears the partial download.";
+          $("status").textContent = "The " + m.name + " brain's download tripped mid-stream.";
+          $("pct").textContent = "Try again keeps your progress. If it keeps tripping, the server may be throttling bigger files." + fastTip;
         }
         const det = $("errDetail");
         det.textContent = "Technical detail: " + reason.slice(0, 160) +
-          " · model server: " + (typeof net === "number" ? "HTTP " + net : net) +
+          " · brain: " + m.name + " (from " + hub + ", " + (typeof net === "number" ? "HTTP " + net : net) + ")" +
           " · browser storage: " + store +
           (freeGB !== null ? " · room available: " + freeGB.toFixed(1) + " GB" : "");
         det.hidden = false;
