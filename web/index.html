@@ -92,6 +92,9 @@
   [data-theme="dark"] .barwrap{background:rgba(245,241,232,.1)}
   .bar-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#FFCC84,#EE9A45);transition:width .3s ease}
   .loading .reassure{margin-top:18px;font-size:14px;color:var(--ink-soft);max-width:440px}
+  .loading .tip-label{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass-lit);opacity:.75;margin-top:34px}
+  .loading .tipbox{margin-top:10px;max-width:440px;min-height:48px;font-size:14.5px;color:var(--ink);line-height:1.65;opacity:0;transition:opacity .45s ease}
+  #retryBtn[hidden]{display:none}
 
   /* chat */
   .chat{max-width:700px;flex:1;min-height:0;justify-content:flex-start}
@@ -284,7 +287,10 @@
         <p class="status" id="status">Kindling the fire…</p>
         <div class="barwrap"><div class="bar-fill" id="bar"></div></div>
         <p class="pct" id="pct"></p>
-        <p class="reassure">We're bringing Hearth home to your device — about a minute, just this once. After today it opens in a blink, even with no internet. Nothing here ever leaves your machine.</p>
+        <p class="reassure">We're bringing Hearth home to your device — a few minutes, just this once. After today it opens in a blink, even with no internet. Nothing here ever leaves your machine.</p>
+        <button class="btn" id="retryBtn" hidden style="margin-top:22px">🔥 Pick up where it left off</button>
+        <p class="tip-label">While you wait</p>
+        <p class="tipbox" id="tipBox"></p>
       </section>
 
       <!-- CHAT -->
@@ -519,14 +525,42 @@
 
     function lowMemory(){ try { return typeof navigator.deviceMemory === "number" && navigator.deviceMemory > 0 && navigator.deviceMemory < 8; } catch (e) { return false; } }
 
-    async function loadModel(id){
+    // Rotating "while you wait" messages — the download is the longest moment we have
+    // someone's attention, so teach them what they're getting.
+    const TIPS = [
+      "Hearth runs entirely on this device. Nothing you say is sent anywhere — there's no server on the other end at all.",
+      "Once this finishes, Hearth works without internet. On a plane, at the cabin, when the wifi dies — it keeps going.",
+      "You can show Hearth a photo: tap the 📎 and ask about any picture. The photo never leaves your device either.",
+      "Hearth has three brains — Fast, Smart, and Genius. Tap the brain button up top to switch; it'll tell you what your computer can handle.",
+      "Your conversations save on this device only. Tap 💬 anytime to pick up an old chat where you left off.",
+      "You can install Hearth like a real app — it'll live in your Dock and open in its own window. Look for ⬇ Install up top.",
+      "This download happens once. After today, Hearth opens in a blink — even offline.",
+      "Free means free: no account, no subscription, no locked buttons, no 'Pro' tier. This is the whole product.",
+      "Hearth is open source, built by one engineer — you can read every line at github.com/Kevinchamplin/hearth.",
+    ];
+    let tipTimer = null, tipIdx = 0;
+    function startTips(){
+      const el = $("tipBox"); if (!el) return;
+      stopTips();
+      el.textContent = TIPS[0]; el.style.opacity = 1; tipIdx = 1;
+      tipTimer = setInterval(() => {
+        el.style.opacity = 0;
+        setTimeout(() => { el.textContent = TIPS[tipIdx++ % TIPS.length]; el.style.opacity = 1; }, 450);
+      }, 7000);
+    }
+    function stopTips(){ if (tipTimer){ clearInterval(tipTimer); tipTimer = null; } }
+
+    async function loadModel(id, attempt = 0){
       currentModelId = id;
       try { localStorage.setItem("h_model", id); } catch (e) {}
       const m = modelInfo(id);
       const pill = $("modelPill");
       pill.textContent = m.emoji + " " + m.name + " ▾";
       show("loading");
-      $("status").textContent = "Kindling the fire…"; $("bar").style.width = "0%"; $("pct").textContent = "";
+      $("retryBtn").hidden = true;
+      $("status").textContent = attempt ? "Picking it back up…" : "Kindling the fire…";
+      $("bar").style.width = "0%"; $("pct").textContent = "";
+      startTips();
       engine = null;
       const t0 = performance.now();
       try {
@@ -542,13 +576,25 @@
         pill.style.display = "inline-flex";
         const pb = $("printBtn"); if (pb) pb.hidden = false;
         const cb = $("chatsBtn"); if (cb) cb.hidden = false;
+        stopTips();
         show("chat");
         $("input").focus();
         maybeBrainHint();
       } catch (e) {
-        $("status").textContent = "That brain wouldn't load (" + (e.message || e) + "). Try a smaller one.";
+        // Downloads cache file-by-file, so a retry resumes — never make a hiccup feel fatal.
+        if (attempt < 1) {
+          $("status").textContent = "A little hiccup — picking it back up…";
+          setTimeout(() => loadModel(id, attempt + 1), 1500);
+          return;
+        }
+        stopTips();
+        window.hearth && window.hearth.track('model_load_failed', { value: String((e && e.message) || e).slice(0, 80) });
+        $("status").textContent = "The download hiccuped — a busy network, most likely.";
+        $("pct").textContent = "Good news: everything so far is saved on your device.";
+        $("retryBtn").hidden = false;
       }
     }
+    $("retryBtn").addEventListener("click", () => loadModel(currentModelId));
 
     $("lightBtn").addEventListener("click", () => {
       if (!navigator.gpu){

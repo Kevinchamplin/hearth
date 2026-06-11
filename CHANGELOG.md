@@ -4,6 +4,16 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-11, hearth-download-retry-and-tips) [0.5h]
+- **Download failures are no longer dead ends.** Model downloads cache file-by-file, so a
+  failure near the end (e.g. stuck at 97% with "Failed to fetch") was always resumable — now
+  the app says so: one silent auto-retry, then a warm "🔥 Pick up where it left off" button with
+  "everything so far is saved on your device." Failures tracked (`model_load_failed`).
+- **Rotating while-you-wait messages** during the model download: 9 warm tips cycling every 7s
+  (runs on this device / works without internet / show it photos / three brains / saved chats /
+  install it / one-time download / free means free / open source by one engineer) — the wait is
+  now the onboarding.
+
 ### Added (2026-06-11, hearth-why-free-and-name-meaning) [0.5h]
 - Answered the two unspoken visitor questions. **"Why give it away?"** — a 3-card trio under
   the builder's note (for the curious / for the love of it / because it was missing) closing
