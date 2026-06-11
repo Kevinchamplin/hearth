@@ -19,6 +19,19 @@ include __DIR__ . '/../partials/header.php';
 
   <p>When you use Hearth, the AI runs <strong>on your device</strong> &mdash; right in your web browser, or as an app on your computer. Nothing you say is sent anywhere. There's no account to create, no subscription, and no meter ticking. Once it's set up, it even keeps working with the internet switched off.</p>
 
+  <h2 class="serif">Why &ldquo;Hearth&rdquo;?</h2>
+  <p>The hearth is the oldest technology a home ever had: the fire at the center of it. It's where the warmth came from, where the light was, where people gathered at the end of the day. And it <em>belonged to the house</em> &mdash; nobody billed you monthly for your own fire.</p>
+  <p>That's the whole idea here. &ldquo;The cloud&rdquo; is somebody else's fire, burning far away, and you rent a little of its heat. Hearth is the opposite: a small, warm intelligence that lives where you live. That's why the AI appears as a glowing ember &mdash; a quiet fire, at home, on your machine. <em>A warm light in a cold cloud.</em></p>
+
+  <h2 class="serif">Why it's free &mdash; honestly</h2>
+  <p>People ask what the catch is, and it's a fair question &mdash; &ldquo;free&rdquo; usually means <em>you're</em> the product. So here it is, plainly. Hearth is free for three reasons:</p>
+  <ul>
+    <li><strong>For the curious.</strong> A lot of people are AI-curious but not ready to hand a credit card &mdash; and their conversations &mdash; to a tech giant. There should be a free, safe first seat at the fire. This is it.</li>
+    <li><strong>For the love of it.</strong> I'm an engineer. I love technology, I love AI, and I love building things. Hearth is the thing I make because I can't <em>not</em> make it.</li>
+    <li><strong>Because it was missing.</strong> Beautiful, private AI for everyday people simply didn't exist &mdash; local AI was for tinkerers with terminals. That hole bugged me. So I filled it.</li>
+  </ul>
+  <p>And what's in it for me? My name on work I'm proud of. Since Hearth runs on <em>your</em> computer, it costs me almost nothing to give away &mdash; there's no server bill ticking, no data worth selling, no investor waiting for a return. The economics of free are real, not a trick.</p>
+
   <h2 class="serif">Why it looks like this</h2>
   <p>Most AI tools feel cold and technical &mdash; all blue glow and robot icons, the kind of thing that makes a normal person feel like they're doing it wrong. Hearth is built to feel like a warm room you'd actually want to sit in: a quiet ember, soft light, plain words. If your mom or dad can open it and start talking in five seconds, it's doing its job.</p>
 

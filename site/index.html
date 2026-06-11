@@ -150,6 +150,12 @@
   .bn-sig{font-size:14px;color:var(--ink-soft)}
   .bn-sig a{color:var(--brass-text);text-decoration:underline}
   @media (max-width:700px){.builder-note{flex-direction:column;text-align:center;padding:30px 24px}}
+  .wf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:980px;margin:0 auto}
+  .wf{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 24px;font-size:15px;line-height:1.65;color:var(--ink-soft)}
+  .wf b{display:block;color:var(--ink);font-size:16px;margin-bottom:7px}
+  .wf-honest{text-align:center;font-size:15.5px;color:var(--ink-soft);margin-top:24px}
+  .wf-honest a{color:var(--brass-text);text-decoration:underline}
+  @media (max-width:760px){.wf-grid{grid-template-columns:1fr}}
   /* tell-a-friend remark */
   .remark{max-width:560px;margin:34px auto 0;text-align:center;font-size:13px;font-family:"JetBrains Mono",ui-monospace,monospace;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft)}
   .remark em{display:block;margin-top:10px;font-family:"Fraunces",Georgia,serif;font-style:italic;font-weight:500;font-size:21px;letter-spacing:0;text-transform:none;color:var(--ink);line-height:1.45}
@@ -484,6 +490,15 @@
           <p class="bn-text serif">&ldquo;The big AI companies rent you a seat in their data center. I'm an AI engineer — I wanted to hand you the keys instead. Hearth is what I believe everyday AI should be: beautiful, private, and yours. No investors behind it, no data to sell, no catch. It's signed work.&rdquo;</p>
           <p class="bn-sig">— <strong>Kevin Champlin</strong>, engineer &amp; AI specialist · <a href="https://kevinchamplin.com">kevinchamplin.com</a> · <a href="https://github.com/Kevinchamplin/hearth" target="_blank" rel="noopener">read every line on GitHub</a></p>
         </div>
+      </div>
+      <div class="why-free">
+        <p class="eyebrow" style="text-align:center;margin:40px 0 22px">&ldquo;Okay&hellip; but why give it away?&rdquo;</p>
+        <div class="wf-grid">
+          <div class="wf"><b>For the curious.</b> A lot of people are AI-curious but not ready to hand a credit card — and their conversations — to a tech giant. There should be a free, safe first seat at the fire. This is it.</div>
+          <div class="wf"><b>For the love of it.</b> I'm an engineer. I love technology, I love AI, and I love building things. Hearth is the thing I make because I can't <em>not</em> make it.</div>
+          <div class="wf"><b>Because it was missing.</b> Beautiful, private AI for everyday people simply didn't exist — local AI was for tinkerers with terminals. That hole bugged me. So I filled it.</div>
+        </div>
+        <p class="wf-honest">And what's in it for me? My name on work I'm proud of — that's the whole trade. <a href="/about">More on the why, and the name &rarr;</a></p>
       </div>
     </div>
   </section>

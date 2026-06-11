@@ -4,6 +4,14 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-11, hearth-why-free-and-name-meaning) [0.5h]
+- Answered the two unspoken visitor questions. **"Why give it away?"** — a 3-card trio under
+  the builder's note (for the curious / for the love of it / because it was missing) closing
+  with the honest trade: "my name on work I'm proud of." **"Why 'Hearth'?"** — name-meaning
+  section on /about (the hearth was the home's own fire — nobody billed you monthly for it;
+  the cloud is somebody else's fire, rented) + the free-economics explainer (runs on your
+  computer → no server bill → free is real, not a trick). Two new/upgraded FAQ entries.
+
 ### Added (2026-06-11, hearth-dream-team-marketing-pass) [1h]
 - On-site marketing pass from the /dream-team panel (Godin/Hormozi/Kennedy). Four moves:
   **(1) Feature stack** — new "The whole feature list. All of it free." section: 8 plain-named
