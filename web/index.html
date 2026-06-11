@@ -96,7 +96,9 @@
   .loading .reassure{margin-top:18px;font-size:14px;color:var(--ink-soft);max-width:440px}
   .loading .tip-label{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass-lit);opacity:.75;margin-top:34px}
   .loading .tipbox{margin-top:10px;max-width:440px;min-height:48px;font-size:14.5px;color:var(--ink);line-height:1.65;opacity:0;transition:opacity .45s ease}
-  #retryBtn[hidden]{display:none}
+  #retryBtn[hidden],#freshBtn[hidden]{display:none}
+  .errdetail{margin-top:16px;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;color:var(--ink-soft);max-width:460px;line-height:1.5;word-break:break-word}
+  .errdetail[hidden]{display:none}
 
   /* chat */
   .chat{max-width:700px;flex:1;min-height:0;justify-content:flex-start}
@@ -322,7 +324,9 @@
         <div class="barwrap"><div class="bar-fill" id="bar"></div></div>
         <p class="pct" id="pct"></p>
         <p class="reassure">We're bringing Hearth home to your device — a few minutes, just this once. After today it opens in a blink, even with no internet. Nothing here ever leaves your machine.</p>
-        <button class="btn" id="retryBtn" hidden style="margin-top:22px">🔥 Pick up where it left off</button>
+        <button class="btn" id="retryBtn" hidden style="margin-top:22px">🔥 Try again (keeps progress)</button>
+        <button class="btn" id="freshBtn" hidden style="margin-top:12px;background:transparent;border:1px solid rgba(245,241,232,.25);color:var(--ink);box-shadow:none">🧹 Start fresh — clear &amp; re-download</button>
+        <p class="errdetail" id="errDetail" hidden></p>
         <p class="tip-label">While you wait</p>
         <p class="tipbox" id="tipBox"></p>
       </section>
@@ -620,7 +624,7 @@
       const pill = $("modelPill");
       pill.textContent = m.emoji + " " + m.name + " ▾";
       show("loading");
-      $("retryBtn").hidden = true;
+      $("retryBtn").hidden = true; $("freshBtn").hidden = true; $("errDetail").hidden = true;
       $("status").textContent = attempt ? "Picking it back up…" : "Kindling the fire…";
       $("bar").style.width = "0%"; $("pct").textContent = "";
       startTips();
@@ -651,13 +655,30 @@
           return;
         }
         stopTips();
-        window.hearth && window.hearth.track('model_load_failed', { value: String((e && e.message) || e).slice(0, 80) });
-        $("status").textContent = "The download hiccuped — a busy network, most likely.";
-        $("pct").textContent = "Good news: everything so far is saved on your device.";
+        const reason = String((e && e.message) || e);
+        window.hearth && window.hearth.track('model_load_failed', { value: reason.slice(0, 80) });
+        $("status").textContent = "The download keeps tripping on something.";
+        $("pct").textContent = "Try again keeps your progress. If it trips twice, Start fresh clears the partial download — that usually cures it.";
+        const det = $("errDetail"); det.textContent = "Technical detail: " + reason.slice(0, 200); det.hidden = false;
         $("retryBtn").hidden = false;
+        $("freshBtn").hidden = false;
       }
     }
     $("retryBtn").addEventListener("click", () => loadModel(currentModelId));
+    // A corrupted partial download can poison the cache so every resume fails the same way.
+    // Start fresh wipes ONLY the model caches (never your conversations) and re-downloads clean.
+    async function clearModelCaches(){
+      try {
+        const keys = await caches.keys();
+        await Promise.all(keys.filter(k => /webllm|tvmjs|mlc/i.test(k)).map(k => caches.delete(k)));
+      } catch (e) {}
+    }
+    $("freshBtn").addEventListener("click", async () => {
+      $("status").textContent = "Clearing the partial download…";
+      $("retryBtn").hidden = true; $("freshBtn").hidden = true; $("errDetail").hidden = true;
+      await clearModelCaches();
+      loadModel(currentModelId);
+    });
 
     $("lightBtn").addEventListener("click", () => {
       if (!navigator.gpu){

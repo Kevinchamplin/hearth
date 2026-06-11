@@ -4,6 +4,15 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Fixed (2026-06-11, hearth-start-fresh-recovery) [0.5h]
+- **Persistent download failures are now curable in-app.** A corrupted partial download can
+  poison the model cache so every resume fails identically (Kevin hit this: stuck at 97%, then
+  endless "a little hiccup" retries). Added **🧹 Start fresh** — wipes only the model caches
+  (webllm/tvmjs/mlc; conversations untouched) and re-downloads clean — alongside "Try again
+  (keeps progress)". The failure screen now also shows the **actual error** in a small
+  technical-detail line instead of hiding it, so real causes (quota, blocked host, corrupt
+  entry) are diagnosable.
+
 ### Added (2026-06-11, hearth-ease-of-use-pass) [2h]
 - **Pinnable conversations sidebar** (ChatGPT-style, user's choice): "📌 Pin open" docks the
   panel as a permanent left column (app shifts right, list auto-refreshes); "✕ Auto-hide"
