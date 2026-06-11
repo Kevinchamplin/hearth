@@ -2,7 +2,7 @@
 $title = $title ?? 'Hearth';
 $desc  = $desc  ?? 'A warm, private AI that runs on your own computer.';
 $canon = 'https://hearth.kevinchamplin.com' . strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
-$ogimg = 'https://hearth.kevinchamplin.com/assets/og.png';
+$ogimg = 'https://hearth.kevinchamplin.com/assets/og.png?v=2';
 $font  = 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap';
 $hh = fn($v) => htmlspecialchars((string)$v, ENT_QUOTES);
 ?><!DOCTYPE html>

@@ -4,6 +4,14 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Changed (2026-06-11, hearth-og-card-v2) [0.25h]
+- Redesigned the OG/social card to match the new hero and to make "this is an AI" legible at a
+  glance (the old card was ember + poetry only). New 1200×630: headline "A **free, private AI**
+  that lives on your own computer" (brass italics), four value pills ($0 free forever · 🔒 100%
+  private · ✈ works without internet · no account), and a mini chat window with the dinner +
+  privacy exchange and the wifi-off badge. Cache-busted via `?v=2` on all og:image/twitter:image
+  references; `og:image:alt` added.
+
 ### Added (2026-06-11, hearth-syscheck-sticky-credit) [1h]
 - **"Will it run on my computer?" checker** on the landing (honest-details section): one click
   reads what the browser can see — AI-capable browser (WebGPU), memory, free space
