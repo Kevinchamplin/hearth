@@ -25,6 +25,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#14120E" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<link rel="icon" href="icons/icon-192.png" type="image/png" />
 <title>Hearth — talk to a private AI in your browser</title>
 <meta name="description" content="A beautiful, free AI that runs entirely in your browser. Private, offline-capable, no account. Powered by WebGPU." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -192,6 +196,24 @@
   .brain-hint .hx{position:absolute;top:6px;right:10px;color:var(--ink-soft);font-size:16px;line-height:1}
   .brain-hint .hx:hover{color:var(--ink)}
   @keyframes hintIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+  /* conversations drawer */
+  .drawer-overlay{position:fixed;inset:0;z-index:90;background:rgba(10,8,5,.55);backdrop-filter:blur(4px);display:none}
+  .drawer-overlay.open{display:block}
+  .drawer{position:fixed;top:0;left:0;bottom:0;z-index:95;width:min(330px,88vw);background:#1a160f;border-right:1px solid var(--line);padding:20px 16px;transform:translateX(-102%);transition:transform .22s ease;display:flex;flex-direction:column}
+  .drawer.open{transform:translateX(0)}
+  .drawer h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:19px;margin:4px 6px 14px;color:var(--ink)}
+  .newchat{display:flex;align-items:center;gap:9px;justify-content:center;width:100%;padding:12px;border-radius:12px;border:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:14.5px;background:radial-gradient(circle at 35% 30%,#FFD89A,#EE9A45 78%);color:#3A2206;margin-bottom:14px}
+  .convo-list{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(228,194,124,.3) transparent}
+  .convo{position:relative;padding:12px 34px 12px 13px;border:1px solid transparent;border-radius:12px;cursor:pointer;margin-bottom:4px}
+  .convo:hover{background:rgba(255,255,255,.045)}
+  .convo.current{border-color:rgba(200,161,90,.4);background:rgba(200,161,90,.07)}
+  .convo .ct{font-size:14px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .convo .cd{font-size:11.5px;color:var(--ink-soft);margin-top:3px;font-family:"JetBrains Mono",ui-monospace,monospace}
+  .convo .cx{position:absolute;top:10px;right:9px;color:var(--ink-soft);font-size:16px;line-height:1;padding:2px 5px;border-radius:7px;opacity:0;transition:opacity .12s}
+  .convo:hover .cx{opacity:1}
+  .convo .cx:hover{color:#e2937f;background:rgba(226,138,111,.1)}
+  .drawer .dfoot{font-size:11.5px;color:var(--ink-soft);text-align:center;padding-top:12px;line-height:1.5}
+  .convo-empty{color:var(--ink-soft);font-size:13.5px;text-align:center;padding:26px 10px;line-height:1.6}
   @media print {
     body{background:#fff !important;color:#000 !important}
     .bar,.composer,.composer-foot,#imgchip,.acts,.view.loading,.view.gate{display:none !important}
@@ -228,6 +250,7 @@
   <div class="app">
     <header class="bar">
       <div class="left">
+        <button class="iconbtn" id="chatsBtn" title="Your conversations" hidden style="margin-right:12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.8A8 8 0 1 1 21 12z"/></svg></button>
         <span class="wordmark"><span class="seed"></span>Hearth</span>
         <span class="pill privacy">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
@@ -235,6 +258,7 @@
         </span>
       </div>
       <div class="right">
+        <button class="iconbtn" id="installBtn" title="Install Hearth as an app" hidden style="width:auto;padding:0 14px;border-radius:999px;font-family:inherit;font-size:12.5px;font-weight:600;gap:6px;display:none">⬇ Install</button>
         <button class="iconbtn" id="printBtn" title="Print this conversation" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg></button>
         <span class="pill" id="modelPill" title="Change Hearth's brain">⚡ Fast ▾</span>
       </div>
@@ -288,6 +312,15 @@
       </section>
     </main>
   </div>
+
+  <!-- Conversations drawer -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="drawer" id="drawer">
+    <h2>Your conversations</h2>
+    <button class="newchat" id="newChatBtn">＋ New chat</button>
+    <div class="convo-list" id="convoList"></div>
+    <p class="dfoot">Saved only on this device — 🔒 never uploaded anywhere.</p>
+  </aside>
 
   <!-- First-time nudge: you can change the brain -->
   <div class="brain-hint" id="brainHint" hidden>
@@ -377,6 +410,81 @@
 
     let engine = null, generating = false;
     let pendingImage = null, visionEngine = null;
+
+    // ---- Offline app (service worker + install) ----
+    if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js").catch(() => {}); }
+    let installPrompt = null;
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault(); installPrompt = e;
+      const b = $("installBtn"); if (b) { b.hidden = false; b.style.display = "inline-flex"; }
+    });
+    (function(){ const b = $("installBtn"); if (!b) return;
+      b.addEventListener("click", async () => { if (!installPrompt) return; installPrompt.prompt(); await installPrompt.userChoice; installPrompt = null; b.style.display = "none"; });
+    })();
+    window.addEventListener("appinstalled", () => { window.hearth && window.hearth.track("pwa_installed"); const b = $("installBtn"); if (b) b.style.display = "none"; });
+
+    // ---- Conversation memory (IndexedDB — this device only, never uploaded) ----
+    let transcript = [], currentConvoId = null, emptyStateEl = null;
+    function idbOpen(){ return new Promise((res, rej) => { const r = indexedDB.open("hearth", 1);
+      r.onupgradeneeded = () => r.result.createObjectStore("convos", { keyPath: "id" });
+      r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
+    async function dbPut(c){ const d = await idbOpen(); return new Promise((res, rej) => { const t = d.transaction("convos", "readwrite"); t.objectStore("convos").put(c); t.oncomplete = res; t.onerror = () => rej(t.error); }); }
+    async function dbAll(){ const d = await idbOpen(); return new Promise((res, rej) => { const q = d.transaction("convos").objectStore("convos").getAll(); q.onsuccess = () => res(q.result || []); q.onerror = () => rej(q.error); }); }
+    async function dbDel(id){ const d = await idbOpen(); return new Promise((res, rej) => { const t = d.transaction("convos", "readwrite"); t.objectStore("convos").delete(id); t.oncomplete = res; t.onerror = () => rej(t.error); }); }
+
+    async function saveConvo(){
+      if (!transcript.length) return;
+      try {
+        if (!currentConvoId) currentConvoId = (crypto.randomUUID ? crypto.randomUUID() : "c" + Date.now());
+        const first = transcript.find(m => m.role === "user");
+        await dbPut({ id: currentConvoId, title: (first ? first.content : "Conversation").slice(0, 48),
+          created: transcript.created || Date.now(), updated: Date.now(), model: currentModelId, messages: transcript.slice() });
+      } catch (e) {}
+    }
+    function whenLabel(ts){
+      const d = new Date(ts), now = new Date();
+      if (d.toDateString() === now.toDateString()) return "Today";
+      const y = new Date(now); y.setDate(now.getDate() - 1);
+      if (d.toDateString() === y.toDateString()) return "Yesterday";
+      return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    }
+    function resetThread(){
+      transcript = []; currentConvoId = null;
+      history.length = 1; // keep system prompt only
+      thread.replaceChildren();
+      if (emptyStateEl){ thread.appendChild(emptyStateEl); emptyStateEl = null; views.chat.classList.add("is-empty"); }
+    }
+    function loadConvo(c){
+      transcript = c.messages.slice(); currentConvoId = c.id;
+      history.length = 1;
+      thread.replaceChildren(); views.chat.classList.remove("is-empty");
+      for (const m of transcript){
+        if (m.role === "user"){ bubble("user", m.content); history.push({ role: "user", content: m.content }); }
+        else { const el = bubble("ai", ""); renderMarkdown(el, m.content); history.push({ role: "assistant", content: m.content }); }
+      }
+      thread.scrollTop = thread.scrollHeight;
+    }
+    async function renderDrawer(){
+      const list = $("convoList"); list.replaceChildren();
+      let all = []; try { all = await dbAll(); } catch (e) {}
+      all.sort((a, b) => b.updated - a.updated);
+      if (!all.length){ const p = document.createElement("p"); p.className = "convo-empty"; p.textContent = "No saved conversations yet — they'll appear here as you chat."; list.appendChild(p); return; }
+      for (const c of all){
+        const row = document.createElement("div"); row.className = "convo" + (c.id === currentConvoId ? " current" : "");
+        const t = document.createElement("div"); t.className = "ct"; t.textContent = c.title || "Conversation";
+        const d = document.createElement("div"); d.className = "cd"; d.textContent = whenLabel(c.updated) + " · " + Math.ceil((c.messages || []).length / 2) + " exchanges";
+        const x = document.createElement("span"); x.className = "cx"; x.textContent = "×"; x.title = "Delete this conversation";
+        x.addEventListener("click", async (e) => { e.stopPropagation(); await dbDel(c.id); if (c.id === currentConvoId) resetThread(); renderDrawer(); });
+        row.append(t, d, x);
+        row.addEventListener("click", () => { loadConvo(c); closeDrawer(); });
+        list.appendChild(row);
+      }
+    }
+    function openDrawer(){ renderDrawer(); $("drawer").classList.add("open"); $("drawerOverlay").classList.add("open"); }
+    function closeDrawer(){ $("drawer").classList.remove("open"); $("drawerOverlay").classList.remove("open"); }
+    $("chatsBtn").addEventListener("click", openDrawer);
+    $("drawerOverlay").addEventListener("click", closeDrawer);
+    $("newChatBtn").addEventListener("click", () => { resetThread(); closeDrawer(); input.focus(); });
     const history = [{ role:"system", content: SYSTEM }];
 
     function lowMemory(){ try { return typeof navigator.deviceMemory === "number" && navigator.deviceMemory > 0 && navigator.deviceMemory < 8; } catch (e) { return false; } }
@@ -403,6 +511,7 @@
         window.hearth && window.hearth.track('model_ready', { load_ms: Math.round(performance.now() - t0), tier: m.name });
         pill.style.display = "inline-flex";
         const pb = $("printBtn"); if (pb) pb.hidden = false;
+        const cb = $("chatsBtn"); if (cb) cb.hidden = false;
         show("chat");
         $("input").focus();
         maybeBrainHint();
@@ -505,7 +614,7 @@
     }
     function copyText(t){ try { navigator.clipboard.writeText(t); } catch (e) {} }
     function bubble(role, text){
-      const empty = $("empty"); if (empty) empty.remove();
+      const empty = $("empty"); if (empty){ emptyStateEl = empty; empty.remove(); }
       views.chat.classList.remove("is-empty");
       const wrap = document.createElement("div"); wrap.className = "msg " + role;
       const who = document.createElement("div"); who.className = "who";
@@ -578,7 +687,9 @@
       const inputs = await processor(prompt, [image]);
       const ids = await model.generate({ ...inputs, max_new_tokens: 300, do_sample: false, repetition_penalty: 1.2, no_repeat_ngram_size: 3 });
       const decoded = processor.batch_decode(ids.slice(null, [inputs.input_ids.dims.at(-1), null]), { skip_special_tokens: true });
-      renderMarkdown(outEl, (decoded[0] || "").trim() || "(I couldn't quite read that one.)");
+      const answer = (decoded[0] || "").trim() || "(I couldn't quite read that one.)";
+      renderMarkdown(outEl, answer);
+      return answer;
     }
 
     async function fire(){
@@ -597,7 +708,8 @@
         if (fileInput) fileInput.value = "";
         input.value = ""; autosize();
         const out = bubble("ai", "…");
-        try { await seeImage(q, imgUrl, out); }
+        transcript.push({ role: "user", content: "📷 " + (q || "What's in this image?") });
+        try { const ans = await seeImage(q, imgUrl, out); transcript.push({ role: "ai", content: ans }); saveConvo(); }
         catch (e) { out.textContent = "I couldn't make out that image — " + (e && e.message ? e.message : e); }
         finally { setTimeout(function () { URL.revokeObjectURL(imgUrl); }, 1500); }
         generating = false; sendBtn.disabled = !input.value.trim();
@@ -607,6 +719,7 @@
 
       window.hearth && window.hearth.track('message_sent');
       bubble("user", text);
+      transcript.push({ role: "user", content: text });
       input.value = ""; autosize();
       history.push({ role:"user", content:text });
       const out = bubble("ai", "…");
@@ -621,6 +734,8 @@
         renderMarkdown(out, full);
         thread.scrollTop = thread.scrollHeight;
         history.push({ role:"assistant", content: full });
+        transcript.push({ role: "ai", content: full });
+        saveConvo();
       } catch (e){
         out.textContent = "(the fire flickered — try that again)";
       } finally {

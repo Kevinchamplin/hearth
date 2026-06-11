@@ -4,6 +4,18 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-11, hearth-pwa-and-memory) [2h]
+- **True offline (PWA):** service worker caches the app shell + JS libraries (model weights left
+  to WebLLM's own cache; analytics never cached), web manifest + ember icons (192/512/maskable),
+  theme-color/apple-touch meta, and an **Install** button (beforeinstallprompt) so Hearth lives in
+  the dock/home screen as a real app. **Verified with Playwright: page fully loads with the
+  network killed** — the "works offline" promise is now literally true (previously only the model
+  weights were cached; the page itself needed network).
+- **Conversation memory:** chats now auto-save locally (IndexedDB — this device only, never
+  uploaded). New 💬 drawer: past conversations with title/date/exchange count, tap to resume
+  (model context rebuilt), ＋ New chat, hover-× delete. Vision exchanges saved as text (📷
+  prefix). FAQ entry added for installing.
+
 ### Added (2026-06-09, hearth-seo-opengraph) [1h]
 - **SEO + OpenGraph pass.** Added `robots.txt` (welcomes AI bots — GPTBot/ClaudeBot/PerplexityBot/
   OAI-SearchBot/Google-Extended — and points to the sitemap), `sitemap.xml` (all 5 pages),

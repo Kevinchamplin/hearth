@@ -19,6 +19,8 @@ $faqs = [
    'To think quickly, Hearth uses your computer\'s graphics chip &mdash; the same part that makes games and videos look smooth. Right now, Chrome and Edge are the browsers that let a website use it. Safari and Firefox are adding it soon. For the smoothest experience today, open Hearth in Chrome or Edge.'],
   ['Does it work offline?',
    'Yes &mdash; after that first download. On a plane, in a cabin, with the wifi switched off, Hearth keeps right on working.'],
+  ['Can I install it like a real app?',
+   'Yes! In Chrome or Edge, look for the <strong>Install</strong> button in Hearth\'s top corner (or the install icon in your browser\'s address bar). It puts Hearth in your dock or home screen, opens in its own window, and works fully offline. Your conversations are saved too &mdash; on your device only, never uploaded.'],
   ['Do I need to make an account?',
    'Nope. You open it and start talking. No sign-up, no login, no email required.'],
   ['Can it look at my photos?',
