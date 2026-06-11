@@ -4,6 +4,19 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-11, ce-support-integration) [1h]
+- **Wired Hearth into CE Support** (support.champlinenterprises.com, product `hearth`, ember
+  accent). **Mode B widget**: "Need a hand?" launcher on every page — landing, About/FAQ/
+  Contact/Tutorial (via footer partial), and the app (bottom-left, clear of the send button);
+  warm plain-language greeting, origin-locked iframe, no browser-held secret. **Mode A**: the
+  /contact form now files real CE Support tickets first (branded confirmation email + threaded
+  replies), with the direct-Mailgun path kept as automatic fallback; vanilla client at
+  `site/lib/ce-support.php`, HMAC secret server-only outside the docroot
+  (`hearth-analytics-data/cesupport.php`). Smoke-verified end-to-end (ticket T-XBIOQCEG).
+- Server fix that unblocked downloads: nginx now serves `/models/` with `Cache-Control:
+  no-store`, etag off, conditionals ignored — browser HTTP-cache 304s were poisoning the model
+  loader's Cache.add() (vhost_nginx.conf on the hearth subdomain).
+
 ### Fixed (2026-06-11, hearth-stale-sw-was-the-villain) [1h]
 - **Root cause of the all-afternoon download failures: a stale service worker.** Access-log
   forensics on the first self-hosted attempt showed shards streaming 200 then re-requested as

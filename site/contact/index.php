@@ -15,8 +15,26 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     } elseif ($name === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || $message === '') {
         $notice = 'Please add your name, a valid email, and a short message.';
     } else {
-        $mg = @include '/var/www/vhosts/kevinchamplin.com/hearth-analytics-data/mailgun.php';
         $sent = false;
+        // First choice: file a real CE Support ticket (threaded conversation, branded
+        // confirmation email to the sender). Mailgun below remains the safety net.
+        $cs = @include '/var/www/vhosts/kevinchamplin.com/hearth-analytics-data/cesupport.php';
+        if (is_array($cs) && !empty($cs['secret'])) {
+            if (!defined('CE_SUPPORT_BASE')) {
+                define('CE_SUPPORT_BASE', $cs['base']);
+                define('CE_SUPPORT_PRODUCT_SLUG', $cs['slug']);
+                define('CE_SUPPORT_API_SECRET', $cs['secret']);
+            }
+            require_once __DIR__ . '/../lib/ce-support.php';
+            $r = ce_support_file_ticket([
+                'customer_email' => $email,
+                'customer_name'  => $name,
+                'subject'        => 'Hearth — ' . mb_substr($message, 0, 60),
+                'body'           => $message . "\n\n— sent from hearth.kevinchamplin.com/contact",
+            ]);
+            $sent = !empty($r['ok']);
+        }
+        $mg = $sent ? null : @include '/var/www/vhosts/kevinchamplin.com/hearth-analytics-data/mailgun.php';
         if (is_array($mg) && !empty($mg['key'])) {
             $endpoint = rtrim($mg['endpoint'] ?: 'https://api.mailgun.net', '/');
             $url  = $endpoint . '/v3/' . $mg['domain'] . '/messages';
@@ -42,7 +60,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             $sent = ($code >= 200 && $code < 300);
         }
         if ($sent) {
-            $ok = true; $notice = "Thank you — your message is on its way. I'll get back to you soon.";
+            $ok = true; $notice = "Thank you — your message is in. Check your email for a confirmation; I'll get back to you soon.";
             $name = $email = $message = '';
         } else {
             $notice = "Hmm, that didn't go through. You can email me directly at kevin@kevinchamplin.com.";
