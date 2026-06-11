@@ -4,6 +4,16 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Fixed (2026-06-11, hearth-rate-limit-guidance) [0.5h]
+- Diagnosed Kevin's persistent "Cache.add() network error" via the analytics trail: **three
+  successful brain downloads in 10 minutes → Hugging Face rate-limited the IP** (model repos
+  verified healthy from another IP). The failure screen now detects this case and says so
+  plainly — "the model server is asking us to slow down… give it 10–15 minutes; constant
+  retrying resets their clock" — and appends **storage available** to the technical detail,
+  with dedicated copy when the browser is under ~2 GB free (the other silent killer).
+- Known follow-up: self-hosting the Fast brain on our own server would remove the third-party
+  rate limit from the first-run path entirely.
+
 ### Fixed (2026-06-11, hearth-start-fresh-recovery) [0.5h]
 - **Persistent download failures are now curable in-app.** A corrupted partial download can
   poison the model cache so every resume fails identically (Kevin hit this: stuck at 97%, then

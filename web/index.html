@@ -657,9 +657,26 @@
         stopTips();
         const reason = String((e && e.message) || e);
         window.hearth && window.hearth.track('model_load_failed', { value: reason.slice(0, 80) });
-        $("status").textContent = "The download keeps tripping on something.";
-        $("pct").textContent = "Try again keeps your progress. If it trips twice, Start fresh clears the partial download — that usually cures it.";
-        const det = $("errDetail"); det.textContent = "Technical detail: " + reason.slice(0, 200); det.hidden = false;
+        const rateLimited = /Cache\.add|429|network error/i.test(reason);
+        if (rateLimited) {
+          $("status").textContent = "The model server is asking us to slow down.";
+          $("pct").textContent = "This happens after downloading a few brains in a row — it's them, not you. Give it 10–15 minutes (constant retrying resets their clock), then Try again.";
+        } else {
+          $("status").textContent = "The download keeps tripping on something.";
+          $("pct").textContent = "Try again keeps your progress. If it trips twice, Start fresh clears the partial download — that usually cures it.";
+        }
+        const det = $("errDetail");
+        det.textContent = "Technical detail: " + reason.slice(0, 200);
+        try {
+          const est = await navigator.storage.estimate();
+          const freeGB = ((est.quota || 0) - (est.usage || 0)) / 1e9;
+          det.textContent += " · storage available: " + freeGB.toFixed(1) + " GB";
+          if (freeGB < 2) {
+            $("status").textContent = "Your browser is running out of storage room.";
+            $("pct").textContent = "Hearth needs a couple of GB free. Freeing disk space (or clearing old brains with Start fresh) should fix it.";
+          }
+        } catch (e2) {}
+        det.hidden = false;
         $("retryBtn").hidden = false;
         $("freshBtn").hidden = false;
       }
