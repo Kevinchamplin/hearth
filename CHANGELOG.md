@@ -4,6 +4,20 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-11, hearth-syscheck-sticky-credit) [1h]
+- **"Will it run on my computer?" checker** on the landing (honest-details section): one click
+  reads what the browser can see — AI-capable browser (WebGPU), memory, free space
+  (storage.estimate), processor cores — and renders plain-language rows ("Thinking room:
+  plenty — 8 GB or more") + a warm overall verdict with a recommended brain. Honest about old
+  machines without scaring anyone; "the check happens right in your browser — nothing is sent
+  anywhere." The app gate also auto-shows "✓ This computer looks ready for Hearth" (or the
+  Chrome/Edge nudge) before they commit.
+- **Fixed: chat input scrolling off-screen.** The app frame is now locked to the viewport
+  (100dvh + overflow hidden; scrolling lives inside the thread), so the header and composer are
+  always visible no matter how long the conversation gets.
+- **In-app attribution:** "Built by Kevin Champlin" (→ kevinchamplin.com) on the gate and in the
+  composer footer.
+
 ### Added (2026-06-11, hearth-download-retry-and-tips) [0.5h]
 - **Download failures are no longer dead ends.** Model downloads cache file-by-file, so a
   failure near the end (e.g. stuck at 97% with "Failed to fetch") was always resumable — now

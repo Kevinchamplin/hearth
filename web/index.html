@@ -49,7 +49,8 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{font-family:"Inter",system-ui,-apple-system,sans-serif;background:var(--grad);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
-  .app{min-height:100vh;display:flex;flex-direction:column}
+  .app{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+  .bar{flex:none}
   .serif{font-family:"Fraunces",Georgia,serif}
 
   /* top bar */
@@ -73,7 +74,7 @@
   .ember.kindling{animation:breathe 1.6s ease-in-out infinite alternate}
 
   /* stage / views */
-  .stage{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+  .stage{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
   .view{display:none;width:100%;max-width:680px;flex-direction:column;align-items:center}
   .view.active{display:flex}
 
@@ -279,6 +280,8 @@
         </button>
         <p class="fineprint">Runs 100% on your device · <b>~1&nbsp;GB one-time download</b> · then works without internet · best in Chrome or Edge</p>
         <p class="fineprint" style="margin-top:10px"><a href="/faq" style="color:var(--brass-lit);text-decoration:underline">Wait — why? (the 60-second, no-jargon version)</a></p>
+        <p class="fineprint" id="gateReady" style="margin-top:14px"></p>
+        <p class="fineprint" style="margin-top:14px;opacity:.8">Built by <a href="https://kevinchamplin.com" target="_blank" rel="noopener" style="color:var(--brass-lit);text-decoration:underline">Kevin Champlin</a></p>
       </section>
 
       <!-- LOADING -->
@@ -314,7 +317,7 @@
           <textarea id="input" rows="1" placeholder="Ask anything, or attach an image…"></textarea>
           <button class="send" id="sendBtn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 20V5M5 12l7-7 7 7"/></svg></button>
         </div>
-        <p class="composer-foot">Private · runs on your device · unlimited &amp; free</p>
+        <p class="composer-foot">Private · runs on your device · unlimited &amp; free · built by <a href="https://kevinchamplin.com" target="_blank" rel="noopener" style="color:var(--brass-lit);text-decoration:none">Kevin Champlin</a></p>
       </section>
     </main>
   </div>
@@ -406,6 +409,19 @@
       if (p < 1)    return "Almost cozy…";
       return "Ready by the fire.";
     }
+
+    // Quiet readiness check on the gate — show them their computer can do this before they commit.
+    (async function(){
+      const el = $("gateReady"); if (!el) return;
+      let ok = false;
+      try { ok = !!(navigator.gpu && await navigator.gpu.requestAdapter()); } catch (e) {}
+      if (!ok) { el.textContent = "⚠ This browser can't light the fire — open Hearth in Chrome or Edge."; el.style.color = "#E9967A"; return; }
+      const mem = navigator.deviceMemory || 0;
+      el.textContent = (mem && mem < 4)
+        ? "✓ This computer can run Hearth — the Fast brain will suit it best."
+        : "✓ Good news: this computer looks ready for Hearth.";
+      el.style.color = "#8ecb9f";
+    })();
 
     // Greet by the visitor's own local time — their device clock, since Hearth runs on their machine.
     (function setGreeting(){
