@@ -1,7 +1,7 @@
 /* Hearth service worker — makes the app genuinely work offline.
    Caches the app shell + the JS libraries it needs. Deliberately does NOT touch
    the model weights (WebLLM/transformers.js manage their own cache) or analytics. */
-const VERSION = "hearth-shell-v2";
+const VERSION = "hearth-shell-v3";
 const SHELL = ["./", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
 const CDN_HOSTS = ["cdn.jsdelivr.net", "esm.run", "fonts.googleapis.com", "fonts.gstatic.com"];
 
@@ -22,6 +22,7 @@ self.addEventListener("fetch", (e) => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.pathname.includes("/analytics/")) return; // never cache analytics
+  if (url.pathname.includes("/models/")) return;    // model weights: WebLLM manages its own cache
 
   // The page itself: try network (so updates arrive), fall back to cache when offline.
   if (req.mode === "navigate") {

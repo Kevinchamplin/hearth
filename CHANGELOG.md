@@ -4,6 +4,19 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-11, hearth-self-hosted-fast-brain) [1.5h]
+- **The Fast brain now downloads from our own server** — mirrored all 30 model files (677 MB)
+  + the matching WebLLM wasm lib to `hearth.kevinchamplin.com/models/` (HF `resolve/main` path
+  shape preserved so WebLLM's URL joining just works). The default first-run path no longer
+  touches Hugging Face at all → no third-party rate limits (the exact failure Kevin hit after
+  downloading three brains in an hour). Smart/Genius still come from the public hub.
+  WebLLM pinned to 0.2.84 (matching the hosted wasm ABI); appConfig overrides only the Fast
+  entry. Service worker now ignores `/models/` (WebLLM manages its own weight cache); SW v3.
+- **Self-diagnosing failure screen:** on a failed download it now probes the model server and
+  the browser's cache storage separately and says which one is sick — storage hiccup ("quit
+  Chrome and reopen"), low disk, server throttling ("wait 15–30 min, don't hammer retry"),
+  offline, or transient — with the probe results appended to the technical detail.
+
 ### Fixed (2026-06-11, hearth-rate-limit-guidance) [0.5h]
 - Diagnosed Kevin's persistent "Cache.add() network error" via the analytics trail: **three
   successful brain downloads in 10 minutes → Hugging Face rate-limited the IP** (model repos

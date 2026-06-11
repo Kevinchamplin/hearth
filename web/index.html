@@ -393,13 +393,25 @@
     // Below: WebLLM. The part that runs an actual language model on your GPU,
     // inside a browser tab, with no server involved. If you'd told 2019-me this
     // was possible I'd have laughed. Anyway — it's all client-side from here. 🔥
-    import * as webllm from "https://esm.run/@mlc-ai/web-llm";
+    import * as webllm from "https://esm.run/@mlc-ai/web-llm@0.2.84";
 
     const MODELS = [
       { id: "Llama-3.2-1B-Instruct-q4f32_1-MLC", name: "Fast",   emoji: "⚡", size: "~1 GB", blurb: "Quick and light. Works well on almost any computer." },
       { id: "Llama-3.2-3B-Instruct-q4f16_1-MLC", name: "Smart",  emoji: "✨", size: "~2 GB", blurb: "More thoughtful, fuller answers. Best on a newer computer." },
       { id: "Llama-3.1-8B-Instruct-q4f16_1-MLC", name: "Genius", emoji: "🧠", size: "~5 GB", blurb: "The most capable. Needs a powerful computer with lots of memory." },
     ];
+
+    // The Fast brain is mirrored on OUR server — no third-party rate limits on the
+    // first-run path. Smart/Genius still come from the public model hub.
+    const SELF_HOST = "https://hearth.kevinchamplin.com/models";
+    const APP_CONFIG = {
+      ...webllm.prebuiltAppConfig,
+      model_list: webllm.prebuiltAppConfig.model_list.map((m) =>
+        m.model_id === "Llama-3.2-1B-Instruct-q4f32_1-MLC"
+          ? { ...m, model: SELF_HOST + "/fast", model_lib: SELF_HOST + "/libs/Llama-3.2-1B-Instruct-q4f32_1_cs1k-webgpu.wasm" }
+          : m
+      ),
+    };
     function modelInfo(id){ return MODELS.find(m => m.id === id) || MODELS[0]; }
     let currentModelId = MODELS[0].id;
     try { const saved = localStorage.getItem("h_model"); if (saved && modelInfo(saved).id === saved) currentModelId = saved; } catch (e) {}
@@ -632,6 +644,7 @@
       const t0 = performance.now();
       try {
         engine = await webllm.CreateMLCEngine(id, {
+          appConfig: APP_CONFIG,
           initProgressCallback: (r) => {
             $("status").textContent = warmStatus(r);
             const pct = Math.max(0, Math.min(100, Math.round((r.progress || 0) * 100)));
@@ -657,25 +670,34 @@
         stopTips();
         const reason = String((e && e.message) || e);
         window.hearth && window.hearth.track('model_load_failed', { value: reason.slice(0, 80) });
-        const rateLimited = /Cache\.add|429|network error/i.test(reason);
-        if (rateLimited) {
+        $("status").textContent = "Hmm — checking what went wrong…";
+        $("pct").textContent = "";
+        // Probe the two usual suspects separately: the model server, and this browser's storage.
+        let net = "unreachable", store = "OK", freeGB = null;
+        try { const r = await fetch(SELF_HOST + "/fast/resolve/main/mlc-chat-config.json", { cache: "no-store" }); net = r.status; } catch (e2) {}
+        try { const c = await caches.open("hearth-probe"); await c.put("/probe", new Response("ok")); await caches.delete("hearth-probe"); } catch (e2) { store = "FAILING"; }
+        try { const est = await navigator.storage.estimate(); freeGB = ((est.quota || 0) - (est.usage || 0)) / 1e9; } catch (e2) {}
+        if (store === "FAILING") {
+          $("status").textContent = "Your browser's storage hiccuped — easy fix.";
+          $("pct").textContent = "Quit Chrome completely (right-click its icon → Quit) and reopen Hearth. That repairs it almost every time.";
+        } else if (freeGB !== null && freeGB < 2) {
+          $("status").textContent = "Your browser is running out of storage room.";
+          $("pct").textContent = "Hearth needs a couple of GB free. Free up some disk space, then Try again.";
+        } else if (net === 429 || (typeof net === "number" && net >= 500)) {
           $("status").textContent = "The model server is asking us to slow down.";
-          $("pct").textContent = "This happens after downloading a few brains in a row — it's them, not you. Give it 10–15 minutes (constant retrying resets their clock), then Try again.";
+          $("pct").textContent = "Give it 15–30 minutes (constant retrying resets their clock), then Try again.";
+        } else if (net === "unreachable") {
+          $("status").textContent = "Can't reach the model server right now.";
+          $("pct").textContent = "Check your internet (or VPN/ad-blocker) and Try again — your progress is saved.";
         } else {
-          $("status").textContent = "The download keeps tripping on something.";
-          $("pct").textContent = "Try again keeps your progress. If it trips twice, Start fresh clears the partial download — that usually cures it.";
+          $("status").textContent = "The download tripped, but everything checks out now.";
+          $("pct").textContent = "Try again keeps your progress. If it trips twice more, Start fresh clears the partial download.";
         }
         const det = $("errDetail");
-        det.textContent = "Technical detail: " + reason.slice(0, 200);
-        try {
-          const est = await navigator.storage.estimate();
-          const freeGB = ((est.quota || 0) - (est.usage || 0)) / 1e9;
-          det.textContent += " · storage available: " + freeGB.toFixed(1) + " GB";
-          if (freeGB < 2) {
-            $("status").textContent = "Your browser is running out of storage room.";
-            $("pct").textContent = "Hearth needs a couple of GB free. Freeing disk space (or clearing old brains with Start fresh) should fix it.";
-          }
-        } catch (e2) {}
+        det.textContent = "Technical detail: " + reason.slice(0, 160) +
+          " · model server: " + (typeof net === "number" ? "HTTP " + net : net) +
+          " · browser storage: " + store +
+          (freeGB !== null ? " · room available: " + freeGB.toFixed(1) + " GB" : "");
         det.hidden = false;
         $("retryBtn").hidden = false;
         $("freshBtn").hidden = false;
