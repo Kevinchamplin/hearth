@@ -4,6 +4,18 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Fixed (2026-06-11, hearth-stale-sw-was-the-villain) [1h]
+- **Root cause of the all-afternoon download failures: a stale service worker.** Access-log
+  forensics on the first self-hosted attempt showed shards streaming 200 then re-requested as
+  206 partials — the signature of the OLD cached SW (pre-/models/-exclusion) intercepting model
+  downloads and stuffing GB shards into the shell cache (`Cache.add() network error`; also
+  explains the original 97% failure — the timeline matches the SW's first ship). Hard-refresh
+  never helped because refresh bypasses the page cache, not the controlling worker.
+- Fixes: SW **v4** (activate purges the shard-bloated old caches), fetch handler now ignores
+  ranged requests entirely and only ever caches full 200s, and the page **forces an SW update
+  check on every open** with a one-time reload on controllerchange (guarded against reloading
+  mid-generation) — stale workers can never linger again.
+
 ### Added (2026-06-11, hearth-all-brains-self-hosted) [1h]
 - **All three brains now download exclusively from our own server.** Root cause of the
   persistent failures even after Fast was mirrored: Kevin was loading **Smart**, whose weights

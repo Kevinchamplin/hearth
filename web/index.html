@@ -490,7 +490,18 @@
     let pendingImage = null, visionEngine = null;
 
     // ---- Offline app (service worker + install) ----
-    if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js").catch(() => {}); }
+    if ("serviceWorker" in navigator) {
+      // Register AND force an update check on every open — a stale worker once sabotaged
+      // model downloads for a whole afternoon. When a new worker takes over, reload once
+      // so the page runs matching code (never mid-generation).
+      navigator.serviceWorker.register("sw.js").then((reg) => { reg.update().catch(() => {}); }).catch(() => {});
+      let swReloaded = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (swReloaded || generating) return;
+        swReloaded = true;
+        location.reload();
+      });
+    }
     const isInstalled = window.matchMedia && window.matchMedia("(display-mode: standalone)").matches;
     let installPrompt = null;
     window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); installPrompt = e; });

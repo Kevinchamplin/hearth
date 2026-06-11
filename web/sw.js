@@ -1,7 +1,7 @@
 /* Hearth service worker — makes the app genuinely work offline.
    Caches the app shell + the JS libraries it needs. Deliberately does NOT touch
    the model weights (WebLLM/transformers.js manage their own cache) or analytics. */
-const VERSION = "hearth-shell-v3";
+const VERSION = "hearth-shell-v4";
 const SHELL = ["./", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
 const CDN_HOSTS = ["cdn.jsdelivr.net", "esm.run", "fonts.googleapis.com", "fonts.gstatic.com"];
 
@@ -39,14 +39,16 @@ self.addEventListener("fetch", (e) => {
   // Only same-origin assets + known JS/font CDNs. Model-weight hosts pass straight through.
   const sameOrigin = url.origin === self.location.origin;
   if (!sameOrigin && !CDN_HOSTS.includes(url.hostname)) return;
+  if (req.headers.has("range")) return; // ranged requests (big binaries): hands off entirely
 
-  // Cache-first with background refresh.
+  // Cache-first with background refresh. Only ever cache full 200s (a 206 partial
+  // poisons the cache and Cache.put rejects it anyway).
   e.respondWith(
     caches.match(req).then((hit) => {
       const net = fetch(req).then((res) => {
-        if (res && (res.ok || res.type === "opaque")) {
+        if (res && (res.status === 200 || res.type === "opaque")) {
           const copy = res.clone();
-          caches.open(VERSION).then((c) => c.put(req, copy));
+          caches.open(VERSION).then((c) => c.put(req, copy)).catch(() => {});
         }
         return res;
       }).catch(() => hit);
