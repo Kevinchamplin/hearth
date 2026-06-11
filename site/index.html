@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Hearth — a warm light in a cold cloud</title>
-<meta name="description" content="Hearth is a beautiful, free AI that runs entirely on your own computer. Private, unlimited, offline. No account, no cloud, nobody watching." />
-<meta property="og:title" content="Hearth — a warm light in a cold cloud" />
-<meta property="og:description" content="A beautiful, free AI that lives on your computer. Private, unlimited, offline." />
+<title>Hearth — Free, Private AI That Runs on Your Computer</title>
+<meta name="description" content="Hearth is a free AI you actually own: it runs on your computer, not in the cloud. No account, no subscription, 100% private, works offline. One download and it's yours." />
+<meta property="og:title" content="Hearth — Free, Private AI That Runs on Your Computer" />
+<meta property="og:description" content="No account. No subscription. Nothing you say leaves your machine — it even works offline. One download and it's yours, forever." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://hearth.kevinchamplin.com/" />
 <meta property="og:image" content="https://hearth.kevinchamplin.com/assets/og.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Hearth — a warm light in a cold cloud" />
-<meta name="twitter:description" content="A beautiful, free AI that lives on your computer. Private, unlimited, offline." />
+<meta name="twitter:title" content="Hearth — Free, Private AI That Runs on Your Computer" />
+<meta name="twitter:description" content="No account. No subscription. Nothing you say leaves your machine — it even works offline. One download and it's yours, forever." />
 <meta name="twitter:image" content="https://hearth.kevinchamplin.com/assets/og.png" />
 <link rel="canonical" href="https://hearth.kevinchamplin.com/" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -81,6 +81,34 @@
   .hero-cta{display:flex;gap:14px;justify-content:center;margin-top:38px;flex-wrap:wrap}
   .trust{margin-top:26px;font-size:13.5px;color:var(--on-d-soft);display:flex;gap:18px;justify-content:center;flex-wrap:wrap;font-family:"JetBrains Mono",ui-monospace,monospace;letter-spacing:.02em}
   .trust span{opacity:.85}
+  .hero-stats{display:flex;gap:46px;justify-content:center;margin-top:34px;flex-wrap:wrap}
+  .hstat{max-width:170px;text-align:center}
+  .hstat .hn{font-weight:600;font-size:36px;line-height:1;color:var(--brass-lit)}
+  .hstat .hl{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--on-d-soft);margin-top:9px;line-height:1.55}
+  /* comparison table */
+  .compare-wrap{max-width:860px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;overflow-x:auto;box-shadow:0 3px 16px rgba(43,39,32,.05)}
+  table.compare{width:100%;border-collapse:collapse;font-size:15.5px;min-width:560px}
+  .compare th,.compare td{padding:15px 20px;text-align:left;border-bottom:1px solid var(--line)}
+  .compare tr:last-child td{border-bottom:none}
+  .compare th{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:16.5px}
+  .compare td:first-child,.compare th:first-child{color:var(--ink-soft);font-weight:500;width:26%}
+  .compare .hcol{background:rgba(200,161,90,.08)}
+  .compare td.hcol strong{color:var(--brass-text)}
+  .compare-foot{text-align:center;font-size:15px;color:var(--ink-soft);margin-top:18px}
+  /* install guide */
+  .install-guide{max-width:660px;margin:44px auto 30px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px 32px;text-align:left;box-shadow:0 3px 16px rgba(43,39,32,.05)}
+  .ig-title{font-size:23px;font-weight:600;margin-bottom:8px}
+  .ig-sub{font-size:15px;color:var(--ink-soft);margin-bottom:18px;line-height:1.55}
+  .ig-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+  .ig-tabs button{font-family:inherit;font-size:13.5px;font-weight:600;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink-soft);cursor:pointer}
+  .ig-tabs button.on{background:var(--ink);color:var(--paper-50,#FBFAF7);border-color:var(--ink)}
+  .ig-panel{display:none}
+  .ig-panel.on{display:block}
+  .ig-panel ol{margin:0 0 14px 0;padding-left:0;list-style:none;counter-reset:ig}
+  .ig-panel ol li{counter-increment:ig;position:relative;padding:0 0 14px 44px;font-size:15.5px;line-height:1.6}
+  .ig-panel ol li::before{content:counter(ig);position:absolute;left:0;top:1px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:14px;color:#3A2206;background:radial-gradient(circle at 36% 30%,#FFD89A,#EE9A45 78%)}
+  .ig-panel a{color:var(--brass-text);text-decoration:underline}
+  .ig-alt{font-size:13.5px;color:var(--ink-soft);background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:12px 15px;line-height:1.55}
   .runs-on{margin-top:18px;font-size:13.5px;color:var(--brass-lit)}
   .soon{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass-text);background:rgba(200,161,90,.12);padding:4px 10px;border-radius:999px}
   .browser-cta{display:flex;align-items:center;gap:24px;text-align:left;background:linear-gradient(135deg,#ffffff,#FFF6E8);border:1.5px solid rgba(200,161,90,.42);border-radius:20px;padding:26px 30px;max-width:800px;margin:0 auto 14px;box-shadow:0 12px 44px rgba(238,154,69,.15)}
@@ -183,15 +211,19 @@
           <div class="glow"></div><div class="ember"></div>
           <span class="mote"></span><span class="mote"></span><span class="mote"></span>
         </div>
-        <p class="eyebrow">Free · Private · Runs on your computer</p>
-        <h1 class="serif">A warm light in a cold cloud.</h1>
-        <p class="lead">Hearth is a beautiful AI that lives on your computer — private, unlimited, and free. No account. No internet. Nobody watching. Just you and a quiet, intelligent presence by the fire.</p>
+        <p class="eyebrow">A warm light in a cold cloud</p>
+        <h1 class="serif">A free, private AI that lives on your own computer.</h1>
+        <p class="lead">Ask it anything — tonight's dinner, the tricky email, your kid's homework. No account. No monthly fee. And nothing you say ever leaves your machine — it even works with the wifi off.</p>
         <div class="hero-cta">
           <a href="/app" class="btn btn-primary" data-ev="hero_try"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>Try it in your browser</a>
           <a href="#download" class="btn btn-ghost" data-ev="hero_download">Download the app</a>
         </div>
         <p class="runs-on">No install in Chrome — or a native app for macOS, Windows &amp; Linux</p>
-        <div class="trust"><span>100% on your device</span><span>·</span><span>No sign-up</span><span>·</span><span>Works offline</span></div>
+        <div class="hero-stats">
+          <div class="hstat"><div class="hn serif">$0</div><div class="hl">forever — no subscription, no caps</div></div>
+          <div class="hstat"><div class="hn serif">100%</div><div class="hl">private — nothing leaves your device</div></div>
+          <div class="hstat"><div class="hn serif">1</div><div class="hl">download — then it's yours, even offline</div></div>
+        </div>
       </div>
     </div>
   </section>
@@ -226,6 +258,28 @@
           <p>No account, no login, no tracking. Hearth is an app that lives with you — not a service you rent.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- COMPARE -->
+  <section class="props" id="compare" style="padding-top:0">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">The question everyone asks</p>
+        <h2 class="serif">&ldquo;So how is this different from ChatGPT?&rdquo;</h2>
+        <p>Simple: ChatGPT runs in a giant data center you rent. Hearth runs on your own computer. That one difference changes everything below.</p>
+      </div>
+      <div class="compare-wrap">
+        <table class="compare">
+          <tr><th></th><th class="hcol">🔥 Hearth</th><th>Cloud AI (ChatGPT, Gemini)</th></tr>
+          <tr><td>Price</td><td class="hcol"><strong>Free, forever</strong></td><td>~$20/month for the good stuff</td></tr>
+          <tr><td>Privacy</td><td class="hcol"><strong>Everything stays on your device</strong></td><td>Your chats live on their servers</td></tr>
+          <tr><td>Works offline</td><td class="hcol"><strong>Yes — even on a plane</strong></td><td>No internet, no AI</td></tr>
+          <tr><td>Account needed</td><td class="hcol"><strong>None. Just open it.</strong></td><td>Sign-up required</td></tr>
+          <tr><td>Huge, complex projects</td><td class="hcol">Honestly? Not its thing</td><td><strong>The cloud wins here</strong></td></tr>
+        </table>
+      </div>
+      <p class="compare-foot">That last row is on purpose. Hearth isn't trying to replace the giants — it's the everyday AI that's actually <em>yours</em>.</p>
     </div>
   </section>
 
@@ -306,7 +360,7 @@
         </div>
       </div>
       <div style="margin-top:32px;background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:24px 28px;max-width:820px;margin-left:auto;margin-right:auto">
-        <p style="margin:0;font-size:17px;color:var(--ink);line-height:1.7"><strong>One honest note:</strong> Hearth isn't trying to beat ChatGPT or Gemini — those run on enormous data centers. Hearth runs on <em>your</em> computer, and that's exactly the point: simple, fast, and completely private. It won't build you a full website, but it'll happily give you a recipe, explain something tricky, help you word an email, or brainstorm — right on your machine, free, with nobody watching.</p>
+        <p style="margin:0;font-size:17px;color:var(--ink);line-height:1.7"><strong>The only catch — and we'll name it ourselves:</strong> your first visit downloads Hearth's brain. It's about 1&nbsp;GB and takes a few minutes. That is the <em>entire</em> price — no money, no account, no fine print. Like downloading a movie before a flight: once it's home, it's yours. Instant, offline, free, forever.</p>
       </div>
     </div>
   </section>
@@ -345,6 +399,47 @@
           <span class="soon">Coming soon</span>
         </div>
       </div>
+      <div class="install-guide" id="install">
+        <h3 class="serif ig-title">Keep it forever: install it like a real app</h3>
+        <p class="ig-sub" id="igDetect">Hearth can live in your Dock or taskbar — no app store needed. Pick your browser and we'll point right at the button.</p>
+        <div class="ig-tabs" id="igTabs">
+          <button type="button" data-g="chrome" class="on">Chrome</button>
+          <button type="button" data-g="edge">Edge</button>
+          <button type="button" data-g="safari">Safari (Mac)</button>
+          <button type="button" data-g="phone">Phone &amp; tablet</button>
+        </div>
+        <div class="ig-panel on" data-g="chrome">
+          <ol>
+            <li>Open <a href="/app">Hearth</a> in Chrome and light the fire.</li>
+            <li>Look at the <strong>right end of the address bar</strong> for a small <strong>install icon</strong> — a little screen with a down-arrow.</li>
+            <li>Click it, then <strong>Install</strong>. Done — Hearth now opens from your Dock (Mac) or Start menu (Windows), in its own window.</li>
+          </ol>
+          <p class="ig-alt">Don't see the icon? Click the <strong>⋮ menu</strong> in Chrome's top corner → <strong>Cast, save and share</strong> → <strong>Install page as app…</strong> — or just use the <strong>⬇ Install</strong> button inside Hearth itself.</p>
+        </div>
+        <div class="ig-panel" data-g="edge">
+          <ol>
+            <li>Open <a href="/app">Hearth</a> in Microsoft Edge.</li>
+            <li>Click the <strong>⋯ menu</strong> in the top-right corner.</li>
+            <li>Choose <strong>Apps</strong> → <strong>Install Hearth</strong>. It now opens from your Start menu like any other app.</li>
+          </ol>
+          <p class="ig-alt">Edge may also show a small <strong>install icon</strong> at the right end of the address bar — one click does the same thing.</p>
+        </div>
+        <div class="ig-panel" data-g="safari">
+          <ol>
+            <li>Open <a href="/app">Hearth</a> in Safari.</li>
+            <li>Click <strong>File</strong> in the menu bar at the top of your screen.</li>
+            <li>Choose <strong>Add to Dock…</strong> and click <strong>Add</strong>.</li>
+          </ol>
+          <p class="ig-alt">Honest heads-up: Hearth runs smoothest in <strong>Chrome or Edge</strong> today — Safari is still catching up on the technology Hearth uses to think fast.</p>
+        </div>
+        <div class="ig-panel" data-g="phone">
+          <ol>
+            <li><strong>iPhone &amp; iPad:</strong> open Hearth in Safari, tap the <strong>Share button</strong> (the square with an arrow), then <strong>Add to Home Screen</strong>.</li>
+            <li><strong>Android:</strong> open Hearth in Chrome, tap the <strong>⋮ menu</strong>, then <strong>Add to Home screen</strong> (or <strong>Install app</strong>).</li>
+          </ol>
+          <p class="ig-alt">Honest heads-up: phones are still experimental for Hearth — newer phones with plenty of memory handle the Fast brain; older ones may struggle. A computer is the best seat by the fire for now.</p>
+        </div>
+      </div>
       <p class="dl-note">The browser version is <strong>live now</strong> — the Mac, Windows &amp; Linux apps are in active, in-the-open development. <a href="https://github.com/Kevinchamplin/hearth" id="gh" target="_blank" rel="noopener">Star it on GitHub</a> to follow along.</p>
     </div>
   </section>
@@ -374,6 +469,34 @@
       <p class="copy">Built by <a href="https://kevinchamplin.com" style="color:inherit">Kevin Champlin</a> · A warm light in a cold cloud · © 2026</p>
     </div>
   </footer>
+
+  <script>
+    (function(){
+      var tabs = document.getElementById('igTabs'); if (!tabs) return;
+      var panels = document.querySelectorAll('.ig-panel');
+      function pick(g){
+        tabs.querySelectorAll('button').forEach(function(b){ b.classList.toggle('on', b.dataset.g === g); });
+        panels.forEach(function(p){ p.classList.toggle('on', p.dataset.g === g); });
+      }
+      tabs.addEventListener('click', function(e){ var b = e.target.closest('button'); if (b) pick(b.dataset.g); });
+      // Auto-detect their browser/OS and open the right tab with a friendly note.
+      var ua = navigator.userAgent, g = 'chrome', label = '';
+      if (/iPhone|iPad|Android/i.test(ua)) { g = 'phone'; label = 'a phone or tablet'; }
+      else if (/Edg\//.test(ua)) { g = 'edge'; label = 'Microsoft Edge'; }
+      else if (/Safari/.test(ua) && !/Chrome|Chromium/.test(ua)) { g = 'safari'; label = 'Safari on a Mac'; }
+      else if (/Chrome/.test(ua)) { g = 'chrome'; label = /Mac/.test(ua) ? 'Chrome on a Mac' : 'Chrome'; }
+      pick(g);
+      if (label) {
+        var d = document.getElementById('igDetect');
+        if (d) {
+          d.textContent = '';
+          d.appendChild(document.createTextNode('It looks like you\'re using '));
+          var s = document.createElement('strong'); s.textContent = label; d.appendChild(s);
+          d.appendChild(document.createTextNode(' — here\'s exactly where your install button lives. (Wrong guess? Pick another tab.)'));
+        }
+      }
+    })();
+  </script>
 
 </body>
 </html>

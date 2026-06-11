@@ -4,6 +4,20 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Changed (2026-06-11, hearth-landing-conversion-and-install-guide) [1.5h]
+- **Conversion + comprehension pass on the landing.** Hero now says it plainly — H1 "A free,
+  private AI that lives on your own computer." (poetry moved to the eyebrow), concrete ask-it-
+  anything lead, and a **$0 / 100% / 1-download stat trio**. New **comparison table** answering
+  "how is this different from ChatGPT?" (price/privacy/offline/account — with an honest "the
+  cloud wins at huge projects" row). The download reframed as **"The only catch — and we'll name
+  it ourselves"** (~1 GB once, movie-before-a-flight analogy, "that's the entire price").
+- **SEO:** title/OG/Twitter now keyword-rich — "Hearth — Free, Private AI That Runs on Your
+  Computer" (H1 was previously pure poetry with zero search terms).
+- **Interactive install guide** on the landing: auto-detects browser/OS ("It looks like you're
+  using Chrome on a Mac"), tabbed plain-language steps for Chrome / Edge / Safari / phones with
+  honest caveats. **In-app:** the ⬇ Install button now always shows (hidden when already
+  installed); without a native prompt it opens a per-browser step overlay.
+
 ### Added (2026-06-11, hearth-pwa-and-memory) [2h]
 - **True offline (PWA):** service worker caches the app shell + JS libraries (model weights left
   to WebLLM's own cache; analytics never cached), web manifest + ember icons (192/512/maskable),

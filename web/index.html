@@ -413,13 +413,43 @@
 
     // ---- Offline app (service worker + install) ----
     if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js").catch(() => {}); }
+    const isInstalled = window.matchMedia && window.matchMedia("(display-mode: standalone)").matches;
     let installPrompt = null;
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault(); installPrompt = e;
-      const b = $("installBtn"); if (b) { b.hidden = false; b.style.display = "inline-flex"; }
-    });
+    window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); installPrompt = e; });
+    function installSteps(){
+      const ua = navigator.userAgent;
+      if (/iPhone|iPad/.test(ua)) return ["Tap the <b>Share</b> button (the square with an arrow).", "Tap <b>Add to Home Screen</b>, then <b>Add</b>."];
+      if (/Android/.test(ua)) return ["Tap the <b>⋮ menu</b> in the top corner.", "Tap <b>Add to Home screen</b> (or <b>Install app</b>)."];
+      if (/Edg\//.test(ua)) return ["Click the <b>⋯ menu</b> in the top-right corner.", "Choose <b>Apps</b> → <b>Install Hearth</b>."];
+      if (/Safari/.test(ua) && !/Chrome|Chromium/.test(ua)) return ["Click <b>File</b> in the menu bar at the top of your screen.", "Choose <b>Add to Dock…</b>, then click <b>Add</b>."];
+      return ["Look at the <b>right end of the address bar</b> for a small install icon (a screen with a down-arrow) and click it.", "Or: <b>⋮ menu</b> → <b>Cast, save and share</b> → <b>Install page as app…</b>"];
+    }
     (function(){ const b = $("installBtn"); if (!b) return;
-      b.addEventListener("click", async () => { if (!installPrompt) return; installPrompt.prompt(); await installPrompt.userChoice; installPrompt = null; b.style.display = "none"; });
+      if (isInstalled) return; // already living in the dock — no button needed
+      b.hidden = false; b.style.display = "inline-flex";
+      b.addEventListener("click", async () => {
+        if (installPrompt) { installPrompt.prompt(); await installPrompt.userChoice; installPrompt = null; return; }
+        // No native prompt available — show friendly directions for THIS browser.
+        const steps = installSteps();
+        const ov = document.createElement("div"); ov.className = "picker-overlay open";
+        const box = document.createElement("div"); box.className = "picker";
+        const h = document.createElement("h2"); h.className = "serif"; h.textContent = "Put Hearth in your Dock";
+        const sub = document.createElement("p"); sub.className = "psub"; sub.textContent = "Install it like a real app — it opens in its own window and works offline.";
+        box.append(h, sub);
+        steps.forEach((s, i) => {
+          const row = document.createElement("div"); row.className = "mcard"; row.style.cursor = "default";
+          const n = document.createElement("div"); n.className = "memoji"; n.textContent = ["1️⃣","2️⃣","3️⃣"][i] || "✨";
+          const bd = document.createElement("div"); bd.className = "mbody";
+          const tx = document.createElement("div"); tx.className = "mblurb"; tx.style.fontSize = "14.5px"; tx.style.color = "var(--ink)";
+          const frag = window.DOMPurify ? window.DOMPurify.sanitize(s, { RETURN_DOM_FRAGMENT: true, ALLOWED_TAGS: ["b"] }) : document.createTextNode(s.replace(/<[^>]+>/g, ""));
+          tx.appendChild(frag); bd.appendChild(tx); row.append(n, bd); box.appendChild(row);
+        });
+        const close = document.createElement("button"); close.className = "pclose"; close.textContent = "Got it";
+        close.addEventListener("click", () => ov.remove());
+        box.appendChild(close);
+        ov.addEventListener("click", (e) => { if (e.target === ov) ov.remove(); });
+        ov.appendChild(box); document.body.appendChild(ov);
+      });
     })();
     window.addEventListener("appinstalled", () => { window.hearth && window.hearth.track("pwa_installed"); const b = $("installBtn"); if (b) b.style.display = "none"; });
 
