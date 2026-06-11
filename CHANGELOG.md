@@ -4,6 +4,12 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Changed (2026-06-11, hearth-works-without-internet-wording) [0.1h]
+- Swapped the jargon-y "works offline" for plain "**works without internet**" everywhere it
+  carries weight — meta/OG descriptions, hero stat trio, props card, comparison-table row, app
+  gate fineprint — and upgraded the FAQ entry ("Does it really work without internet?") with the
+  try-it-yourself wifi-off challenge.
+
 ### Changed (2026-06-11, hearth-landing-conversion-and-install-guide) [1.5h]
 - **Conversion + comprehension pass on the landing.** Hero now says it plainly — H1 "A free,
   private AI that lives on your own computer." (poetry moved to the eyebrow), concrete ask-it-
