@@ -4,6 +4,19 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-11, hearth-ease-of-use-pass) [2h]
+- **Pinnable conversations sidebar** (ChatGPT-style, user's choice): "📌 Pin open" docks the
+  panel as a permanent left column (app shifts right, list auto-refreshes); "✕ Auto-hide"
+  returns it to a slide-over. Choice remembered; mobile always uses the slide-over.
+- **First-run guided tour**: after the model loads the first time, a 5-step skippable tour
+  glows each control in turn — type & Enter → 📎 photos → 🧠 Fast/Smart/Genius → 💬 saved
+  conversations (+ pin) → copy/print. Shown once (replaces the old single brain nudge).
+- **New /tutorial page** — "How to use Hearth: the simple guide": 6 numbered steps with real
+  app screenshots (light the fire / one-time download / just talk / pick its brain / find your
+  conversations / install it) + the wifi-off party trick. Linked from the header + footer nav
+  ("How to use"), the landing, the sitemap, and the app gate ("First time? The 5-minute
+  picture guide").
+
 ### Changed (2026-06-11, hearth-fair-source-relicense) [1h]
 - **Relicensed MIT → FSL-1.1-MIT (Functional Source License)** — fair source: anyone can read,
   run, learn from, and contribute; **competing use is prohibited**; each release auto-converts

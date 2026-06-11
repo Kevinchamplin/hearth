@@ -201,12 +201,35 @@
   .brain-hint .hx{position:absolute;top:6px;right:10px;color:var(--ink-soft);font-size:16px;line-height:1}
   .brain-hint .hx:hover{color:var(--ink)}
   @keyframes hintIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+  /* first-run guided tour */
+  .tour-pop{position:fixed;z-index:130;width:min(310px,86vw);background:#1c1812;border:1px solid var(--brass);border-radius:16px;padding:18px 18px 16px;box-shadow:0 18px 50px rgba(0,0,0,.55);animation:hintIn .25s ease}
+  .tour-pop .tstep{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10px;color:var(--brass-lit);letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px}
+  .tour-pop h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:17.5px;margin:0 0 7px;color:var(--ink)}
+  .tour-pop p{font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin:0 0 14px}
+  .tour-pop .tnav{display:flex;gap:12px;align-items:center}
+  .tour-pop .tnext{flex:1;background:radial-gradient(circle at 35% 30%,#FFD89A,#EE9A45 78%);border:none;color:#3A2206;font-weight:700;font-size:13.5px;padding:10px;border-radius:10px;cursor:pointer;font-family:inherit}
+  .tour-pop .tskip{background:none;border:none;color:var(--ink-soft);cursor:pointer;font-size:12px;font-family:inherit;padding:6px}
+  .tour-pop .tskip:hover{color:var(--ink)}
+  .tour-glow{box-shadow:0 0 0 3px var(--brass-lit), 0 0 26px 6px rgba(238,154,69,.55) !important;border-radius:12px}
   /* conversations drawer */
   .drawer-overlay{position:fixed;inset:0;z-index:90;background:rgba(10,8,5,.55);backdrop-filter:blur(4px);display:none}
   .drawer-overlay.open{display:block}
   .drawer{position:fixed;top:0;left:0;bottom:0;z-index:95;width:min(330px,88vw);background:#1a160f;border-right:1px solid var(--line);padding:20px 16px;transform:translateX(-102%);transition:transform .22s ease;display:flex;flex-direction:column}
   .drawer.open{transform:translateX(0)}
-  .drawer h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:19px;margin:4px 6px 14px;color:var(--ink)}
+  .drawer .dhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 6px 14px}
+  .drawer h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:19px;margin:0;color:var(--ink)}
+  .pinbtn{background:none;border:1px solid var(--line);border-radius:9px;color:var(--ink-soft);cursor:pointer;font-size:11.5px;padding:6px 10px;font-family:"JetBrains Mono",ui-monospace,monospace;white-space:nowrap}
+  .pinbtn:hover{color:var(--ink);border-color:var(--brass-lit)}
+  /* pinned mode: the drawer docks as a permanent left column (user's choice, remembered) */
+  body.drawer-pinned .drawer{transform:none;box-shadow:none;border-right:1px solid var(--line)}
+  body.drawer-pinned .drawer-overlay{display:none !important}
+  body.drawer-pinned .app{margin-left:min(330px,88vw)}
+  @media (max-width:900px){
+    body.drawer-pinned .app{margin-left:0}
+    body.drawer-pinned .drawer{transform:translateX(-102%);box-shadow:0 0 60px rgba(0,0,0,.5)}
+    body.drawer-pinned .drawer.open{transform:none}
+    body.drawer-pinned .drawer-overlay.open{display:block !important}
+  }
   .newchat{display:flex;align-items:center;gap:9px;justify-content:center;width:100%;padding:12px;border-radius:12px;border:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:14.5px;background:radial-gradient(circle at 35% 30%,#FFD89A,#EE9A45 78%);color:#3A2206;margin-bottom:14px}
   .convo-list{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(228,194,124,.3) transparent}
   .convo{position:relative;padding:12px 34px 12px 13px;border:1px solid transparent;border-radius:12px;cursor:pointer;margin-bottom:4px}
@@ -287,7 +310,7 @@
           Light the hearth
         </button>
         <p class="fineprint">Runs 100% on your device · <b>~1&nbsp;GB one-time download</b> · then works without internet · best in Chrome or Edge</p>
-        <p class="fineprint" style="margin-top:10px"><a href="/faq" style="color:var(--brass-lit);text-decoration:underline">Wait — why? (the 60-second, no-jargon version)</a></p>
+        <p class="fineprint" style="margin-top:10px"><a href="/tutorial" target="_blank" rel="noopener" style="color:var(--brass-lit);text-decoration:underline">First time? The 5-minute picture guide</a> · <a href="/faq" target="_blank" rel="noopener" style="color:var(--brass-lit);text-decoration:underline">Why the download?</a></p>
         <p class="fineprint" id="gateReady" style="margin-top:14px"></p>
         <p class="fineprint" style="margin-top:14px;opacity:.8">Built by <a href="https://kevinchamplin.com" target="_blank" rel="noopener" style="color:var(--brass-lit);text-decoration:underline">Kevin Champlin</a></p>
       </section>
@@ -335,7 +358,10 @@
   <!-- Conversations drawer -->
   <div class="drawer-overlay" id="drawerOverlay"></div>
   <aside class="drawer" id="drawer">
-    <h2>Your conversations</h2>
+    <div class="dhead">
+      <h2>Your conversations</h2>
+      <button class="pinbtn" id="pinBtn" type="button" title="Keep this panel open">📌 Pin open</button>
+    </div>
     <button class="newchat" id="newChatBtn">＋ New chat</button>
     <div class="convo-list" id="convoList"></div>
     <p class="dfoot">Saved only on this device — 🔒 never uploaded anywhere.</p>
@@ -501,6 +527,7 @@
         const first = transcript.find(m => m.role === "user");
         await dbPut({ id: currentConvoId, title: (first ? first.content : "Conversation").slice(0, 48),
           created: transcript.created || Date.now(), updated: Date.now(), model: currentModelId, messages: transcript.slice() });
+        if (isPinned()) renderDrawer(); // keep the docked list fresh
       } catch (e) {}
     }
     function whenLabel(ts){
@@ -544,9 +571,19 @@
     }
     function openDrawer(){ renderDrawer(); $("drawer").classList.add("open"); $("drawerOverlay").classList.add("open"); }
     function closeDrawer(){ $("drawer").classList.remove("open"); $("drawerOverlay").classList.remove("open"); }
-    $("chatsBtn").addEventListener("click", openDrawer);
+    function isPinned(){ return document.body.classList.contains("drawer-pinned"); }
+    function setPinned(on){
+      document.body.classList.toggle("drawer-pinned", on);
+      try { localStorage.setItem("h_pin", on ? "1" : ""); } catch (e) {}
+      const pb = $("pinBtn"); if (pb) pb.textContent = on ? "✕ Auto-hide" : "📌 Pin open";
+      if (on) { $("drawerOverlay").classList.remove("open"); renderDrawer(); }
+      else closeDrawer();
+    }
+    $("pinBtn").addEventListener("click", () => setPinned(!isPinned()));
+    $("chatsBtn").addEventListener("click", () => { if (isPinned() && window.innerWidth > 900) { setPinned(false); } else openDrawer(); });
     $("drawerOverlay").addEventListener("click", closeDrawer);
-    $("newChatBtn").addEventListener("click", () => { resetThread(); closeDrawer(); input.focus(); });
+    $("newChatBtn").addEventListener("click", () => { resetThread(); if (!isPinned()) closeDrawer(); input.focus(); });
+    try { if (localStorage.getItem("h_pin") === "1") setPinned(true); } catch (e) {}
     const history = [{ role:"system", content: SYSTEM }];
 
     function lowMemory(){ try { return typeof navigator.deviceMemory === "number" && navigator.deviceMemory > 0 && navigator.deviceMemory < 8; } catch (e) { return false; } }
@@ -605,7 +642,7 @@
         stopTips();
         show("chat");
         $("input").focus();
-        maybeBrainHint();
+        try { localStorage.getItem("h_tour") ? maybeBrainHint() : maybeTour(); } catch (e) { maybeTour(); }
       } catch (e) {
         // Downloads cache file-by-file, so a retry resumes — never make a hiccup feel fatal.
         if (attempt < 1) {
@@ -683,7 +720,61 @@
     $("pickerClose").addEventListener("click", () => $("pickerOverlay").classList.remove("open"));
     $("pickerOverlay").addEventListener("click", (e) => { if (e.target === $("pickerOverlay")) $("pickerOverlay").classList.remove("open"); });
 
-    // One-time nudge so people discover they can change the brain.
+    // ---- First-run guided tour: five little things, then you're a pro. Shown once. ----
+    const TOUR = [
+      { t: null,         title: "Hearth is ready 🔥",      text: "Want the 20-second tour? Five little things and you're a pro.", btn: "Show me" },
+      { t: "#input",     title: "Just type",               text: "Ask anything here and press Enter to send. That's the whole trick." },
+      { t: "#attachBtn", title: "Show it a photo",         text: "Tap the paperclip to attach a picture and ask about it. The photo never leaves your device." },
+      { t: "#modelPill", title: "Pick its brain",          text: "Fast, Smart, or Genius — tap here anytime to switch. Hearth tells you what your computer can handle." },
+      { t: "#chatsBtn",  title: "Your conversations",      text: "They save here automatically — on this device only, never uploaded. You can pin the panel open if you like." },
+      { t: "#printBtn",  title: "Take answers with you",   text: "Hover any reply to Copy it, or print the whole conversation with this button.", btn: "Enjoy the fire 🔥" },
+    ];
+    let tourPop = null, tourTarget = null, tourIdx = 0;
+    function tourCleanup(){
+      if (tourTarget) tourTarget.classList.remove("tour-glow");
+      if (tourPop) tourPop.remove();
+      tourPop = null; tourTarget = null;
+    }
+    function tourFinish(){
+      tourCleanup();
+      try { localStorage.setItem("h_tour", "1"); localStorage.setItem("h_brain_hint", "1"); } catch (e) {}
+    }
+    function tourStep(){
+      tourCleanup();
+      const s = TOUR[tourIdx];
+      if (!s) { tourFinish(); return; }
+      const pop = document.createElement("div"); pop.className = "tour-pop";
+      const st = document.createElement("div"); st.className = "tstep";
+      st.textContent = tourIdx === 0 ? "Quick tour" : tourIdx + " of " + (TOUR.length - 1);
+      const h = document.createElement("h3"); h.textContent = s.title;
+      const p = document.createElement("p"); p.textContent = s.text;
+      const nav = document.createElement("div"); nav.className = "tnav";
+      const next = document.createElement("button"); next.className = "tnext";
+      next.textContent = s.btn || (tourIdx === TOUR.length - 1 ? "Done" : "Next");
+      next.addEventListener("click", () => { tourIdx++; tourIdx >= TOUR.length ? tourFinish() : tourStep(); });
+      const skip = document.createElement("button"); skip.className = "tskip"; skip.textContent = tourIdx === 0 ? "No thanks" : "Skip tour";
+      skip.addEventListener("click", tourFinish);
+      nav.append(next, skip); pop.append(st, h, p, nav);
+      document.body.appendChild(pop); tourPop = pop;
+      const el = s.t ? document.querySelector(s.t) : null;
+      if (el && el.offsetParent !== null) {
+        tourTarget = el; el.classList.add("tour-glow");
+        const r = el.getBoundingClientRect(), pw = Math.min(310, window.innerWidth * .86);
+        const left = Math.max(12, Math.min(r.left + r.width / 2 - pw / 2, window.innerWidth - pw - 12));
+        pop.style.left = left + "px";
+        if (r.top < window.innerHeight / 2) pop.style.top = Math.round(r.bottom + 14) + "px";
+        else pop.style.bottom = Math.round(window.innerHeight - r.top + 14) + "px";
+      } else {
+        pop.style.left = "50%"; pop.style.top = "50%"; pop.style.transform = "translate(-50%,-50%)";
+      }
+    }
+    function maybeTour(){
+      try { if (localStorage.getItem("h_tour")) return; } catch (e) {}
+      tourIdx = 0; setTimeout(tourStep, 700);
+    }
+
+    // One-time nudge so people discover they can change the brain. (Superseded by the tour;
+    // kept for users who already dismissed it before the tour existed.)
     function maybeBrainHint(){
       try { if (localStorage.getItem("h_brain_hint")) return; } catch (e) {}
       const h = $("brainHint"); if (!h) return;

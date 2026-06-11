@@ -4,7 +4,7 @@
       <div class="foot-brand"><span class="seed"></span>Hearth &mdash; a warm light in a cold cloud.</div>
       <nav class="foot-links">
         <a href="/about">About</a>
-        <a href="/#how">How it works</a>
+        <a href="/tutorial">How to use</a>
         <a href="/faq">FAQ</a>
         <a href="/contact">Contact</a>
         <a href="/app">Try Hearth</a>

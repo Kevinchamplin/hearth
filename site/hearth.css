@@ -53,6 +53,16 @@ main.page{padding:60px 0 70px}
 .contact-alt{margin-top:24px;color:var(--ink-soft);font-size:15px}
 .contact-alt a{color:var(--brass-text);text-decoration:underline}
 
+/* tutorial */
+.tut{margin-top:34px}
+.tut-step{display:flex;gap:22px;padding:30px 0;border-top:1px solid var(--line)}
+.tut-num{width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:19px;color:#3A2206;background:radial-gradient(circle at 36% 30%,#FFD89A,#EE9A45 78%);box-shadow:0 0 16px rgba(238,154,69,.3)}
+.tut-body{flex:1;min-width:0}
+.tut-body h2{margin:6px 0 10px}
+.tut-body img{display:block;width:100%;height:auto;border-radius:14px;border:1px solid rgba(43,39,32,.14);box-shadow:0 14px 36px rgba(43,39,32,.16);margin-top:18px}
+.tut-tip{background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:13px 16px;font-size:15px;margin-top:16px}
+@media (max-width:600px){.tut-step{flex-direction:column;gap:12px}}
+
 /* footer */
 footer.foot{background:var(--d-bg);color:var(--on-d-soft);padding:54px 0 40px;margin-top:50px}
 .foot-inner{max-width:1000px;margin:0 auto;padding:0 24px}
