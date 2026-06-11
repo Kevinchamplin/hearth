@@ -4,6 +4,18 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-11, hearth-dream-team-marketing-pass) [1h]
+- On-site marketing pass from the /dream-team panel (Godin/Hormozi/Kennedy). Four moves:
+  **(1) Feature stack** — new "The whole feature list. All of it free." section: 8 plain-named
+  cards (just talk, show it photos, three brains, remembers your chats, no internet needed,
+  lives in your Dock, copy & print, no account ever) + kicker "no locked buttons, no Pro tier."
+  **(2) Builder's note** — signed letter with Kevin's photo ("The big AI companies rent you a
+  seat in their data center… I wanted to hand you the keys instead. It's signed work.") linking
+  kevinchamplin.com + GitHub — builder credibility without naming engines.
+  **(3) Wait priced in minutes** — "a few minutes from now, you own an AI" (GB → minutes).
+  **(4) Tell-a-friend remark** — hands visitors the script: "It's a free AI that runs on your
+  own computer — it even works with the wifi off."
+
 ### Changed (2026-06-11, hearth-hero-demo-window) [0.75h]
 - Redesigned the hero from a centered stack into a **two-column above-the-fold story**: message
   left (eyebrow, plain-spoken H1, lead, CTAs, one-row $0/100%/1 stat trio), and a **glowing mock
