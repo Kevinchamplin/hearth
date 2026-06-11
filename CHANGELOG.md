@@ -4,6 +4,15 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Changed (2026-06-11, hearth-hero-demo-window) [0.75h]
+- Redesigned the hero from a centered stack into a **two-column above-the-fold story**: message
+  left (eyebrow, plain-spoken H1, lead, CTAs, one-row $0/100%/1 stat trio), and a **glowing mock
+  Hearth window** right — a CSS-built live demo where the conversation sells the product itself
+  (dinner question → "did anyone else just see that?" → "Nobody. I run right here on your
+  computer"), topped with a "✈ Wifi off — still working" badge. Staggered load animation,
+  breathing ember seeds, reduced-motion respected. At 1440×900 the entire what/why/proof story
+  now fits above the fold; mobile stacks with the CTA still above the fold.
+
 ### Added (2026-06-11, hearth-pexels-photo-strip) [0.5h]
 - Added curated lifestyle photography (Pexels free license, self-hosted in
   `site/assets/photos/`): a 3-up **photo strip** under the comparison table — plane-window

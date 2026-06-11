@@ -85,6 +85,41 @@
   .hstat{max-width:170px;text-align:center}
   .hstat .hn{font-weight:600;font-size:36px;line-height:1;color:var(--brass-lit)}
   .hstat .hl{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--on-d-soft);margin-top:9px;line-height:1.55}
+  /* hero grid + live demo window */
+  .hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:56px;align-items:center;text-align:left;max-width:1080px;margin:0 auto;padding:34px 28px 0}
+  .hero-grid .hero-cta{justify-content:flex-start}
+  .hero-grid .hero-stats{justify-content:flex-start;gap:26px;margin-top:30px;flex-wrap:nowrap}
+  .hero-grid .hstat{text-align:left;max-width:150px}
+  .hero-grid .hstat .hn{font-size:30px}
+  .hero-grid .hstat .hl{font-size:10px}
+  .hero-grid h1{font-size:53px;max-width:none;margin:0}
+  .hero-grid p.lead{margin:22px 0 0;max-width:520px}
+  .hero-copy{animation:heroIn .7s ease both}
+  .hero-demo{position:relative;animation:heroIn .7s .15s ease both}
+  @keyframes heroIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .hero-demo::before{content:"";position:absolute;inset:-14% -12%;background:radial-gradient(60% 55% at 50% 44%,rgba(238,154,69,.34),rgba(238,154,69,0) 70%);filter:blur(14px);pointer-events:none}
+  .demo-window{position:relative;background:#1D1812;border:1px solid rgba(245,241,232,.14);border-radius:22px;box-shadow:0 30px 90px rgba(0,0,0,.5),0 0 60px rgba(238,154,69,.18);overflow:hidden}
+  .dw-bar{display:flex;align-items:center;gap:7px;padding:13px 16px;border-bottom:1px solid rgba(245,241,232,.09)}
+  .dw-dot{width:11px;height:11px;border-radius:50%;background:rgba(245,241,232,.16)}
+  .dw-title{display:flex;align-items:center;gap:7px;margin-left:10px;font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:14.5px;color:var(--on-d)}
+  .dw-badge{margin-left:auto;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--brass-lit);border:1px solid rgba(228,194,124,.35);background:rgba(228,194,124,.08);padding:4px 9px;border-radius:999px}
+  .dw-seed{width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 36% 30%,#FFEEC9,#FFCC84 30%,#EE9A45 72%);box-shadow:0 0 9px 1px rgba(238,154,69,.6);animation:breathe 4.8s ease-in-out infinite alternate;flex:none}
+  .dw-body{padding:20px 20px 6px;display:flex;flex-direction:column;gap:13px}
+  .dw-user{align-self:flex-end;max-width:84%;background:rgba(228,194,124,.1);border:1px solid rgba(228,194,124,.2);color:var(--on-d);font-size:14px;line-height:1.5;padding:9px 14px;border-radius:14px 14px 4px 14px}
+  .dw-ai{display:flex;gap:9px;align-items:flex-start;max-width:92%}
+  .dw-ai .dw-seed{margin-top:4px}
+  .dw-ai p{font-size:14px;line-height:1.62;color:rgba(245,241,232,.88);margin:0}
+  .dw-input{display:flex;align-items:center;gap:10px;margin:14px 16px 16px;border:1px solid rgba(245,241,232,.12);background:rgba(255,255,255,.04);border-radius:13px;padding:11px 14px;font-size:13.5px;color:rgba(245,241,232,.45);font-style:italic}
+  .dw-send{margin-left:auto;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 38% 32%,#FFCC84,#EE9A45 70%);color:#3a2208;font-style:normal;font-weight:700;font-size:14px}
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr;text-align:center;gap:40px;padding-top:22px}
+    .hero-grid .hero-cta,.hero-grid .hero-stats{justify-content:center}
+    .hero-grid .hstat{text-align:center}
+    .hero-grid h1{font-size:38px}
+    .hero-grid p.lead{margin:20px auto 0}
+    .dw-badge{font-size:9px}
+  }
+  @media (prefers-reduced-motion: reduce){.hero-copy,.hero-demo{animation:none}.dw-seed{animation:none}}
   /* comparison table */
   .compare-wrap{max-width:860px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;overflow-x:auto;box-shadow:0 3px 16px rgba(43,39,32,.05)}
   table.compare{width:100%;border-collapse:collapse;font-size:15.5px;min-width:560px}
@@ -213,14 +248,11 @@
           <a href="/app" class="nav-cta">Try Hearth</a>
         </div>
       </nav>
-      <div class="hero-inner">
-        <div class="ember-wrap">
-          <div class="glow"></div><div class="ember"></div>
-          <span class="mote"></span><span class="mote"></span><span class="mote"></span>
-        </div>
+      <div class="hero-inner hero-grid">
+        <div class="hero-copy">
         <p class="eyebrow">A warm light in a cold cloud</p>
         <h1 class="serif">A free, private AI that lives on your own computer.</h1>
-        <p class="lead">Ask it anything — tonight's dinner, the tricky email, your kid's homework. No account. No monthly fee. And nothing you say ever leaves your machine — it even works with the wifi off.</p>
+        <p class="lead">Ask it anything — dinner ideas, tricky emails, homework help. No account, no monthly fee, and nothing you say ever leaves your machine.</p>
         <div class="hero-cta">
           <a href="/app" class="btn btn-primary" data-ev="hero_try"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>Try it in your browser</a>
           <a href="#download" class="btn btn-ghost" data-ev="hero_download">Download the app</a>
@@ -230,6 +262,23 @@
           <div class="hstat"><div class="hn serif">$0</div><div class="hl">forever — no subscription, no caps</div></div>
           <div class="hstat"><div class="hn serif">100%</div><div class="hl">private — nothing leaves your device</div></div>
           <div class="hstat"><div class="hn serif">1</div><div class="hl">download — then it works without internet, forever</div></div>
+        </div>
+        </div>
+        <div class="hero-demo">
+          <div class="demo-window">
+            <div class="dw-bar">
+              <span class="dw-dot"></span><span class="dw-dot"></span><span class="dw-dot"></span>
+              <span class="dw-title"><span class="dw-seed"></span>Hearth</span>
+              <span class="dw-badge">✈ Wifi off — still working</span>
+            </div>
+            <div class="dw-body">
+              <div class="dw-user">What can I make with chicken, rice and a bell pepper?</div>
+              <div class="dw-ai"><span class="dw-seed"></span><p>Easy — one-pan chicken &amp; pepper rice. Sear the chicken, soften the pepper, stir in the rice and broth, lid on for 15 minutes. Dinner in under 30.</p></div>
+              <div class="dw-user">Wait — did anyone else just see that?</div>
+              <div class="dw-ai"><span class="dw-seed"></span><p>Nobody. I run right here on your computer — nothing you say ever leaves this machine. 🔒</p></div>
+            </div>
+            <div class="dw-input">Say something to Hearth… <span class="dw-send">↑</span></div>
+          </div>
         </div>
       </div>
     </div>
