@@ -4,6 +4,14 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Fixed (2026-06-11, hearth-sticky-composer-dock) [0.5h]
+- **Input can no longer be pushed off-screen, period.** The composer (+ image chip + footer
+  line) now lives in a `position:sticky` dock pinned to the window bottom with a fade-to-
+  background gradient above it — text slides under it instead of colliding. `body` overflow
+  hidden (the conversation is the only thing that scrolls), print styles updated, and the
+  service-worker cache version bumped (v2) so installed PWAs purge the old shell on next launch.
+  Verified: 40 long messages at a 620px-tall window — composer pinned, no page scrollbar.
+
 ### Changed (2026-06-11, hearth-og-card-v2) [0.25h]
 - Redesigned the OG/social card to match the new hero and to make "this is an AI" legible at a
   glance (the old card was ember + poetry only). New 1200×630: headline "A **free, private AI**

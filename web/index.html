@@ -48,7 +48,7 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
-  body{font-family:"Inter",system-ui,-apple-system,sans-serif;background:var(--grad);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+  body{font-family:"Inter",system-ui,-apple-system,sans-serif;background:var(--grad);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5;overflow:hidden}
   .app{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
   .bar{flex:none}
   .serif{font-family:"Fraunces",Georgia,serif}
@@ -219,7 +219,8 @@
   .drawer .dfoot{font-size:11.5px;color:var(--ink-soft);text-align:center;padding-top:12px;line-height:1.5}
   .convo-empty{color:var(--ink-soft);font-size:13.5px;text-align:center;padding:26px 10px;line-height:1.6}
   @media print {
-    body{background:#fff !important;color:#000 !important}
+    body{background:#fff !important;color:#000 !important;overflow:visible !important}
+    .composer-dock{display:none !important}
     .bar,.composer,.composer-foot,#imgchip,.acts,.view.loading,.view.gate{display:none !important}
     .stage,.chat,.thread{height:auto !important;max-height:none !important;overflow:visible !important;display:block !important;max-width:100% !important;-webkit-mask-image:none !important;mask-image:none !important}
     .msg .text,.msg .who,.msg.ai .text,.msg.ai .text *{color:#000 !important}
@@ -228,6 +229,12 @@
     .uimg{border-color:#ccc !important}
   }
   .composer-foot{width:100%;text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:10px;font-family:"JetBrains Mono",ui-monospace,monospace;letter-spacing:.02em}
+  /* sticky dock: input pinned to the bottom of the window, always. Text slides under the
+     fade instead of colliding with the box. */
+  .composer-dock{position:sticky;bottom:0;z-index:6;width:100%;margin-top:auto;padding:18px 0 14px;
+    background:linear-gradient(to top, var(--paper) 72%, rgba(0,0,0,0))}
+  .chat .composer{margin:0 auto;max-width:700px}
+  .chat .imgchip{margin-bottom:10px}
 
   @media (max-width:680px){.gate h1{font-size:32px}}
   @media (prefers-reduced-motion: reduce){.ember,.glow,.seed,.dot,.ember.kindling{animation:none !important}}
@@ -310,14 +317,16 @@
             </div>
           </div>
         </div>
-        <div id="imgchip" class="imgchip" hidden></div>
-        <div class="composer">
-          <button class="attach" id="attachBtn" type="button" title="Attach an image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5l-8.5 8.5a5 5 0 0 1-7-7l8.6-8.6a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-2.9-2.9l7.8-7.8"/></svg></button>
-          <input type="file" id="fileInput" accept="image/*" hidden>
-          <textarea id="input" rows="1" placeholder="Ask anything, or attach an image…"></textarea>
-          <button class="send" id="sendBtn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 20V5M5 12l7-7 7 7"/></svg></button>
+        <div class="composer-dock">
+          <div id="imgchip" class="imgchip" hidden></div>
+          <div class="composer">
+            <button class="attach" id="attachBtn" type="button" title="Attach an image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5l-8.5 8.5a5 5 0 0 1-7-7l8.6-8.6a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-2.9-2.9l7.8-7.8"/></svg></button>
+            <input type="file" id="fileInput" accept="image/*" hidden>
+            <textarea id="input" rows="1" placeholder="Ask anything, or attach an image…"></textarea>
+            <button class="send" id="sendBtn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 20V5M5 12l7-7 7 7"/></svg></button>
+          </div>
+          <p class="composer-foot">Private · runs on your device · unlimited &amp; free · built by <a href="https://kevinchamplin.com" target="_blank" rel="noopener" style="color:var(--brass-lit);text-decoration:none">Kevin Champlin</a></p>
         </div>
-        <p class="composer-foot">Private · runs on your device · unlimited &amp; free · built by <a href="https://kevinchamplin.com" target="_blank" rel="noopener" style="color:var(--brass-lit);text-decoration:none">Kevin Champlin</a></p>
       </section>
     </main>
   </div>
