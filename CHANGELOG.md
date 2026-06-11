@@ -4,6 +4,13 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-11, hearth-what-is-post-and-hero-line) [0.5h]
+- Published a short, plain-language **"What is Hearth?"** post to kevinchamplin.com (post 115,
+  `what-is-hearth-free-private-ai`) — benefits list, what it's good for, the only catch, 3-step
+  try-it — with the new OG card as the featured image. Companion to the longer launch post.
+- Fixed the confusing hero sub-line ("No install in Chrome — or a native app for…") → "Works
+  right in your browser — nothing to install. Mac, Windows & Linux apps are on the way."
+
 ### Fixed (2026-06-11, hearth-sticky-composer-dock) [0.5h]
 - **Input can no longer be pushed off-screen, period.** The composer (+ image chip + footer
   line) now lives in a `position:sticky` dock pinned to the window bottom with a fade-to-
