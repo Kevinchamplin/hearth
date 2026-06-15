@@ -4,6 +4,14 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Fixed (2026-06-15, voice-download-progress-bar) [0.25h]
+- **The voice (Whisper) download now shows a real progress bar**, not just a climbing MB counter
+  that read as "stuck." transformers.js reports progress per-file (resetting each file), so we now
+  track every file's loaded/total bytes and render an **honest overall % = loaded ÷ total**,
+  clamped monotonic and capped at 99% so it never jumps backward or claims "done" early. Copy is
+  clearer too ("a one-time download, then it's instant" → "…57% · 105 MB (one-time only)"). Bar
+  hides when the download finishes or on error. SW bumped **v5 → v6**.
+
 ### Added (2026-06-15, hearth-voice-mode) [1.5h]
 - **Voice mode — talk to Hearth, and it talks back, fully on-device.** New mic button in the
   composer and a speaker toggle in the top bar. Speech *in* is transcribed by a local **Whisper**
