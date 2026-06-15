@@ -271,8 +271,11 @@
   @keyframes micpulse{0%{box-shadow:0 0 0 0 rgba(224,87,58,.5)}70%{box-shadow:0 0 0 13px rgba(224,87,58,0)}100%{box-shadow:0 0 0 0 rgba(224,87,58,0)}}
   .speakbtn.on{color:var(--brass-lit);border-color:var(--brass-lit);background:rgba(228,194,124,.12)}
   .speakbtn.speaking{animation:breathe 1.5s ease-in-out infinite alternate}
-  .voicebar{width:100%;max-width:700px;margin:0 auto 8px;text-align:center;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.03em;color:var(--brass-lit);min-height:15px;opacity:0;transition:opacity .2s;pointer-events:none}
+  .voicebar{width:100%;max-width:700px;margin:0 auto 6px;text-align:center;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.03em;color:var(--brass-lit);min-height:15px;opacity:0;transition:opacity .2s;pointer-events:none}
   .voicebar.show{opacity:.92}
+  .vbar{width:min(280px,70vw);height:5px;border-radius:999px;background:rgba(245,241,232,.12);overflow:hidden;margin:0 auto 10px;display:none}
+  .vbar.show{display:block}
+  .vbar-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#FFCC84,#EE9A45);transition:width .25s ease}
   @media (max-width:680px){.gate h1{font-size:32px}}
   @media (prefers-reduced-motion: reduce){.ember,.glow,.seed,.dot,.ember.kindling,.mic.rec,.speakbtn.speaking{animation:none !important}}
 </style>
@@ -359,6 +362,7 @@
         </div>
         <div class="composer-dock">
           <div class="voicebar" id="voiceBar"></div>
+          <div class="vbar" id="voiceProg"><div class="vbar-fill" id="voiceProgFill"></div></div>
           <div id="imgchip" class="imgchip" hidden></div>
           <div class="composer">
             <button class="mic" id="micBtn" type="button" title="Talk to Hearth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg></button>
@@ -989,9 +993,11 @@
     // NOT use the browser's built-in SpeechRecognition: in Chrome it streams your audio to
     // Google, which would quietly break Hearth's whole promise. Speech OUT uses your operating
     // system's own voices. Nothing about your voice ever leaves the device.
-    const micBtn = $("micBtn"), speakBtn = $("speakBtn"), voiceBar = $("voiceBar");
+    const micBtn = $("micBtn"), speakBtn = $("speakBtn"), voiceBar = $("voiceBar"), voiceProg = $("voiceProg"), voiceProgFill = $("voiceProgFill");
     let speakOn = false; try { speakOn = localStorage.getItem("h_speak") === "1"; } catch (e) {}
     function voiceMsg(t){ if (!voiceBar) return; if (t){ voiceBar.textContent = t; voiceBar.classList.add("show"); } else { voiceBar.classList.remove("show"); } }
+    // pct null = hide the bar; a number 0–100 = show it filled to that point.
+    function voiceProgress(pct){ if (!voiceProg) return; if (pct == null){ voiceProg.classList.remove("show"); voiceProgFill.style.width = "0%"; } else { voiceProg.classList.add("show"); voiceProgFill.style.width = Math.max(0, Math.min(100, pct)) + "%"; } }
 
     // ── Speak (text-to-speech via the OS's own voices — local, private) ──
     let ttsVoice = null;
@@ -1052,18 +1058,28 @@
     function micSupported(){ return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder); }
     async function ensureEars(){
       if (earsEngine) return earsEngine;
-      voiceMsg("Teaching Hearth to listen — one-time download…");
+      voiceMsg("Teaching Hearth to listen — a one-time download, then it's instant.");
+      voiceProgress(0);
       const { pipeline } = await import("https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1");
-      const seen = {};
+      // transformers.js reports progress per FILE; track each file's bytes so we can show an
+      // honest OVERALL bar (loaded ÷ total across all files), not a per-file % that keeps
+      // resetting. Clamp it monotonic + ≤99% so it never jumps backward or claims "done" early.
+      const files = {}; let lastPct = 0;
       const onProgress = (p) => {
         if (!p || p.status !== "progress" || !p.file) return;
-        seen[p.file] = p.loaded || 0; let bytes = 0; for (const k in seen) bytes += seen[k];
-        voiceMsg("Teaching Hearth to listen… " + Math.round(bytes / 1048576) + " MB (one-time only)");
+        files[p.file] = { loaded: p.loaded || 0, total: p.total || 0 };
+        let loaded = 0, total = 0; for (const k in files){ loaded += files[k].loaded; total += files[k].total; }
+        const mb = Math.round(loaded / 1048576);
+        let pct = total > 0 ? Math.round(loaded / total * 100) : 0;
+        pct = Math.max(lastPct, Math.min(99, pct)); lastPct = pct;
+        voiceProgress(pct);
+        voiceMsg("Teaching Hearth to listen… " + pct + "% · " + mb + " MB (one-time only)");
       };
       let asr;
       // WebGPU first (fast, same as vision); fall back to the always-works WASM path.
       try { asr = await pipeline("automatic-speech-recognition", "onnx-community/whisper-base.en", { device: "webgpu", progress_callback: onProgress }); }
       catch (e) { asr = await pipeline("automatic-speech-recognition", "onnx-community/whisper-base.en", { progress_callback: onProgress }); }
+      voiceProgress(100);
       earsEngine = asr; return asr;
     }
     // Decode whatever the recorder captured down to the 16 kHz mono Float32 Whisper wants.
@@ -1103,6 +1119,7 @@
       if (!blob.size){ micBtn.classList.remove("busy"); voiceMsg(""); return; }
       try {
         const asr = await ensureEars();
+        voiceProgress(null);
         voiceMsg("Making out the words…");
         const audio = await decodeTo16k(blob);
         const out = await asr(audio);
@@ -1115,7 +1132,7 @@
         window.hearth && window.hearth.track("voice_message");
         fire();
       } catch (e) {
-        micBtn.classList.remove("busy");
+        micBtn.classList.remove("busy"); voiceProgress(null);
         voiceMsg("Hearth couldn't make out that one — try again?");
         setTimeout(() => voiceMsg(""), 3200);
       }
