@@ -4,6 +4,23 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-15, hearth-voice-mode) [1.5h]
+- **Voice mode — talk to Hearth, and it talks back, fully on-device.** New mic button in the
+  composer and a speaker toggle in the top bar. Speech *in* is transcribed by a local **Whisper**
+  model (`onnx-community/whisper-base.en` via transformers.js, WebGPU with a WASM fallback,
+  lazy-loaded on first use exactly like the SmolVLM vision model) — the audio is turned to text
+  **on the user's own machine and never uploaded**. Deliberately did **not** use the browser's
+  built-in `SpeechRecognition`, which streams audio to Google in Chrome and would break Hearth's
+  whole promise. Speech *out* uses the OS's own voices via `speechSynthesis` (sentence-chunked to
+  dodge the long-utterance cutoff; markdown/emoji stripped first).
+- **Why:** the single biggest "give it to someone who's never heard the word LLM" unlock and the
+  most demo-able, news-worthy differentiator — a private voice assistant where *even your voice*
+  stays on the device. First time someone talks, Hearth auto-enables talk-back once (mutable) to
+  close the loop. Tour gains an "…or just talk" step; mic hides where `MediaRecorder`/mic is
+  unsupported; honors `prefers-reduced-motion`. Service worker bumped **v4 → v5** so the new shell
+  ships. Privacy-respecting analytics: `voice_listen_start`, `voice_message`, `voice_speak_toggle`
+  (counts only — never audio or text).
+
 ### Added (2026-06-11, ce-support-integration) [1h]
 - **Wired Hearth into CE Support** (support.champlinenterprises.com, product `hearth`, ember
   accent). **Mode B widget**: "Need a hand?" launcher on every page — landing, About/FAQ/

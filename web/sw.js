@@ -1,7 +1,7 @@
 /* Hearth service worker — makes the app genuinely work offline.
    Caches the app shell + the JS libraries it needs. Deliberately does NOT touch
    the model weights (WebLLM/transformers.js manage their own cache) or analytics. */
-const VERSION = "hearth-shell-v4";
+const VERSION = "hearth-shell-v5";
 const SHELL = ["./", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
 const CDN_HOSTS = ["cdn.jsdelivr.net", "esm.run", "fonts.googleapis.com", "fonts.gstatic.com"];
 

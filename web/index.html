@@ -262,8 +262,19 @@
   .chat .composer{margin:0 auto;max-width:700px}
   .chat .imgchip{margin-bottom:10px}
 
+  /* ── voice: talk to it, it talks back (all on-device) ── */
+  .mic{width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center;border:none;background:transparent;color:var(--ink-soft);cursor:pointer;align-self:center;position:relative}
+  .mic:hover{color:var(--brass-lit)}
+  .mic svg{width:20px;height:20px}
+  .mic.rec{color:#fff;background:radial-gradient(circle at 38% 32%,#FF8E6B,#E0573A);box-shadow:0 0 0 0 rgba(224,87,58,.55);animation:micpulse 1.5s ease-out infinite}
+  .mic.busy{color:var(--brass-lit);opacity:.7;cursor:default}
+  @keyframes micpulse{0%{box-shadow:0 0 0 0 rgba(224,87,58,.5)}70%{box-shadow:0 0 0 13px rgba(224,87,58,0)}100%{box-shadow:0 0 0 0 rgba(224,87,58,0)}}
+  .speakbtn.on{color:var(--brass-lit);border-color:var(--brass-lit);background:rgba(228,194,124,.12)}
+  .speakbtn.speaking{animation:breathe 1.5s ease-in-out infinite alternate}
+  .voicebar{width:100%;max-width:700px;margin:0 auto 8px;text-align:center;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.03em;color:var(--brass-lit);min-height:15px;opacity:0;transition:opacity .2s;pointer-events:none}
+  .voicebar.show{opacity:.92}
   @media (max-width:680px){.gate h1{font-size:32px}}
-  @media (prefers-reduced-motion: reduce){.ember,.glow,.seed,.dot,.ember.kindling{animation:none !important}}
+  @media (prefers-reduced-motion: reduce){.ember,.glow,.seed,.dot,.ember.kindling,.mic.rec,.speakbtn.speaking{animation:none !important}}
 </style>
 <!-- Pulse analytics (pulse.champlinenterprises.com) -->
 <script src="https://pulse.champlinenterprises.com/pulse.js" data-token="17j5KP9HYKhdtcKAGO0RuBfvWnouU0Tp" async></script>
@@ -296,6 +307,7 @@
       </div>
       <div class="right">
         <button class="iconbtn" id="installBtn" title="Install Hearth as an app" hidden style="width:auto;padding:0 14px;border-radius:999px;font-family:inherit;font-size:12.5px;font-weight:600;gap:6px;display:none">⬇ Install</button>
+        <button class="iconbtn speakbtn" id="speakBtn" title="Read answers aloud" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 6a9 9 0 0 1 0 12"/></svg></button>
         <button class="iconbtn" id="printBtn" title="Print this conversation" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg></button>
         <span class="pill" id="modelPill" title="Change Hearth's brain">⚡ Fast ▾</span>
       </div>
@@ -346,11 +358,13 @@
           </div>
         </div>
         <div class="composer-dock">
+          <div class="voicebar" id="voiceBar"></div>
           <div id="imgchip" class="imgchip" hidden></div>
           <div class="composer">
+            <button class="mic" id="micBtn" type="button" title="Talk to Hearth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg></button>
             <button class="attach" id="attachBtn" type="button" title="Attach an image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5l-8.5 8.5a5 5 0 0 1-7-7l8.6-8.6a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-2.9-2.9l7.8-7.8"/></svg></button>
             <input type="file" id="fileInput" accept="image/*" hidden>
-            <textarea id="input" rows="1" placeholder="Ask anything, or attach an image…"></textarea>
+            <textarea id="input" rows="1" placeholder="Ask anything, talk, or attach an image…"></textarea>
             <button class="send" id="sendBtn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 20V5M5 12l7-7 7 7"/></svg></button>
           </div>
           <p class="composer-foot">Private · runs on your device · unlimited &amp; free · built by <a href="https://kevinchamplin.com" target="_blank" rel="noopener" style="color:var(--brass-lit);text-decoration:none">Kevin Champlin</a></p>
@@ -671,6 +685,7 @@
         pill.style.display = "inline-flex";
         const pb = $("printBtn"); if (pb) pb.hidden = false;
         const cb = $("chatsBtn"); if (cb) cb.hidden = false;
+        const sb = $("speakBtn"); if (sb && ("speechSynthesis" in window)){ sb.hidden = false; setSpeak(speakOn); }
         stopTips();
         show("chat");
         $("input").focus();
@@ -804,8 +819,9 @@
 
     // ---- First-run guided tour: five little things, then you're a pro. Shown once. ----
     const TOUR = [
-      { t: null,         title: "Hearth is ready 🔥",      text: "Want the 20-second tour? Five little things and you're a pro.", btn: "Show me" },
+      { t: null,         title: "Hearth is ready 🔥",      text: "Want the 20-second tour? A few little things and you're a pro.", btn: "Show me" },
       { t: "#input",     title: "Just type",               text: "Ask anything here and press Enter to send. That's the whole trick." },
+      { t: "#micBtn",    title: "…or just talk",           text: "Tap the mic and speak — Hearth listens and answers out loud. Your voice is understood right here on your device, and never leaves it." },
       { t: "#attachBtn", title: "Show it a photo",         text: "Tap the paperclip to attach a picture and ask about it. The photo never leaves your device." },
       { t: "#modelPill", title: "Pick its brain",          text: "Fast, Smart, or Genius — tap here anytime to switch. Hearth tells you what your computer can handle." },
       { t: "#chatsBtn",  title: "Your conversations",      text: "They save here automatically — on this device only, never uploaded. You can pin the panel open if you like." },
@@ -967,10 +983,152 @@
       return answer;
     }
 
+    // ---- Voice: talk to Hearth, and let it talk back. Both run entirely on-device. ----
+    // Speech IN is transcribed by a local Whisper model (via transformers.js, exactly like
+    // vision above) — your voice is turned to text ON your machine and never uploaded. We do
+    // NOT use the browser's built-in SpeechRecognition: in Chrome it streams your audio to
+    // Google, which would quietly break Hearth's whole promise. Speech OUT uses your operating
+    // system's own voices. Nothing about your voice ever leaves the device.
+    const micBtn = $("micBtn"), speakBtn = $("speakBtn"), voiceBar = $("voiceBar");
+    let speakOn = false; try { speakOn = localStorage.getItem("h_speak") === "1"; } catch (e) {}
+    function voiceMsg(t){ if (!voiceBar) return; if (t){ voiceBar.textContent = t; voiceBar.classList.add("show"); } else { voiceBar.classList.remove("show"); } }
+
+    // ── Speak (text-to-speech via the OS's own voices — local, private) ──
+    let ttsVoice = null;
+    function pickVoice(){
+      try {
+        const vs = speechSynthesis.getVoices(); if (!vs.length) return;
+        const en = vs.filter(v => /^en/i.test(v.lang));
+        const pref = ["Samantha","Ava","Allison","Serena","Karen","Moira","Daniel","Google US English","Microsoft Aria","Microsoft Jenny"];
+        ttsVoice = pref.map(n => en.find(v => v.name && v.name.includes(n))).find(Boolean)
+                || en.find(v => v.localService) || en[0] || vs[0] || null;
+      } catch (e) {}
+    }
+    if ("speechSynthesis" in window){ pickVoice(); speechSynthesis.addEventListener("voiceschanged", pickVoice); }
+    function plainForSpeech(md){
+      return String(md)
+        .replace(/```[\s\S]*?```/g, ". ")
+        .replace(/`([^`]+)`/g, "$1")
+        .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+        .replace(/^\s{0,3}[#>]+\s?/gm, "")
+        .replace(/[*_~|]/g, "")
+        .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}]/gu, "")
+        .replace(/\s+/g, " ").trim();
+    }
+    function stopSpeaking(){ try { speechSynthesis.cancel(); } catch (e) {} if (speakBtn) speakBtn.classList.remove("speaking"); }
+    function speak(text){
+      if (!speakOn || !("speechSynthesis" in window)) return;
+      const t = plainForSpeech(text); if (!t) return;
+      try {
+        speechSynthesis.cancel();
+        // Speak sentence-by-sentence: starts sooner, and dodges the ~15s utterance cutoff some
+        // browsers impose on one long blob.
+        const parts = t.match(/[^.!?]+[.!?]*\s*/g) || [t];
+        parts.forEach((p, i) => {
+          const txt = p.trim(); if (!txt) return;
+          const u = new SpeechSynthesisUtterance(txt);
+          if (ttsVoice) u.voice = ttsVoice;
+          u.rate = 1.02; u.pitch = 1.0;
+          if (i === 0) u.onstart = () => { if (speakBtn) speakBtn.classList.add("speaking"); };
+          u.onend = () => { if (!speechSynthesis.speaking && !speechSynthesis.pending && speakBtn) speakBtn.classList.remove("speaking"); };
+          speechSynthesis.speak(u);
+        });
+      } catch (e) {}
+    }
+    function setSpeak(on){
+      speakOn = !!on; try { localStorage.setItem("h_speak", speakOn ? "1" : ""); } catch (e) {}
+      if (speakBtn){ speakBtn.classList.toggle("on", speakOn); speakBtn.title = speakOn ? "Stop reading answers aloud" : "Read answers aloud"; }
+      if (!speakOn) stopSpeaking();
+    }
+    if (speakBtn) speakBtn.addEventListener("click", () => {
+      if (speakBtn.classList.contains("speaking")){ stopSpeaking(); return; }
+      setSpeak(!speakOn);
+      window.hearth && window.hearth.track("voice_speak_toggle", { value: speakOn ? "on" : "off" });
+    });
+
+    // ── Listen (speech-to-text via a local Whisper model — runs on this device) ──
+    let earsEngine = null, recording = false, mediaRec = null, micStream = null, recChunks = [];
+    function micSupported(){ return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder); }
+    async function ensureEars(){
+      if (earsEngine) return earsEngine;
+      voiceMsg("Teaching Hearth to listen — one-time download…");
+      const { pipeline } = await import("https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1");
+      const seen = {};
+      const onProgress = (p) => {
+        if (!p || p.status !== "progress" || !p.file) return;
+        seen[p.file] = p.loaded || 0; let bytes = 0; for (const k in seen) bytes += seen[k];
+        voiceMsg("Teaching Hearth to listen… " + Math.round(bytes / 1048576) + " MB (one-time only)");
+      };
+      let asr;
+      // WebGPU first (fast, same as vision); fall back to the always-works WASM path.
+      try { asr = await pipeline("automatic-speech-recognition", "onnx-community/whisper-base.en", { device: "webgpu", progress_callback: onProgress }); }
+      catch (e) { asr = await pipeline("automatic-speech-recognition", "onnx-community/whisper-base.en", { progress_callback: onProgress }); }
+      earsEngine = asr; return asr;
+    }
+    // Decode whatever the recorder captured down to the 16 kHz mono Float32 Whisper wants.
+    async function decodeTo16k(blob){
+      const arr = await blob.arrayBuffer();
+      const AC = window.AudioContext || window.webkitAudioContext;
+      const tmp = new AC(); let decoded;
+      try { decoded = await tmp.decodeAudioData(arr); } finally { try { tmp.close(); } catch (e) {} }
+      const off = new OfflineAudioContext(1, Math.max(1, Math.ceil(decoded.duration * 16000)), 16000);
+      const src = off.createBufferSource(); src.buffer = decoded; src.connect(off.destination); src.start();
+      const rendered = await off.startRendering();
+      return rendered.getChannelData(0);
+    }
+    async function startRec(){
+      if (recording || generating) return;
+      stopSpeaking();
+      try { micStream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+      catch (e) { voiceMsg("I couldn't reach the microphone — check your browser's mic permission."); setTimeout(() => voiceMsg(""), 3800); return; }
+      recChunks = [];
+      try { mediaRec = new MediaRecorder(micStream); } catch (e) { mediaRec = new MediaRecorder(micStream, { mimeType: "audio/webm" }); }
+      mediaRec.ondataavailable = (ev) => { if (ev.data && ev.data.size) recChunks.push(ev.data); };
+      mediaRec.onstop = onRecStop;
+      mediaRec.start();
+      recording = true; micBtn.classList.add("rec"); micBtn.title = "Stop & send";
+      voiceMsg("Listening… tap the mic again when you're done.");
+      window.hearth && window.hearth.track("voice_listen_start");
+    }
+    function stopRec(){
+      if (!recording || !mediaRec) return;
+      recording = false; micBtn.classList.remove("rec"); micBtn.classList.add("busy"); micBtn.title = "Talk to Hearth";
+      try { mediaRec.stop(); } catch (e) {}
+      if (micStream){ micStream.getTracks().forEach(t => t.stop()); micStream = null; }
+    }
+    async function onRecStop(){
+      const blob = new Blob(recChunks, { type: (mediaRec && mediaRec.mimeType) || "audio/webm" });
+      recChunks = [];
+      if (!blob.size){ micBtn.classList.remove("busy"); voiceMsg(""); return; }
+      try {
+        const asr = await ensureEars();
+        voiceMsg("Making out the words…");
+        const audio = await decodeTo16k(blob);
+        const out = await asr(audio);
+        const text = ((out && out.text) || "").trim();
+        micBtn.classList.remove("busy"); voiceMsg("");
+        if (!text || /^[\s.,!?]*$/.test(text)){ voiceMsg("I didn't quite catch that — try again?"); setTimeout(() => voiceMsg(""), 2800); return; }
+        // First time someone talks to Hearth, close the loop so it talks back too (once; they can mute).
+        try { if (!localStorage.getItem("h_voice_loop")){ localStorage.setItem("h_voice_loop", "1"); if (!speakOn){ setSpeak(true); voiceMsg("I'll answer out loud too — tap the speaker to mute."); setTimeout(() => voiceMsg(""), 3600); } } } catch (e) {}
+        input.value = text; autosize();
+        window.hearth && window.hearth.track("voice_message");
+        fire();
+      } catch (e) {
+        micBtn.classList.remove("busy");
+        voiceMsg("Hearth couldn't make out that one — try again?");
+        setTimeout(() => voiceMsg(""), 3200);
+      }
+    }
+    if (micBtn){
+      if (!micSupported()) micBtn.style.display = "none";
+      else micBtn.addEventListener("click", () => { recording ? stopRec() : startRec(); });
+    }
+
     async function fire(){
       const text = input.value.trim();
       if ((!text && !pendingImage) || generating || !engine) return;
-      generating = true; sendBtn.disabled = true;
+      generating = true; sendBtn.disabled = true; stopSpeaking();
 
       if (pendingImage) {
         window.hearth && window.hearth.track('message_sent', { value: 'image' });
@@ -984,7 +1142,7 @@
         input.value = ""; autosize();
         const out = bubble("ai", "…");
         transcript.push({ role: "user", content: "📷 " + (q || "What's in this image?") });
-        try { const ans = await seeImage(q, imgUrl, out); transcript.push({ role: "ai", content: ans }); saveConvo(); }
+        try { const ans = await seeImage(q, imgUrl, out); transcript.push({ role: "ai", content: ans }); saveConvo(); speak(ans); }
         catch (e) { out.textContent = "I couldn't make out that image — " + (e && e.message ? e.message : e); }
         finally { setTimeout(function () { URL.revokeObjectURL(imgUrl); }, 1500); }
         generating = false; sendBtn.disabled = !input.value.trim();
@@ -1011,6 +1169,7 @@
         history.push({ role:"assistant", content: full });
         transcript.push({ role: "ai", content: full });
         saveConvo();
+        speak(full);
       } catch (e){
         out.textContent = "(the fire flickered — try that again)";
       } finally {
