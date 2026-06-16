@@ -11,9 +11,11 @@
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
+use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::Duration;
 use tauri::ipc::Channel;
+use tauri::{AppHandle, Manager};
 
 const OLLAMA_URL: &str = "http://127.0.0.1:11434";
 
@@ -58,6 +60,54 @@ fn ollama_bin() -> Option<String> {
         }
     }
     None
+}
+
+/// Path to the Ollama engine we ship *inside* the app bundle, if present. Depending on how
+/// Tauri lays out the resource map, it may land at `<res>/ollama/ollama` or
+/// `<res>/resources/ollama/ollama` — check both so we're not brittle to that.
+fn bundled_ollama(app: &AppHandle) -> Option<String> {
+    let res = app.path().resource_dir().ok()?;
+    for rel in ["ollama/ollama", "resources/ollama/ollama"] {
+        let p: PathBuf = res.join(rel);
+        if p.is_file() {
+            return Some(p.to_string_lossy().into_owned());
+        }
+    }
+    None
+}
+
+/// The Ollama binary to use: prefer the bundled engine (one-install experience), then any
+/// system install (so a user who already runs Ollama just works too).
+fn resolve_ollama(app: &AppHandle) -> Option<String> {
+    bundled_ollama(app).or_else(ollama_bin)
+}
+
+/// Zip/copy steps can strip the exec bit off bundled binaries. Restore it so the engine and
+/// its runners can actually launch from inside the .app.
+#[cfg(unix)]
+fn ensure_executable(path: &Path) {
+    use std::os::unix::fs::PermissionsExt;
+    if let Ok(meta) = std::fs::metadata(path) {
+        let mut perms = meta.permissions();
+        if perms.mode() & 0o111 == 0 {
+            perms.set_mode(0o755);
+            let _ = std::fs::set_permissions(path, perms);
+        }
+    }
+}
+
+/// Make sure the bundled engine binary + its sibling runners are executable before we spawn.
+fn prepare_bundled(bin: &str) {
+    #[cfg(unix)]
+    {
+        ensure_executable(Path::new(bin));
+        if let Some(dir) = Path::new(bin).parent() {
+            ensure_executable(&dir.join("lib/ollama/llama-server"));
+            ensure_executable(&dir.join("lib/ollama/llama-quantize"));
+        }
+    }
+    #[cfg(not(unix))]
+    let _ = bin;
 }
 
 fn ollama_version(bin: &str) -> Option<String> {
@@ -112,8 +162,8 @@ fn total_ram_gb() -> u64 {
 }
 
 #[tauri::command]
-async fn ollama_status() -> OllamaStatus {
-    let bin = ollama_bin();
+async fn ollama_status(app: AppHandle) -> OllamaStatus {
+    let bin = resolve_ollama(&app);
     let installed = bin.is_some();
     let version = bin.as_deref().and_then(ollama_version);
     let running = http_running().await;
@@ -130,11 +180,18 @@ async fn ollama_status() -> OllamaStatus {
 /// Ensure the Ollama server is up. If it's already answering, great. Otherwise spawn
 /// `ollama serve` (detached — it keeps running like any local daemon) and wait for it.
 #[tauri::command]
-async fn start_ollama() -> Result<bool, String> {
+async fn start_ollama(app: AppHandle) -> Result<bool, String> {
     if http_running().await {
         return Ok(true);
     }
-    let bin = ollama_bin().ok_or_else(|| "Ollama is not installed".to_string())?;
+    // Prefer the bundled engine; if it's the one we ship, make sure its exec bits survived bundling.
+    let bundled = bundled_ollama(&app);
+    if let Some(b) = &bundled {
+        prepare_bundled(b);
+    }
+    let bin = bundled
+        .or_else(ollama_bin)
+        .ok_or_else(|| "Ollama is not available".to_string())?;
     Command::new(&bin)
         .arg("serve")
         .env("OLLAMA_HOST", "127.0.0.1:11434")

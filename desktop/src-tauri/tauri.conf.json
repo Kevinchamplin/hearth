@@ -30,7 +30,10 @@
     "targets": ["app", "dmg"],
     "category": "Productivity",
     "shortDescription": "A warm, private, local AI for your desktop.",
-    "longDescription": "Hearth runs a real large language model entirely on your own machine — private by design, no account, no cloud. The desktop edition uses native inference (via Ollama) so it can run bigger, smarter models than the browser ever could.",
+    "longDescription": "Hearth runs a real large language model entirely on your own machine — private by design, no account, no cloud. The desktop edition bundles its own native inference engine (Ollama) so it can run bigger, smarter models than the browser ever could — one install, no setup.",
+    "resources": {
+      "resources/ollama": "ollama"
+    },
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
