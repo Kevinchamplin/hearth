@@ -4,6 +4,26 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-16, mobile-aware-model-gate) [0.5h]
+- **Hearth now gives phones honest, device-specific guidance instead of computer-only advice.**
+  Added a `IS_MOBILE` detector (UA + iPadOS-masquerades-as-Mac touch-point check) that tunes the
+  whole entry experience for phones/tablets:
+  - **Gate readiness line** no longer tells iOS users to "open in Chrome or Edge" (those are Safari
+    skins on iOS with identical WebGPU limits). On a phone with no WebGPU it now explains Hearth
+    needs **iOS 18+ / a recent Android and runs best on a computer**; with WebGPU present it points
+    them at the **⚡ Fast brain** and notes the bigger brains need a computer.
+  - **Per-model verdicts** are now phone-honest regardless of `navigator.deviceMemory` (which is
+    **undefined on iOS Safari/Firefox**, so the old RAM-based verdicts misleadingly read "should
+    run" for all three on iPhones): ⚡ Fast = "Best choice for a phone", ✨ Smart = "Heavy — newer
+    phones only", 🧠 Genius = "Needs a computer".
+  - On a phone with no prior choice, the **default brain is ⚡ Fast** (smallest, ~1 GB).
+  - Picker spec line + "Light the fire" fallback copy say **"phone"** instead of "computer" on mobile.
+- **Why:** Kevin asked whether Hearth works on iPhones/Android. It *can* on a flagship + iOS 18/recent
+  Android with the 1B Fast model, but the old copy actively misdirected phone users (wrong browser
+  advice, over-optimistic verdicts). This makes the constraint honest and steers phones to the only
+  realistic tier without hard-blocking them. No WebLLM/model changes; SW untouched (page is
+  network-first, so the update ships without a version bump).
+
 ### Fixed (2026-06-15, voice-download-progress-bar) [0.25h]
 - **The voice (Whisper) download now shows a real progress bar**, not just a climbing MB counter
   that read as "stuck." transformers.js reports progress per-file (resetting each file), so we now
