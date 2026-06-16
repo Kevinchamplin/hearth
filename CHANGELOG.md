@@ -4,6 +4,24 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-16, desktop-bundle-ollama-engine) [1.5h]
+- **The desktop app now bundles its own engine — one install, no setup.** Previously it required a
+  separate Ollama install; now `Hearth.app` ships Ollama inside it. `desktop/scripts/bundle-ollama.sh`
+  folds the engine (the `ollama` binary + `lib/ollama/{llama-server,llama-quantize}`) into
+  `src-tauri/resources/ollama/`, `tauri.conf.json` `bundle.resources` ships it in the app, and Rust
+  **prefers the bundled binary** (`bundled_ollama()` via the resource dir), restores its exec bit
+  (`prepare_bundled()`), and spawns it — **falling back to a system Ollama** if the user already has one
+  (shared `~/.ollama/models`).
+- **Why / details:** Ollama isn't a single file — the main binary spawns runner binaries from a
+  sibling `lib/ollama/` dir, so we bundle that whole tree and rely on Ollama's relative
+  `<exedir>/lib/ollama` runner discovery (verified by running the bundled tree standalone and
+  generating a real completion). The MLX runner is skipped (it's a symlink to the external `mlx-c`
+  brew dep, MLX-format only; Hearth's tiers are all GGUF). Bundled binaries are **gitignored**
+  (third-party redistributables — run the script before `tauri build`). Adds ~45 MB to the app.
+- **Not yet:** code-signing/notarization — with a bundled engine, each nested Mach-O (`ollama`,
+  `llama-server`, `llama-quantize`) must be signed with Developer ID + hardened runtime, which needs
+  an Apple Developer ID cert. macOS/arm64 only so far.
+
 ### Added (2026-06-16, desktop-app-tauri-ollama) [3h]
 - **Hearth now has a native desktop app** (`desktop/`) — a Tauri v2 shell wrapping the same Hearth
   UI, but with the browser's WebLLM engine swapped for **native Ollama inference**. This is the

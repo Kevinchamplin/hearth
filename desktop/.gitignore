@@ -6,3 +6,6 @@ src-tauri/gen/
 node_modules/
 # Build artifacts
 *.dmg
+# Bundled Ollama engine — populated locally by scripts/bundle-ollama.sh before `tauri build`.
+# Third-party redistributable binaries; not committed to the repo.
+src-tauri/resources/ollama/
