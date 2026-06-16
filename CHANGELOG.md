@@ -4,6 +4,32 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-16, desktop-app-tauri-ollama) [3h]
+- **Hearth now has a native desktop app** (`desktop/`) — a Tauri v2 shell wrapping the same Hearth
+  UI, but with the browser's WebLLM engine swapped for **native Ollama inference**. This is the
+  bigger-model unlock: the desktop edition runs models on real GPU (Metal/CUDA), so it can run
+  **Genius (Llama-3.1-8B)** and **Titan (Qwen2.5-14B)** — far beyond what WebGPU-in-a-tab can hold.
+  Still fully local and private; the browser app stays the zero-install Fast tier.
+- **What's in it:**
+  - Rust backend (`desktop/src-tauri/src/lib.rs`): `ollama_status` (incl. `total_ram_gb` via
+    `sysinfo`), `start_ollama` (auto-starts the engine), `list_models`, `pull_model` (streams
+    download progress), `chat` (streams tokens). All Ollama calls are **proxied through Rust** and
+    streamed to the UI over a Tauri `Channel` — deliberately, to dodge the macOS `WKWebView` ATS
+    block on `http://localhost`, Ollama's `tauri://`-origin CORS rejection, and CSP all at once.
+  - Frontend (`desktop/dist/index.html`): the web UI adapted to `window.__TAURI__` `invoke`/`Channel`
+    (buildless — no bundler). Four RAM-aware tiers (Fast/Smart/Genius/Titan → `llama3.2:1b` /
+    `llama3.2:3b` / `llama3.1:8b` / `qwen2.5:14b`), pull-on-first-use with the existing progress UI,
+    an Ollama-install gate ("Get Ollama" when missing), and speak-aloud TTS retained.
+  - Buildless frontend + pinned Tauri CLI in `desktop/package.json`; icons generated from the Hearth
+    mark; `.gitignore` for `target/`/`gen/`/`node_modules/`.
+- **Why:** answers "can Hearth run bigger/smarter models?" — yes, natively, on the desktop. Verified
+  end-to-end: Rust compiles clean, the app launches without error, and the `invoke → Rust → Ollama`
+  bridge is confirmed (boot-time `ollama_status` hits Ollama's API; chat streaming validated against
+  the live `/api/chat`).
+- **Not yet:** vision (SmolVLM) + mic/Whisper STT were dropped from desktop (browser-only ML,
+  unreliable in WKWebView) — re-add later via a native Ollama vision model. Ollama is a separate
+  install for now (sidecar-bundling is a future step); `.dmg`/`.app` are unsigned (notarization TBD).
+
 ### Added (2026-06-16, mobile-aware-model-gate) [0.5h]
 - **Hearth now gives phones honest, device-specific guidance instead of computer-only advice.**
   Added a `IS_MOBILE` detector (UA + iPadOS-masquerades-as-Mac touch-point check) that tunes the
