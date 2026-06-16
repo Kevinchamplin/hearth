@@ -438,6 +438,17 @@
     let currentModelId = MODELS[0].id;
     try { const saved = localStorage.getItem("h_model"); if (saved && modelInfo(saved).id === saved) currentModelId = saved; } catch (e) {}
 
+    // Phones are a different world: WebGPU is iOS 18+ / recent Android only, RAM is tight,
+    // and navigator.deviceMemory is undefined on Safari/Firefox — so memory-based verdicts
+    // can't be trusted on a phone. Detect the device class up front and tune guidance to it.
+    // (iPadOS 13+ masquerades as "Macintosh" — catch it via touch points.)
+    const UA = navigator.userAgent || "";
+    const IS_MOBILE = /Android|iPhone|iPod|iPad|Mobi/i.test(UA)
+      || (/Macintosh/.test(UA) && (navigator.maxTouchPoints || 0) > 1);
+    // On a phone, the smallest brain is the only realistic option — default to it unless the
+    // user has explicitly chosen otherwise on THIS device before.
+    if (IS_MOBILE) { try { if (!localStorage.getItem("h_model")) currentModelId = MODELS[0].id; } catch (e) {} }
+
     // What does THIS computer have? (Used to tell the user which brain it can handle.)
     let specs = null;
     async function detectSpecs(){
@@ -459,6 +470,14 @@
     function memLabel(mem){ return mem == null ? null : (mem >= 8 ? "8 GB or more" : "about " + mem + " GB"); }
     function verdict(model){
       const mem = specs ? specs.mem : null;
+      // On phones/tablets, RAM reporting is unreliable (undefined on iOS Safari) and even
+      // when a brain loads, the big ones routinely get killed mid-answer. Be honest: ⚡ Fast
+      // is the realistic one, ✨ Smart is a stretch on flagships, 🧠 Genius needs a computer.
+      if (IS_MOBILE) {
+        if (model.name === "Fast")  return { label: "✓ Best choice for a phone", cls: "good" };
+        if (model.name === "Smart") return { label: "⚠ Heavy — newer phones only", cls: "warn" };
+        return { label: "✗ Needs a computer", cls: "bad" };
+      }
       if (mem == null) return { label: "Should run in Chrome or Edge", cls: "ok" };
       if (model.name === "Fast")  return mem >= 2 ? { label: "✓ Great for your computer", cls: "good" } : { label: "✓ Should run fine", cls: "good" };
       if (model.name === "Smart") return mem >= 8 ? { label: "✓ Good for your computer", cls: "good" } : (mem >= 4 ? { label: "⚠ Might be slow here", cls: "warn" } : { label: "✗ Likely too much", cls: "bad" });
@@ -489,7 +508,18 @@
       const el = $("gateReady"); if (!el) return;
       let ok = false;
       try { ok = !!(navigator.gpu && await navigator.gpu.requestAdapter()); } catch (e) {}
-      if (!ok) { el.textContent = "⚠ This browser can't light the fire — open Hearth in Chrome or Edge."; el.style.color = "#E9967A"; return; }
+      if (!ok) {
+        // On iOS, Chrome/Edge are just Safari skins — same WebGPU limits — so "use Chrome"
+        // is wrong advice. Tell phone users what actually matters: an up-to-date OS, or a computer.
+        el.textContent = IS_MOBILE
+          ? "⚠ This phone can't light the fire yet — Hearth needs iOS 18+ or a recent Android, and runs best on a computer."
+          : "⚠ This browser can't light the fire — open Hearth in Chrome or Edge.";
+        el.style.color = "#E9967A"; return;
+      }
+      if (IS_MOBILE) {
+        el.textContent = "✓ Your phone can run Hearth — start with the ⚡ Fast brain (the bigger brains need a computer).";
+        el.style.color = "#8ecb9f"; return;
+      }
       const mem = navigator.deviceMemory || 0;
       el.textContent = (mem && mem < 4)
         ? "✓ This computer can run Hearth — the Fast brain will suit it best."
@@ -763,8 +793,9 @@
     $("lightBtn").addEventListener("click", () => {
       if (!navigator.gpu){
         window.hearth && window.hearth.track('webgpu_missing');
-        views.gate.querySelector(".lead").textContent =
-          "Hearth needs WebGPU, which this browser doesn't have yet. Open this page in Chrome or Edge (or Safari 18+) and it'll spark right up.";
+        views.gate.querySelector(".lead").textContent = IS_MOBILE
+          ? "Hearth needs WebGPU, which this phone doesn't have yet. It needs iOS 18 or newer (or a recent Android) — and honestly runs best on a computer. Try opening this page there."
+          : "Hearth needs WebGPU, which this browser doesn't have yet. Open this page in Chrome or Edge (or Safari 18+) and it'll spark right up.";
         return;
       }
       window.hearth && window.hearth.track('hearth_lit');
@@ -779,14 +810,15 @@
       const sp = $("pickerSpecs"); if (!sp) return; sp.replaceChildren();
       if (!specs) return;
       const ml = memLabel(specs.mem);
+      const device = IS_MOBILE ? "phone" : "computer";
       const line = document.createElement("div");
       if (ml || specs.cores){
-        const lab = document.createElement("span"); lab.style.color = "var(--ink-soft)"; lab.textContent = "Your computer: ";
+        const lab = document.createElement("span"); lab.style.color = "var(--ink-soft)"; lab.textContent = "Your " + device + ": ";
         line.appendChild(lab);
         if (ml){ const b = document.createElement("strong"); b.textContent = ml; line.append(b, " of memory"); }
         if (specs.cores){ line.append((ml ? " · " : "") + specs.cores + " processor cores"); }
       } else {
-        line.append("Your computer looks ready to go.");
+        line.append("Your " + device + " looks ready to go.");
       }
       sp.appendChild(line);
       if (specs.gpu){ const g = document.createElement("div"); g.style.opacity = ".6"; g.style.marginTop = "3px"; g.textContent = specs.gpu; sp.appendChild(g); }
