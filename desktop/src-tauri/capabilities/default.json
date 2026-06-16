@@ -1,0 +1,10 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capabilities for the main Hearth window. Custom commands (ollama_status, start_ollama, chat, pull_model, list_models) are exposed directly; this grants core defaults plus opening external links.",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "opener:default"
+  ]
+}

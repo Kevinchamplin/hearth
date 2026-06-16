@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Hearth",
+  "version": "0.1.0",
+  "identifier": "com.kevinchamplin.hearth",
+  "build": {
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "Hearth",
+        "width": 1000,
+        "height": 760,
+        "minWidth": 380,
+        "minHeight": 540,
+        "resizable": true,
+        "theme": "Dark",
+        "titleBarStyle": "Visible"
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["app", "dmg"],
+    "category": "Productivity",
+    "shortDescription": "A warm, private, local AI for your desktop.",
+    "longDescription": "Hearth runs a real large language model entirely on your own machine — private by design, no account, no cloud. The desktop edition uses native inference (via Ollama) so it can run bigger, smarter models than the browser ever could.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+# Rust build output
+src-tauri/target/
+# Tauri-generated schemas/config (regenerated on build)
+src-tauri/gen/
+# Node (only the pinned Tauri CLI lives here)
+node_modules/
+# Build artifacts
+*.dmg
