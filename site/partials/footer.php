@@ -6,6 +6,7 @@
         <a href="/about">About</a>
         <a href="/tutorial">How to use</a>
         <a href="/blog">Blog</a>
+        <a href="/compare">Hearth vs ChatGPT</a>
         <a href="/faq">FAQ</a>
         <a href="/contact">Contact</a>
         <a href="/app">Try Hearth</a>

@@ -15,6 +15,8 @@ All notable changes to Hearth are documented here.
   - **Related posts ("Keep reading")** on every post — 3 posts ranked by shared tags (`blog_related()`),
     so posts interlink (crawl depth + dwell time + AI-citation surface).
   - **Author byline → kevinchamplin.com** with `rel="author"` (E-E-A-T).
+- **Internal links to `/compare/`** (was nearly orphaned): "See the full Hearth vs ChatGPT
+  comparison" in the homepage's comparison section + "Hearth vs ChatGPT" in every footer.
 - ⚠ Homepage is now `index.php` (removed the static `index.html`; PHP serves the live post module).
 
 ### Added (2026-06-17, blog-engine-and-seo-best-in-class) [3.5h]

@@ -384,6 +384,7 @@
         </table>
       </div>
       <p class="compare-foot">That last row is on purpose. Hearth isn't trying to replace the giants — it's the everyday AI that's actually <em>yours</em>.</p>
+      <p class="compare-foot" style="margin-top:12px"><a href="/compare" style="color:var(--brass-text);font-weight:600;text-decoration:none">See the full Hearth vs ChatGPT comparison &rarr;</a></p>
 
       <!-- Photos via Pexels (free license) — graded warm to sit in the Hearth palette -->
       <div class="photo-strip">
@@ -654,6 +655,7 @@
           <a href="/faq">FAQ</a>
           <a href="/contact">Contact</a>
           <a href="/blog">Blog</a>
+          <a href="/compare">Hearth vs ChatGPT</a>
           <a href="/app">Try Hearth</a>
           <a href="https://github.com/Kevinchamplin/hearth" target="_blank" rel="noopener">GitHub</a>
         </div>
