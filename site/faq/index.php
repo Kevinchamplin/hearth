@@ -7,6 +7,8 @@ include __DIR__ . '/../partials/header.php';
 $faqs = [
   ['Is Hearth really free?',
    'Yes &mdash; completely, and forever. It runs on your own computer, so there\'s nothing for us to bill you for. No subscription, no credit card, no &ldquo;free trial&rdquo; that ends.'],
+  ['Will Hearth ever start charging, or get more expensive?',
+   'No. Hearth runs on <em>your</em> computer, not on a server we pay for &mdash; so there\'s no cost to pass on and no meter to switch on later. Cloud AI is cheap right now because big companies are subsidizing it; those prices can rise. Hearth\'s can\'t: it\'s free today, and free in ten years. <a href="/compare">See how it compares &rarr;</a>'],
   ['Is it actually private?',
    'Yes, by design. The AI runs on your device, so your conversations are never sent to us or anyone else. There\'s no server in the middle that could read them.'],
   ['Can you see my conversations?',
@@ -46,6 +48,7 @@ echo '<script type="application/ld+json">' . json_encode([
   <p class="eyebrow">Questions &amp; answers</p>
   <h1 class="serif">The honest FAQ.</h1>
   <p class="lead">No fine print, no spin. Here's what people ask most.</p>
+  <figure class="ph"><img src="/assets/photos/reading-nook.jpg" alt="A quiet, sunlit reading corner — a calm place to think" width="1600" height="1067" loading="lazy"><figcaption>Free, private, and yours &mdash; no catch to read between the lines.</figcaption></figure>
   <?php foreach ($faqs as $f): ?>
     <div class="faq-item">
       <div class="faq-q serif"><?= $f[0] ?></div>

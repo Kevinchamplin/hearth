@@ -37,6 +37,8 @@ echo '<script type="application/ld+json">' . json_encode([
 
   <p>The short version: <strong>ChatGPT, Gemini and Claude are brilliant cloud tools</strong> that run on enormous data-center models. <strong>Hearth is a different thing on purpose</strong> — the AI runs on <em>your</em> computer, so it's free, completely private, and works without internet. It won't build you a whole app, but for everyday questions, writing help, and explanations it's wonderful — and nothing you type ever leaves your machine.</p>
 
+  <figure class="ph"><img src="/assets/photos/cozy-laptop.jpg" alt="Using a private, local AI on a laptop at home in warm light" width="1600" height="1067" loading="lazy"><figcaption>The everyday AI that's actually yours.</figcaption></figure>
+
   <div class="cmp-wrap">
   <table class="cmp">
     <thead><tr><th></th><th>Hearth</th><th>ChatGPT / Gemini / Claude</th></tr></thead>

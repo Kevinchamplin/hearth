@@ -404,6 +404,21 @@
     </div>
   </section>
 
+  <!-- WHY NOW -->
+  <section style="background:#14120E;color:#F5F1E8;padding:76px 0">
+    <div class="wrap" style="max-width:820px;text-align:center">
+      <p class="eyebrow" style="color:#E4C27C">Why now</p>
+      <h2 style="font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:clamp(28px,4.5vw,40px);line-height:1.12;letter-spacing:-.01em;margin:0 0 18px">Cloud AI is cheap today because<br>someone else is footing the bill.</h2>
+      <p style="font-size:18px;line-height:1.7;color:rgba(245,241,232,.72);margin:0 auto 26px;max-width:680px">Right now the big AI companies are racing for users, so prices feel low and limits feel generous. That never lasts. Subscriptions creep up, free tiers shrink, meters appear — and access can be throttled, repriced, or switched off overnight. <strong style="color:#F5F1E8">Hearth's price can't move.</strong> It runs on a computer you already own — so it's free today, and free in ten years.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:30px">
+        <span style="border:1px solid rgba(245,241,232,.18);border-radius:999px;padding:8px 16px;font-size:14px">$0 — forever</span>
+        <span style="border:1px solid rgba(245,241,232,.18);border-radius:999px;padding:8px 16px;font-size:14px">No meter, ever</span>
+        <span style="border:1px solid rgba(245,241,232,.18);border-radius:999px;padding:8px 16px;font-size:14px">Can't be throttled or cut off</span>
+      </div>
+      <a href="/app" class="btn btn-primary" data-ev="whynow_try">Bring your AI home — free &rarr;</a>
+    </div>
+  </section>
+
   <!-- SHOWCASE -->
   <section class="look" id="look">
     <div class="wrap">

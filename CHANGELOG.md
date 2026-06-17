@@ -4,6 +4,24 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Changed (2026-06-17, sitewide-content-seo-images-and-price-narrative) [2.5h]
+- **Sitewide content + SEO pass to lead the "own your AI before prices skyrocket" story**, with real
+  imagery on every page.
+  - **Homepage:** new dark **"Why now"** band — cloud AI is cheap today because it's subsidized; that
+    ends; Hearth's price is fixed at free because it runs on hardware you own. CTA "Bring your AI home — free".
+  - **/about:** rewritten — added a "Why bring your AI home now?" section, a pull-quote, two more warm
+    photos + the founder portrait, question-style H2s, and **AboutPage + Person + BreadcrumbList** schema.
+  - **/tutorial:** tightened, quotable intro, and **HowTo + HowToStep + BreadcrumbList** schema (rich-result
+    eligible) built from the existing 5 real screenshots.
+  - **/faq:** added "Will Hearth ever start charging?" (auto-flows into FAQPage schema) + a warm photo.
+  - **/compare** + **/contact:** added warm photos; compare reinforces the price/ownership angle.
+  - **New blog post:** "AI Is Cheap Right Now. Here's How to Make Sure It Stays Free for You." — the
+    flagship price-hook post (quotable lead, question H2s, internal links).
+  - **llms.txt:** added a "Why own your AI now" section so AI assistants carry the price narrative.
+  - **Imagery:** 4 new warm Pexels photos (cozy-laptop, reading-nook, off-grid, writing-desk), optimized
+    to ≤1600px; reusable `.ph` figure + `.pull` pull-quote styles in `hearth.css`.
+- All pages verified live (200, zero PHP errors, images load, schema present). Sitemap now 15 URLs.
+
 ### Added (2026-06-17, blog-internal-linking-and-cta) [1h]
 - **Made the blog an actual SEO/conversion engine — it was getting no link equity before.** The
   homepage (hand-rolled `index.html`, which didn't use the shared partials) had **no link to the
