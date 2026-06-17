@@ -4,6 +4,37 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-17, blog-engine-and-seo-best-in-class) [3.5h]
+- **Hearth now has a real, indexed blog + a daily auto-publishing engine — the biggest organic /
+  AI-citation lever the site was missing.** Previously there was no content system at all.
+  - **File-based blog engine** (`site/lib/blog.php` + vendored `Parsedown`): posts are Markdown
+    files with front matter in `site/blog/posts/*.md`. `site/blog/index.php` (listing, Blog +
+    ItemList + Breadcrumb schema), `site/blog/post.php` (article, BlogPosting + Breadcrumb schema,
+    per-post OG/canonical), `site/blog/feed.php` (RSS 2.0), pretty URLs via `site/blog/.htaccess`
+    (`/blog/<slug>`). Blog added to header/footer nav; article + blog CSS in `hearth.css`.
+  - **5 launch posts** (what-is-local-ai, is-your-ai-private, how-to-run-ai-offline,
+    hearth-desktop-app, migrated build-in-public post) — each SEO-shaped (quotable lead, question
+    H2s) for AI Overviews / ChatGPT Search / Perplexity.
+  - **Daily generator** (`site/blog/generate.php`): cron picks the next topic from
+    `blog/topics.txt` (24-topic backlog Kevin can edit; used topics move to `topics.used.txt`),
+    has an LLM write an on-brand SEO post, writes the `.md`, regenerates the sitemap. Idempotent
+    (≤1 post/day). Live cron at 9:10 AM daily on kc-prod (PHP 8.4). Key in server-only
+    `hearth-analytics-data/blog.php` (OpenAI, not in git). End-to-end verified.
+  - **Comparison page** `/compare/` ("Hearth vs ChatGPT, Gemini & Claude") with comparison table +
+    FAQPage + Breadcrumb schema — captures high-intent "private/offline/free ChatGPT alternative".
+  - **Schema upgrades**: homepage SoftwareApplication now reflects the desktop app (operatingSystem,
+    downloadUrl, screenshots, featureList, voice/image), org `sameAs`, `isAccessibleForFree`.
+  - **Dynamic sitemap** (`site/lib/gen-sitemap.php`) includes blog + compare, regenerated at deploy
+    and after each daily post; trailing-slash URLs match canonicals.
+  - **robots.txt** expanded to 18 AI/search crawlers; **llms.txt** rewritten (desktop, voice,
+    features, comparison, blog, FAQ section).
+  - **head.php**: per-page og:type/og:image/alt (article posts), apple-touch-icon, theme-color,
+    RSS `<link rel=alternate>`, og:site_name.
+- Baseline (Lighthouse, home): SEO 100, Perf 80, CLS 0, LCP 3.8s (lab/throttled; field = new-site).
+- ⚠ Note: generated posts live on the server (`blog/posts/`), not in git — the repo carries the 5
+  seed posts + the engine. ⚠ After editing existing PHP on this vhost, reload `plesk-php84-fpm`
+  (opcache serves stale bytecode — bit the canonical update).
+
 ### Added (2026-06-17, desktop-code-signing-pipeline) [1.5h]
 - **One-command signed + notarized macOS release** so the desktop app is distributable to anyone,
   not just openable on the build machine. `desktop/scripts/release-macos.sh`: cleans up (stale dmg

@@ -1,0 +1,28 @@
+# Hearth blog topic backlog — one per line. The daily generator picks the first unused line.
+# Edit freely: add ideas, reorder, delete. Used topics move to topics.used.txt.
+# Aim for real search intents: questions people type, comparisons, and how-tos.
+
+Is it safe to put personal information into ChatGPT?
+The best private AI apps in 2026, and how to choose one
+How much does AI actually cost — and why Hearth is free
+What can a small, local AI actually do well?
+AI for writers who don't want their drafts used for training
+How to use AI without an account or sign-up
+Local AI vs cloud AI: which one should you use, and when?
+Is AI listening to me? What data your AI assistant collects
+How to ask AI better questions (a simple guide for everyone)
+Running AI on a laptop: what kind of computer do you need?
+Why your AI assistant should work on an airplane
+AI for students: a private, free study helper that works offline
+The quiet case for owning your software instead of renting it
+How to keep your AI conversations private
+Can AI run without the internet? Yes — here's how
+AI for small business owners who care about confidentiality
+What is on-device AI, and why does it matter?
+Five everyday things a free local AI is genuinely great at
+How to talk to an AI with your voice — privately
+AI and your data: what 'it runs on your device' really means
+Is there a free alternative to ChatGPT Plus?
+What to look for in a privacy-first AI tool
+How AI on your own computer saves you money every month
+Teaching a non-technical person to use AI in five minutes

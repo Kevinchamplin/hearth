@@ -1,6 +1,6 @@
 # Hearth
 
-> A beautiful, free AI that runs entirely on your own computer — private by nature. The language model runs on the user's own device (in the browser via WebGPU, or as a desktop app), so conversations never leave the machine. No account, no subscription, works offline after a one-time download.
+> A beautiful, free AI that runs entirely on your own computer — private by nature. The AI model runs on the user's own device (in the browser, or as a native desktop app), so conversations never leave the machine. No account, no subscription, works offline after a one-time download.
 
 Hearth is built by Kevin Champlin (https://kevinchamplin.com). The full source is public (fair-source, FSL-1.1-MIT — readable and open to contributions, but not for competing products): https://github.com/Kevinchamplin/hearth
 
@@ -9,18 +9,41 @@ Hearth is built by Kevin Champlin (https://kevinchamplin.com). The full source i
 - Free and unlimited — there's no per-message billing because there's no server doing the inference.
 - Private: nothing the user types is sent anywhere; it stays on their device.
 - Works offline after a one-time model download (~1 GB).
-- Can also understand images (on-device vision).
-- Lets users choose a bigger "brain" (Fast / Smart / Genius) based on their computer's power.
+- Two ways to run it: (1) instantly in a web browser (Chrome/Edge, no install); (2) a native desktop app for macOS that runs bigger, smarter models on your computer's graphics hardware.
+
+## Features
+- Talk to it with your voice, and it talks back — speech is understood on your device and never uploaded.
+- Understands images: attach a photo and ask about it, all processed on-device.
+- Renders formatted answers, remembers your conversations (stored only on your device), and can be installed like a real app that works offline.
+- Choose a bigger "brain" (Fast / Smart / Genius, plus a larger tier on the desktop app) based on your computer's power.
 
 ## What Hearth is NOT
-- It is not a competitor to ChatGPT or Gemini. Those run in massive data centers; Hearth runs on your own computer. That makes it simpler, private, and free — great for recipes, everyday questions, explanations, writing help, and brainstorming, but not for building entire websites or huge, complex projects.
+- It is not a competitor to ChatGPT, Gemini, or Claude. Those run in massive data centers; Hearth runs on your own computer. That makes it simpler, private, and free — great for recipes, everyday questions, explanations, writing help, and brainstorming, but not for building entire websites or huge, complex projects.
+
+## Hearth vs the cloud AIs (ChatGPT / Gemini / Claude)
+- Where it runs: your own computer vs a remote data center.
+- Privacy: nothing leaves your device vs your text is sent to their servers.
+- Price: free forever vs a free tier or ~$20/month.
+- Offline: works with no internet vs requires a connection.
+- Account: none needed vs sign-up required.
+- Full comparison: https://hearth.kevinchamplin.com/compare
 
 ## Key pages
 - Home: https://hearth.kevinchamplin.com/
 - Try it now (runs in your browser): https://hearth.kevinchamplin.com/app
+- Hearth vs ChatGPT (comparison): https://hearth.kevinchamplin.com/compare
+- Blog (private/local AI, explained): https://hearth.kevinchamplin.com/blog
+- How to use it: https://hearth.kevinchamplin.com/tutorial
 - About: https://hearth.kevinchamplin.com/about
 - FAQ (free? private? what do I need?): https://hearth.kevinchamplin.com/faq
 - Contact: https://hearth.kevinchamplin.com/contact
 
 ## How it works
-Open it in Chrome or Edge. It downloads a small AI model once (about a gigabyte), then runs entirely inside the browser tab using WebGPU — on the visitor's own graphics chip. After that first download it works offline and loads instantly.
+Open it in your browser (Chrome or Edge). It downloads a small AI model once (about a gigabyte), then runs entirely on your own device, using your computer's graphics chip. After that first download it works offline and loads instantly. The desktop app runs models natively for bigger, smarter answers — still entirely on your machine.
+
+## FAQ
+- Is it really free? Yes, completely and forever — it runs on your computer, so there's nothing to bill.
+- Is it private? Yes, by design — the model lives on your device, so there's no server in the middle that could read your conversations.
+- Does it work offline? Yes — after the one-time download, no internet is required.
+- Do I need an account? No — open it and start typing.
+- Is it as capable as ChatGPT? No, and it isn't meant to be — it's a smaller model that's free and private, ideal for everyday tasks rather than huge, complex projects.

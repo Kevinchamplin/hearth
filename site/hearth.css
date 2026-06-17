@@ -78,9 +78,64 @@ footer.foot{background:var(--d-bg);color:var(--on-d-soft);padding:54px 0 40px;ma
 .foot-attr{padding-top:22px;font-size:13px;color:rgba(245,241,232,.5)}
 .foot-attr a{color:var(--on-d-soft);text-decoration:underline}
 
+/* blog index */
+.blog-list{margin-top:34px;display:flex;flex-direction:column}
+.blog-card{border-top:1px solid var(--line)}
+.blog-card:last-child{border-bottom:1px solid var(--line)}
+.blog-card-link{display:block;padding:26px 0;text-decoration:none;color:inherit}
+.blog-card-link:hover .blog-card-title{color:var(--brass-text)}
+.blog-card-link:hover .blog-card-more{transform:translateX(3px)}
+.blog-card-meta{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12.5px;letter-spacing:.04em;color:var(--ink-soft);display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.blog-card-title{font-size:24px;line-height:1.2;margin:0 0 8px;transition:color .15s}
+.blog-card-desc{font-size:16.5px;color:var(--ink-soft);margin:0 0 10px}
+.blog-card-more{color:var(--brass-text);font-weight:600;font-size:15px;display:inline-block;transition:transform .15s}
+.blog-cta{display:inline-block;background:radial-gradient(circle at 35% 30%,#FFD89A,#EE9A45 78%);color:#3A2206;font-weight:700;padding:14px 28px;border-radius:12px;text-decoration:none;box-shadow:0 0 22px rgba(238,154,69,.3)}
+.blog-cta-ghost{display:inline-block;margin-left:10px;padding:14px 22px;border-radius:12px;text-decoration:none;color:var(--brass-text);font-weight:600;border:1px solid var(--line)}
+
+/* breadcrumbs */
+.crumbs{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12.5px;color:var(--ink-soft);margin-bottom:18px}
+.crumbs a{color:var(--brass-text);text-decoration:none}
+.crumbs span{margin:0 7px;opacity:.5}
+
+/* article */
+.post-head{margin-bottom:22px}
+.post-title{font-size:38px;line-height:1.12;letter-spacing:-.01em;margin-top:10px}
+.post-body{font-size:18px;line-height:1.72}
+.post-body h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:27px;margin:38px 0 12px;letter-spacing:-.01em}
+.post-body h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:21px;margin:28px 0 10px}
+.post-body p{margin:0 0 20px}
+.post-body ul,.post-body ol{margin:0 0 20px 24px}
+.post-body li{margin-bottom:9px}
+.post-body a{color:var(--brass-text);text-decoration:underline;font-weight:500}
+.post-body strong{color:var(--ink)}
+.post-body img{display:block;max-width:100%;height:auto;border-radius:14px;border:1px solid var(--line);margin:24px 0}
+.post-body blockquote{border-left:3px solid var(--brass);background:var(--paper-2);margin:24px 0;padding:14px 20px;border-radius:0 12px 12px 0;color:var(--ink-soft);font-style:italic}
+.post-body blockquote p{margin:0}
+.post-body code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.86em;background:var(--paper-2);padding:2px 6px;border-radius:6px}
+.post-body pre{background:var(--d-bg);color:var(--on-d);padding:18px 20px;border-radius:12px;overflow:auto;margin:24px 0}
+.post-body pre code{background:none;padding:0;color:inherit;font-size:14px}
+.post-body hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.post-body table{width:100%;border-collapse:collapse;margin:24px 0;font-size:15.5px}
+.post-body th,.post-body td{border:1px solid var(--line);padding:10px 13px;text-align:left}
+.post-body th{background:var(--paper-2);font-weight:600}
+.post-tags{margin:30px 0 0;display:flex;gap:9px;flex-wrap:wrap}
+.post-tags .tag{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;letter-spacing:.03em;color:var(--brass-text);background:var(--paper-2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.post-cta{margin-top:44px;padding:28px;border-radius:16px;background:var(--paper-2);border:1px solid var(--line);text-align:center}
+
+/* comparison table page */
+.cmp{width:100%;border-collapse:collapse;margin:30px 0;font-size:15.5px}
+.cmp th,.cmp td{border:1px solid var(--line);padding:12px 14px;text-align:left;vertical-align:top}
+.cmp th{background:var(--paper-2);font-weight:600;font-family:"Fraunces",Georgia,serif}
+.cmp td:first-child{font-weight:600}
+.cmp .yes{color:#2f7d4f;font-weight:600}
+.cmp .no{color:#b3402a}
+.cmp-wrap{overflow-x:auto}
+
 @media (max-width:680px){
   .nav-inner{justify-content:center}
   .links{gap:14px;justify-content:center}
   .page h1{font-size:32px}
+  .post-title{font-size:29px}
+  .post-body{font-size:17px}
   .foot-top{flex-direction:column;align-items:flex-start}
 }
