@@ -1,0 +1,11 @@
+# Pretty blog URLs: /blog/<slug> -> post.php?slug=<slug>, /blog/feed(.xml) -> feed.php
+RewriteEngine On
+RewriteBase /blog/
+
+# RSS feed
+RewriteRule ^feed(\.xml)?/?$ feed.php [L]
+
+# Single posts: only rewrite when the path isn't a real file/dir
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-z0-9][a-z0-9-]*)/?$ post.php?slug=$1 [L,QSA]
