@@ -60,7 +60,7 @@ echo '<script type="application/ld+json">' . json_encode($ld, JSON_UNESCAPED_SLA
       <div class="blog-card-meta">
         <time datetime="<?= $hh($post['date']) ?>"><?= $hh(blog_date_human($post['date'])) ?></time>
         <span>·</span><span><?= blog_reading_time($post) ?> min read</span>
-        <span>·</span><span>by <?= $hh($post['author']) ?></span>
+        <span>·</span><span>by <a href="https://kevinchamplin.com" rel="author" style="color:var(--brass-text)"><?= $hh($post['author']) ?></a></span>
       </div>
       <h1 class="serif post-title"><?= $hh($post['title']) ?></h1>
     </header>
@@ -76,6 +76,23 @@ echo '<script type="application/ld+json">' . json_encode($ld, JSON_UNESCAPED_SLA
       <a href="/blog" class="blog-cta-ghost">More posts</a>
     </div>
   </article>
+
+  <?php $rel = blog_related($post, 3); if ($rel): ?>
+  <section class="related">
+    <h2 class="serif" style="font-size:22px;margin:0 0 18px">Keep reading</h2>
+    <div class="blog-list">
+      <?php foreach ($rel as $r): ?>
+        <article class="blog-card">
+          <a class="blog-card-link" href="/blog/<?= $hh($r['slug']) ?>" style="padding:18px 0">
+            <div class="blog-card-meta"><time datetime="<?= $hh($r['date']) ?>"><?= $hh(blog_date_human($r['date'])) ?></time><span>·</span><span><?= blog_reading_time($r) ?> min read</span></div>
+            <div class="serif blog-card-title" style="font-size:20px"><?= $hh($r['title']) ?></div>
+          </a>
+        </article>
+      <?php endforeach; ?>
+    </div>
+    <p style="margin-top:18px"><a href="/blog" style="color:var(--brass-text);font-weight:600;text-decoration:none">All posts &rarr;</a></p>
+  </section>
+  <?php endif; ?>
 </div></main>
 <?php include __DIR__ . '/../partials/footer.php'; ?>
 </body>

@@ -95,6 +95,19 @@ function blog_reading_time(array $p): int {
     return max(1, (int) round($words / 200));
 }
 
+/** Up to $n other posts most related by shared tags (falls back to most recent). */
+function blog_related(array $post, int $n = 3): array {
+    $tags = array_map('strtolower', $post['tags']);
+    $scored = [];
+    foreach (blog_posts() as $p) {
+        if ($p['slug'] === $post['slug']) continue;
+        $shared = count(array_intersect(array_map('strtolower', $p['tags']), $tags));
+        $scored[] = ['p' => $p, 's' => $shared];
+    }
+    usort($scored, fn($a, $b) => ($b['s'] <=> $a['s']) ?: strcmp($b['p']['date'], $a['p']['date']));
+    return array_map(fn($x) => $x['p'], array_slice($scored, 0, $n));
+}
+
 function blog_date_human(string $ymd): string {
     $t = strtotime($ymd);
     return $t ? date('M j, Y', $t) : $ymd;

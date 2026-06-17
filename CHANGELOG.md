@@ -4,6 +4,19 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-17, blog-internal-linking-and-cta) [1h]
+- **Made the blog an actual SEO/conversion engine — it was getting no link equity before.** The
+  homepage (hand-rolled `index.html`, which didn't use the shared partials) had **no link to the
+  blog at all**; fixed by converting it to `index.php` and adding:
+  - A **dynamic "From the blog" module** showing the 3 latest posts (auto-updates as the daily
+    generator publishes) — this passes the homepage's authority to fresh posts (big internal-SEO
+    lever + freshness signal) and drives clicks, with a "Try Hearth free" CTA.
+  - **Blog** in the homepage nav + footer.
+  - **Related posts ("Keep reading")** on every post — 3 posts ranked by shared tags (`blog_related()`),
+    so posts interlink (crawl depth + dwell time + AI-citation surface).
+  - **Author byline → kevinchamplin.com** with `rel="author"` (E-E-A-T).
+- ⚠ Homepage is now `index.php` (removed the static `index.html`; PHP serves the live post module).
+
 ### Added (2026-06-17, blog-engine-and-seo-best-in-class) [3.5h]
 - **Hearth now has a real, indexed blog + a daily auto-publishing engine — the biggest organic /
   AI-citation lever the site was missing.** Previously there was no content system at all.
