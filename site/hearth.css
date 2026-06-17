@@ -121,6 +121,7 @@ footer.foot{background:var(--d-bg);color:var(--on-d-soft);padding:54px 0 40px;ma
 .post-tags{margin:30px 0 0;display:flex;gap:9px;flex-wrap:wrap}
 .post-tags .tag{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;letter-spacing:.03em;color:var(--brass-text);background:var(--paper-2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
 .post-cta{margin-top:44px;padding:28px;border-radius:16px;background:var(--paper-2);border:1px solid var(--line);text-align:center}
+.related{margin-top:50px;padding-top:30px;border-top:1px solid var(--line)}
 
 /* comparison table page */
 .cmp{width:100%;border-collapse:collapse;margin:30px 0;font-size:15.5px}

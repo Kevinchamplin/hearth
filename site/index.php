@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/lib/blog.php'; $latest = array_slice(blog_posts(), 0, 3); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -291,6 +292,7 @@
           <a href="/tutorial">How to use</a>
           <a href="/faq">FAQ</a>
           <a href="/contact">Contact</a>
+          <a href="/blog">Blog</a>
           <a href="/app" class="nav-cta">Try Hearth</a>
         </div>
       </nav>
@@ -615,6 +617,32 @@
     </div>
   </section>
 
+  <!-- FROM THE BLOG -->
+  <?php if ($latest): ?>
+  <section style="background:var(--paper);padding:64px 0;border-top:1px solid var(--line)">
+    <div class="wrap">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:28px">
+        <div>
+          <p class="eyebrow">From the blog</p>
+          <h2 style="font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:30px;line-height:1.1;margin:0">Private AI, in plain English.</h2>
+        </div>
+        <a href="/blog" style="color:var(--brass-text);font-weight:600;text-decoration:none;white-space:nowrap">All posts &rarr;</a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px">
+        <?php foreach ($latest as $lp): $hh = fn($v) => htmlspecialchars((string)$v, ENT_QUOTES); ?>
+        <a href="/blog/<?= $hh($lp['slug']) ?>" style="display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;transition:box-shadow .15s,transform .15s" onmouseover="this.style.boxShadow='0 14px 36px rgba(43,39,32,.10)';this.style.transform='translateY(-2px)'" onmouseout="this.style.boxShadow='none';this.style.transform='none'">
+          <div style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;color:var(--ink-soft);margin-bottom:9px"><?= $hh(blog_date_human($lp['date'])) ?> &middot; <?= blog_reading_time($lp) ?> min read</div>
+          <div style="font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:19px;line-height:1.25;margin-bottom:9px"><?= $hh($lp['title']) ?></div>
+          <div style="font-size:14.5px;color:var(--ink-soft);line-height:1.55"><?= $hh(blog_excerpt($lp, 110)) ?></div>
+          <div style="color:var(--brass-text);font-weight:600;font-size:14px;margin-top:12px">Read &rarr;</div>
+        </a>
+        <?php endforeach; ?>
+      </div>
+      <p style="text-align:center;margin-top:36px"><a href="/app" class="btn btn-primary" data-ev="blog_try">Try Hearth free &rarr;</a></p>
+    </div>
+  </section>
+  <?php endif; ?>
+
   <!-- FOOTER -->
   <footer>
     <div class="wrap">
@@ -625,6 +653,7 @@
           <a href="/tutorial">How to use</a>
           <a href="/faq">FAQ</a>
           <a href="/contact">Contact</a>
+          <a href="/blog">Blog</a>
           <a href="/app">Try Hearth</a>
           <a href="https://github.com/Kevinchamplin/hearth" target="_blank" rel="noopener">GitHub</a>
         </div>
