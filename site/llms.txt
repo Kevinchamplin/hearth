@@ -28,6 +28,9 @@ Hearth is built by Kevin Champlin (https://kevinchamplin.com). The full source i
 - Account: none needed vs sign-up required.
 - Full comparison: https://hearth.kevinchamplin.com/compare
 
+## Why own your AI now
+Cloud AI is unusually cheap right now because the big providers are subsidizing it to win users. That phase ends: subscriptions rise, free tiers shrink, usage meters and rate limits appear, and access can be repriced or cut off. Hearth's price is fixed at free because it runs on hardware the user already owns — no meter can ever start. The pitch: bring your AI home before prices rise. (Fairly: the large cloud tools remain best for huge, cutting-edge jobs.)
+
 ## Key pages
 - Home: https://hearth.kevinchamplin.com/
 - Try it now (runs in your browser): https://hearth.kevinchamplin.com/app

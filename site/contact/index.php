@@ -78,6 +78,7 @@ $h = fn($v) => htmlspecialchars((string)$v, ENT_QUOTES);
   <p class="eyebrow">Contact</p>
   <h1 class="serif">Say hello.</h1>
   <p class="lead">A question, an idea, or just want to tell me Hearth made you smile? Send a note &mdash; it comes straight to me.</p>
+  <figure class="ph"><img src="/assets/photos/writing-desk.jpg" alt="A notebook and coffee on a warm wooden desk" width="1600" height="1067" loading="lazy"><figcaption>Real notes, read by a real person.</figcaption></figure>
 
   <?php if ($notice): ?><div class="notice <?= $ok ? 'ok' : 'err' ?>"><?= $h($notice) ?></div><?php endif; ?>
 
