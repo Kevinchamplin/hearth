@@ -4,6 +4,27 @@ All notable changes to Hearth are documented here.
 
 ## [Unreleased]
 
+### Added (2026-06-17, desktop-code-signing-pipeline) [1.5h]
+- **One-command signed + notarized macOS release** so the desktop app is distributable to anyone,
+  not just openable on the build machine. `desktop/scripts/release-macos.sh`: cleans up (stale dmg
+  mounts/temps + running app), bundles the engine, **signs the nested Ollama binaries** (`ollama`,
+  `llama-server`, `llama-quantize`) with Developer ID + hardened runtime + timestamp, then
+  `tauri build` signs the app shell and (when creds are present) notarizes + staples.
+- **What we verified / learned** (de-risked against the real Developer ID cert):
+  - The bundled third-party engine is signed with **our** Developer ID (Team `744UXMUX79`) — standard
+    and required; re-signing third-party binaries needs no permission from Ollama.
+  - **No entitlements required** — Ollama's GGUF inference (incl. the `ollama`→`llama-server` Metal
+    spawn) runs under hardened runtime with plain `--options runtime`; confirmed by generating from the
+    signed binaries.
+  - Tauri's app-shell signing **preserves** the pre-signed nested binaries → `codesign --verify --deep
+    --strict` passes; `spctl` reports "Unnotarized Developer ID" (the expected pre-notarization state).
+  - `bundle_dmg.sh` fails if a copy of the app is running or a stale `rw.*.dmg` temp is mounted; the
+    script clears both first.
+- Adds `scripts/sign-bundled-ollama.sh`, `scripts/release-macos.sh`, `.env.release.example`;
+  `.env.release` (Apple ID + app-specific password) is gitignored. macOS/arm64 only.
+- **Remaining (needs Kevin):** create the app-specific password + fill `.env.release`, then run the
+  script for a fully notarized `.dmg`. The signing half is wired and proven.
+
 ### Added (2026-06-16, desktop-bundle-ollama-engine) [1.5h]
 - **The desktop app now bundles its own engine — one install, no setup.** Previously it required a
   separate Ollama install; now `Hearth.app` ships Ollama inside it. `desktop/scripts/bundle-ollama.sh`
